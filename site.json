@@ -1,0 +1,4 @@
+{
+  "origin": "https://ontarioexterns.ca",
+  "_note": "Production address. Used by scripts/build-dist.mjs (canonical, sitemap, robots, analytics domain) and by the carousel renderer (URLs on slides and in captions)."
+}

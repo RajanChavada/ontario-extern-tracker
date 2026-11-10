@@ -1,0 +1,25 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ontario Extern Tracker//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:shn-20261130@extern-tracker.local
+DTSTAMP:20261110T120000Z
+DTSTART;VALUE=DATE:20261130
+DTEND;VALUE=DATE:20261201
+SUMMARY:Closing date: Scarborough Health Network – Clinical Nurse Extern 
+ (talent pool)
+DESCRIPTION:Closing date listed on the posting. Closing time not published
+ \, so apply early. Official posting: https://shn.wd10.myworkdayjobs.com/en
+ -US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-
+ _JR105532
+URL:https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/C
+ linical-Nurse-Extern--Talent-Pool--2026-_JR105532
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P3D
+DESCRIPTION:Scarborough Health Network extern closes in 3 days
+END:VALARM
+END:VEVENT
+END:VCALENDAR

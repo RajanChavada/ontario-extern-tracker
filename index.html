@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbfaf7">
+  <title>Nursing externships in Ontario: what's open, closing dates and criteria</title>
+  <meta name="description" content="Paid clinical extern postings at Ontario hospitals, checked against each hospital's own careers page: listed positions vs talent pools, closing dates, and whether you meet the listed criteria.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap mast">
+      <a class="wordmark" href="./">Ontario Extern Tracker</a>
+      <a class="mast-link" href="what-is-a-clinical-extern-ontario.html" id="guide-link">What is an extern?</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="intro">
+      <h1>Nursing externships in Ontario</h1>
+      <p class="standfirst" id="standfirst"></p>
+      <p class="dateline" id="dateline"></p>
+    </div>
+
+    <section class="filters" aria-label="Filter listings">
+      <div class="fgroup">
+        <span class="flabel" id="lbl-program">Program</span>
+        <div class="seg" data-field="program" role="group" aria-labelledby="lbl-program">
+          <button type="button" data-v="BSCN">BScN</button><button type="button" data-v="PN">PN / RPN</button><button type="button" data-v="IEN">IEN</button>
+        </div>
+      </div>
+      <div class="fgroup" id="year-row">
+        <span class="flabel" id="lbl-year">Year</span>
+        <div class="seg" data-field="year" role="group" aria-labelledby="lbl-year">
+          <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button>
+        </div>
+      </div>
+      <div class="more" id="more">
+        <div class="fgroup">
+          <span class="flabel" id="lbl-bcls">BCLS</span>
+          <div class="seg" data-field="bcls" role="group" aria-labelledby="lbl-bcls">
+            <button type="button" data-v="yes">Have it</button><button type="button" data-v="no">Don't</button><button type="button" data-v="unsure">Not sure</button>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel" for="region">Region</label>
+          <select id="region">
+            <option value="all">All of Ontario</option>
+            <option value="gta">GTA</option>
+            <option value="hamilton">Hamilton</option>
+            <option value="london">London</option>
+            <option value="ottawa">Ottawa</option>
+          </select>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" id="final"> Final year of my program</label>
+          <label><input type="checkbox" id="hide-unmet"> Hide listings I don't meet</label>
+        </div>
+      </div>
+      <div class="fbar">
+        <button type="button" class="tlink" id="more-btn" aria-expanded="false" aria-controls="more">More options<span id="more-count"></span></button>
+        <button type="button" class="tlink" id="reset" hidden>Clear</button>
+        <span class="privacy">Filters run in your browser. We don't send your selections.</span>
+      </div>
+    </section>
+
+    <p class="resultline" id="summary" aria-live="polite"></p>
+    <div id="results"></div>
+
+    <footer class="foot">
+      <p>Not affiliated with any hospital or Ontario Health. Confirm details on the hospital's posting before applying; meeting the listed criteria doesn't guarantee an interview. A listing not re-checked within 7 days is marked Unconfirmed.</p>
+      <p>No accounts or cookies. We count anonymous visits and clicks, never your selections. <a href="what-is-a-clinical-extern-ontario.html">Extern vs placement vs NGG</a></p>
+    </footer>
+  </main>
+
+  <div class="toast" id="feedback" role="dialog" aria-label="Feedback" hidden>
+    <p class="toast-q">Did this help you find something to apply to?</p>
+    <div class="toast-actions">
+      <button type="button" data-helped="yes">Yes</button>
+      <button type="button" data-helped="no">No</button>
+      <button type="button" class="toast-close" aria-label="Close">Close</button>
+    </div>
+    <p class="toast-thanks" hidden>Thanks, that helps.<a id="fb-mail" hidden> Spot an error? Tell us</a></p>
+  </div>
+</body>
+</html>

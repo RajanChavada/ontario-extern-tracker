@@ -1,0 +1,77 @@
+/* Carousel template: the same editorial system as the site (paper, ink, serif names, ruled rows, one blue accent).
+   Two canvases: .ig = Instagram 1080x1350 (4:5); .tt = TikTok Photo Mode 1080x1920 (9:16) with UI safe zones. */
+:root {
+  --paper: #fbfaf7; --ink: #1a1a1a; --ink-2: #454545; --muted: #6b6a66; --rule: #d9d5cc; --rule-strong: #1a1a1a;
+  --accent: #1f4f8f; --pos: #1d6b3b; --caution: #8a5600; --neg: #a3262e; --tint: #f1efe9;
+  --serif: Charter, "Bitstream Charter", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+body { position: relative; overflow: hidden; }
+
+/* Canvas + safe area. Everything important sits inside .safe. */
+.ig { width: 1080px; height: 1350px; --t-cover: 104px; --t-title: 72px; --t-body: 38px; --t-row: 36px; --t-label: 27px; --t-small: 25px; }
+.ig .safe { position: absolute; left: 92px; right: 92px; top: 80px; bottom: 76px; display: flex; flex-direction: column; }
+.tt { width: 1080px; height: 1920px; --t-cover: 126px; --t-title: 90px; --t-body: 48px; --t-row: 45px; --t-label: 33px; --t-small: 29px; }
+/* TikTok overlays: status bar + tabs on top (~150px), caption + music + nav at the bottom (~470px), action buttons on the right (~140px). */
+.tt .safe { position: absolute; left: 84px; right: 150px; top: 176px; bottom: 480px; display: flex; flex-direction: column; }
+
+/* Masthead (every slide): wordmark + position. A hairline, not a box. */
+.mast { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 18px; border-bottom: 3px solid var(--rule-strong); font-size: var(--t-small); }
+.mast b { font-weight: 650; letter-spacing: -.005em; }
+.mast span { color: var(--muted); }
+
+.body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding-top: 44px; }
+h1 { font: 700 var(--t-title)/1.08 var(--serif); letter-spacing: -.015em; text-wrap: balance; }
+.cover h1 { font-size: var(--t-cover); line-height: 1.02; letter-spacing: -.02em; }
+.sub { margin-top: 28px; font-size: var(--t-body); line-height: 1.32; color: var(--ink-2); }
+.cover .sub { font-size: calc(var(--t-body) * 1.08); }
+.meta { margin-top: 12px; font-size: var(--t-label); color: var(--muted); }
+p.note { margin-top: 26px; font-size: var(--t-body); line-height: 1.34; color: var(--ink-2); }
+p.note b, .sub b { color: var(--ink); font-weight: 650; }
+blockquote { margin-top: 30px; padding-left: 28px; border-left: 6px solid var(--ink); font: 400 calc(var(--t-body) * 1.02)/1.32 var(--serif); color: var(--ink); }
+blockquote cite { display: block; margin-top: 12px; font: 400 var(--t-label) var(--sans); color: var(--muted); font-style: normal; }
+
+/* Ruled fact rows, like the tracker's listings */
+.rows { margin-top: 30px; border-top: 1px solid var(--rule); }
+.row { display: grid; grid-template-columns: 210px 1fr; column-gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.tt .row { grid-template-columns: 200px 1fr; padding: 24px 0; }
+.row .k { font-size: var(--t-label); color: var(--muted); }
+.row .v { font-size: var(--t-row); line-height: 1.25; }
+.row .v small { display: block; margin-top: 6px; font-size: var(--t-label); color: var(--muted); }
+.positive { color: var(--pos); font-weight: 650; } .caution { color: var(--caution); font-weight: 650; }
+.negative { color: var(--neg); font-weight: 650; } .strong { font-weight: 650; }
+
+/* Entry list (several hospitals on one slide) */
+.entries { margin-top: 28px; border-top: 1px solid var(--rule); }
+.entry { padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.entry .n { font: 700 calc(var(--t-row) * 1.08)/1.2 var(--serif); }
+.entry .d { margin-top: 6px; font-size: var(--t-label); line-height: 1.35; color: var(--ink-2); }
+.entry .s { font-size: var(--t-row); margin-top: 4px; }
+
+/* Real product screenshot: shown flat with a hairline, never inside a fake phone */
+.shot { flex: 1 1 0; min-height: 0; padding-top: 34px; display: flex; flex-direction: column; align-items: center; }
+.shot img { display: block; max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; border: 2px solid var(--rule); background: #fff; }
+.shot:has(.cap) img { max-height: calc(100% - 56px); }
+.shot.natural { flex: 0 0 auto; padding-top: 30px; }
+.shot.natural img { width: 100%; max-height: none; }
+.shot.natural + .rows, .shot.natural + .sub, .shot.natural + .note { margin-top: 26px; }
+/* Statement slides: one idea, set large */
+.statement .sub { font-size: calc(var(--t-body) * 1.3); line-height: 1.26; color: var(--ink); margin-top: 36px; }
+.statement blockquote { font-size: calc(var(--t-body) * 1.22); margin-top: 40px; }
+.statement .note { font-size: calc(var(--t-body) * 1.05); margin-top: 34px; }
+.shot .cap { align-self: stretch; margin-top: 12px; font-size: var(--t-small); color: var(--muted); text-align: center; }
+
+/* CTA slide */
+.url { margin-top: 40px; padding: 26px 0; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--rule); font: 650 var(--t-row)/1.25 var(--sans); color: var(--accent); overflow-wrap: anywhere; }
+.how { margin-top: 18px; font-size: var(--t-label); color: var(--muted); line-height: 1.4; }
+
+/* Footer (every slide) */
+.foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: var(--t-small); color: var(--muted); line-height: 1.35; }
+
+/* Review aids (only with --guides): TikTok overlay zones + overflow warning */
+.guide-zone { position: absolute; background: rgba(163, 38, 46, .10); outline: 2px dashed rgba(163, 38, 46, .5); z-index: 9; }
+.overflow-flag { position: absolute; left: 0; right: 0; top: 0; padding: 12px; background: #a3262e; color: #fff; font: 700 34px var(--sans); text-align: center; z-index: 10; }
+
+.nw { white-space: nowrap; }

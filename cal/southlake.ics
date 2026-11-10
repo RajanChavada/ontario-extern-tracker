@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ontario Extern Tracker//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:southlake-20261130@extern-tracker.local
+DTSTAMP:20261110T120000Z
+DTSTART;VALUE=DATE:20261130
+DTEND;VALUE=DATE:20261201
+SUMMARY:Closing date: Southlake Health – Clinical Extern
+DESCRIPTION:Closing date listed on the posting. Closing time not published
+ \, so apply early. Official posting: https://southlake.wd10.myworkdayjobs.
+ com/en-US/Southlake/job/Clinical-Extern_JR-102401
+URL:https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-E
+ xtern_JR-102401
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P3D
+DESCRIPTION:Southlake Health extern closes in 3 days
+END:VALARM
+END:VEVENT
+END:VCALENDAR

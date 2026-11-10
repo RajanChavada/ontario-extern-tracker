@@ -1,0 +1,15 @@
+node_modules/
+.DS_Store
+dist/
+.wrangler/
+marketing/carousel/out/_guides/
+marketing/carousel/out/*/*/*.html
+# generated locally, not committed
+marketing/carousel/out/
+marketing/carousel/shots/
+docs/screenshots/
+docs/compare.html
+.env
+.env.*
+.dev.vars
+.leakscan.local

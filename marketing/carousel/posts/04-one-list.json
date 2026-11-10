@@ -1,0 +1,172 @@
+{
+  "id": "04-one-list",
+  "message": "Convenience of finding opportunities",
+  "hypothesis": "Students value not having to check every hospital's careers site; framing the tracker as the one list brings visitors who return or save the closing dates.",
+  "verified": "2026-11-10",
+  "verified_label": "Nov 10, 2026",
+  "facts": [
+    {
+      "entry": "southlake",
+      "field": "status",
+      "equals": "open_vacancies"
+    },
+    {
+      "entry": "shn",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "mackenzie",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "sunnybrook",
+      "field": "status",
+      "equals": "open_unspecified"
+    },
+    {
+      "entry": "cheo",
+      "field": "status",
+      "equals": "typical_window"
+    },
+    {
+      "entry": "sickkids",
+      "field": "status",
+      "equals": "typical_window"
+    },
+    {
+      "entry": "lhsc",
+      "field": "status",
+      "equals": "check_employer"
+    },
+    {
+      "entry": "thp",
+      "field": "status",
+      "equals": "check_employer"
+    },
+    {
+      "entry": "hhs",
+      "field": "status",
+      "equals": "unconfirmed"
+    },
+    {
+      "entry": "uhn",
+      "field": "status",
+      "equals": "closed"
+    },
+    {
+      "entry": "osler",
+      "field": "status",
+      "equals": "closed"
+    }
+  ],
+  "slides": [
+    {
+      "layout": "cover",
+      "title": "11 hospitals, 5 job sites, 1 list",
+      "sub": "Ontario nursing extern postings live on different career systems. Here's what checking them all looks like.",
+      "img": {
+        "src": "shots/{SHOTS}/top.png"
+      }
+    },
+    {
+      "title": "Where the postings live",
+      "rows": [
+        [
+          "Workday",
+          "Southlake, Scarborough Health Network"
+        ],
+        [
+          "iCIMS",
+          "Mackenzie Health"
+        ],
+        [
+          "Talcura",
+          "Sunnybrook"
+        ],
+        [
+          "SmartRecruiters",
+          "William Osler (posting expired)"
+        ],
+        [
+          "Taleo",
+          "Hamilton Health Sciences (searched; not found)"
+        ],
+        [
+          "Program pages",
+          "Trillium, LHSC, CHEO, SickKids, UHN"
+        ]
+      ]
+    },
+    {
+      "title": "Right now",
+      "rows": [
+        [
+          "Taking applications",
+          "4: Southlake (positions listed), Sunnybrook (count not stated), SHN and Mackenzie (talent pools)",
+          "strong"
+        ],
+        [
+          "Not open now",
+          "CHEO usually posts Feb–Mar; SickKids' last window was Jan 19–25, 2026"
+        ],
+        [
+          "No live posting linked",
+          "Trillium, LHSC"
+        ],
+        [
+          "Closed",
+          "UHN, William Osler"
+        ],
+        [
+          "Unconfirmed",
+          "Hamilton Health Sciences",
+          "caution"
+        ]
+      ]
+    },
+    {
+      "title": "Kept honest",
+      "sub": "Every listing links to the hospital's own posting. Anything not re-checked within 7 days is marked **Unconfirmed** automatically.",
+      "note": "No sign-up, and your filter choices never leave your browser."
+    },
+    {
+      "layout": "cta",
+      "title": "Save the list, not 11 tabs",
+      "sub": "Closing dates, posting type and the listed criteria for each hospital, re-checked by hand.",
+      "url": {
+        "ig": "Link in bio",
+        "tt": "{HOST}/t4"
+      },
+      "how": {
+        "ig": "Free · no sign-up · {HOST}/i4",
+        "tt": "Type it into your browser · free · no sign-up"
+      }
+    }
+  ],
+  "caption": {
+    "instagram": "Ontario nursing extern postings are spread across Workday, iCIMS, Talcura, SmartRecruiters, Taleo and hospital program pages. I check 11 hospitals by hand and keep one list: what's taking applications, what's a talent pool, what's closed, and what usually opens later.\n\nLink in bio. Free, no sign-up, not affiliated with any hospital.\n\n#nursingstudent #ontarionursing #nursingextern #clinicalextern #studentnurse #nursingjobs",
+    "tiktok": "Every Ontario nursing extern posting in one list instead of 11 career sites. Free, not affiliated with any hospital: {HOST}/t4 #nursingstudent #nursingextern #ontarionursing #nursingjobs"
+  },
+  "search_terms": [
+    "ontario nursing extern list",
+    "where to find nursing extern jobs ontario",
+    "hospital extern postings toronto",
+    "nursing student jobs ontario"
+  ],
+  "cta": "Open and save the tracker (utm_content=p4)",
+  "metrics": {
+    "content": [
+      "saves (the 'keep this' signal)",
+      "shares",
+      "views"
+    ],
+    "site": [
+      "visitors with utm_content=p4",
+      "return_visit_estimate from p4 visitors' sessions (estimate)",
+      "calendar_add",
+      "posting_click"
+    ]
+  }
+}

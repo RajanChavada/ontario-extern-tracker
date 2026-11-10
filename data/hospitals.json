@@ -1,0 +1,338 @@
+{
+  "dataset_checked": "2026-11-10",
+  "stale_after_days": 7,
+  "note": "Facts in our own words. Every entry links to the employer's own page. Verification captures are kept outside this repository. 'short' fields are display summaries of the facts above, not new facts.",
+  "entries": [
+    {
+      "id": "southlake",
+      "hospital": "Southlake Health",
+      "region": "gta",
+      "location": "Newmarket",
+      "program_name": "Clinical Extern",
+      "posting_type": "open_vacancies",
+      "positions_listed": 40,
+      "deadline": "2026-11-30",
+      "pay_text": "$21.80/hr",
+      "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4
+          },
+          "PN": {
+            "finalYearOnly": true
+          }
+        },
+        "bcls": null,
+        "also_listed": [
+          "Recent acute care experience (preferred)"
+        ]
+      }
+    },
+    {
+      "id": "shn",
+      "hospital": "Scarborough Health Network",
+      "region": "gta",
+      "location": "Scarborough",
+      "program_name": "Clinical Nurse Extern (talent pool)",
+      "posting_type": "open_talent_pool",
+      "pool_note": "The posting says it builds a candidate pool for upcoming vacancies and is not a specific vacant position.",
+      "deadline": "2026-11-30",
+      "pay_text": "$25.379/hr",
+      "source_url": "https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-_JR105532",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 3,
+            "maxYear": 4,
+            "finalYearOk": true
+          }
+        },
+        "bcls": true,
+        "also_listed": [
+          "Evidence of excellent academic standing"
+        ]
+      },
+      "short": "Not a current vacancy"
+    },
+    {
+      "id": "mackenzie",
+      "hospital": "Mackenzie Health",
+      "region": "gta",
+      "location": "Richmond Hill / Vaughan",
+      "program_name": "Clinical Extern (Nursing)",
+      "posting_type": "open_talent_pool",
+      "pool_note": "The posting says it is not for an existing vacancy; it is sourcing candidates for potential future opportunities.",
+      "deadline": null,
+      "pay_text": "$22.00/hr",
+      "source_url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "semantics": "entering"
+          },
+          "PN": {
+            "finalYearOnly": true,
+            "semantics": "entering"
+          }
+        },
+        "bcls": true,
+        "also_listed": [
+          "Evidence of good academic standing",
+          "Completed the academic year before your last year"
+        ]
+      },
+      "short": "Not a current vacancy"
+    },
+    {
+      "id": "sunnybrook",
+      "hospital": "Sunnybrook Health Sciences Centre",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical Extern (Nursing students and IENs)",
+      "posting_type": "open_unspecified",
+      "posted_text": "Posted Apr 9, 2026; no closing date shown",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4
+          },
+          "PN": {
+            "minYear": 2,
+            "maxYear": 4
+          },
+          "IEN": {
+            "anyYear": true,
+            "note": "In a CNO-approved program such as BScN-IEN or PN-IEN (other routes listed on the posting)"
+          }
+        },
+        "bcls": true,
+        "also_listed": []
+      },
+      "short": "Vacancy count not stated"
+    },
+    {
+      "id": "thp",
+      "hospital": "Trillium Health Partners",
+      "region": "gta",
+      "location": "Mississauga",
+      "program_name": "Clinical Extern (Enhanced Extern Program)",
+      "posting_type": "check_employer",
+      "window_text": "Program page only. We did not find a live posting to link.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://www.trilliumhealthpartners.ca/careers/welcome/A/Extern-Opportunities.html",
+      "source_kind": "program_page",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 4,
+            "maxYear": 4
+          },
+          "PN": {
+            "check": true,
+            "note": "Page lists Practical Nursing students without a clear year"
+          },
+          "IEN": {
+            "anyYear": true,
+            "note": "Needs a CNO letter of direction plus one of the routes on the page"
+          }
+        },
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Program page only"
+    },
+    {
+      "id": "lhsc",
+      "hospital": "London Health Sciences Centre",
+      "region": "london",
+      "location": "London",
+      "program_name": "Clinical Extern Nursing Program",
+      "posting_type": "check_employer",
+      "window_text": "LHSC says intakes run regularly through the year (start dates February, May, June and July). We did not link a live posting.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://www.lhsc.on.ca/nursing/recruitment",
+      "source_kind": "program_page",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 3,
+            "maxYear": 4
+          },
+          "PN": {
+            "minYear": 2,
+            "maxYear": 2,
+            "note": "Page says year 2 of a CNO-approved diploma program"
+          }
+        },
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Intakes through the year"
+    },
+    {
+      "id": "cheo",
+      "hospital": "CHEO",
+      "region": "ottawa",
+      "location": "Ottawa",
+      "program_name": "Clinical Extern Program",
+      "posting_type": "typical_window",
+      "window_text": "CHEO says postings usually go up in February/March, for a spring cohort around May. That's their typical window, not a guaranteed opening.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://www.cheo.on.ca/en/about-us/careers/nursing-health-human-resources-programs-students-and-clinical-externs/",
+      "source_kind": "program_page",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 3,
+            "maxYear": 4,
+            "finalYearOk": true
+          },
+          "PN": {
+            "minYear": 2,
+            "maxYear": 2,
+            "finalYearOk": true
+          }
+        },
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Usually posts Feb–Mar"
+    },
+    {
+      "id": "sickkids",
+      "hospital": "SickKids",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical Extern Program",
+      "posting_type": "typical_window",
+      "window_text": "The 2026 posting was live for one week only (Jan 19–25, 2026). SickKids hasn't announced the next window.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://www.sickkids.ca/en/learning/student-centre/nursing-learners/nursing-clinical-extern-program/",
+      "source_kind": "program_page",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "check": true,
+            "note": "Must be at least halfway through your program"
+          }
+        },
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Last window: Jan 19–25, 2026"
+    },
+    {
+      "id": "uhn",
+      "hospital": "UHN (Toronto General / Toronto Western)",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical Extern (Nursing)",
+      "posting_type": "closed",
+      "window_text": "The last posting has expired. UHN's program page lists nursing start dates in February, June, August and October.",
+      "deadline": null,
+      "pay_text": "up to $20.60/hr (last posting)",
+      "source_url": "https://www.uhn.ca/healthcareprofessionals/Meet_Professions/Collaborative_Academic_Practice/ClinicalExterns",
+      "source_kind": "program_page",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4
+          }
+        },
+        "bcls": null,
+        "also_listed": [
+          "At least 18.75 hours/week availability"
+        ]
+      },
+      "short": "Last posting expired"
+    },
+    {
+      "id": "osler",
+      "hospital": "William Osler Health System",
+      "region": "gta",
+      "location": "Brampton / Etobicoke",
+      "program_name": "Clinical Extern (Medicine and Surgery)",
+      "posting_type": "closed",
+      "window_text": "The posting page says this job has expired.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://jobs.smartrecruiters.com/WilliamOslerHealthSystem1/744000151923218-clinical-extern-medicine-and-surgery",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": false,
+        "programs": {},
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Posting expired"
+    },
+    {
+      "id": "hhs",
+      "hospital": "Hamilton Health Sciences",
+      "region": "hamilton",
+      "location": "Hamilton",
+      "program_name": "Clinical Extern (Nurse)",
+      "posting_type": "unconfirmed",
+      "unconfirmed_reason": "Job aggregators list an HHS clinical extern posting, but we couldn't find it on HHS's official careers search on Nov 9. Check HHS directly.",
+      "deadline": null,
+      "pay_text": null,
+      "source_url": "https://www.hhscareers.ca/",
+      "source_kind": "careers_home",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": false,
+        "programs": {},
+        "bcls": null,
+        "also_listed": []
+      },
+      "short": "Not found on HHS careers site"
+    }
+  ]
+}

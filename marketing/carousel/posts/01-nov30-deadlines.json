@@ -1,0 +1,183 @@
+{
+  "id": "01-nov30-deadlines",
+  "message": "Deadline urgency",
+  "hypothesis": "A specific, dated deadline (Nov 30) gets Ontario nursing students to visit the tracker and check whether they meet the listed criteria.",
+  "verified": "2026-11-10",
+  "verified_label": "Nov 10, 2026",
+  "facts": [
+    {
+      "entry": "southlake",
+      "field": "status",
+      "equals": "open_vacancies"
+    },
+    {
+      "entry": "southlake",
+      "field": "deadline",
+      "equals": "2026-11-30"
+    },
+    {
+      "entry": "southlake",
+      "field": "positions_listed",
+      "equals": 40
+    },
+    {
+      "entry": "southlake",
+      "field": "pay_text",
+      "equals": "$21.80/hr"
+    },
+    {
+      "entry": "shn",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "shn",
+      "field": "deadline",
+      "equals": "2026-11-30"
+    },
+    {
+      "entry": "shn",
+      "field": "pay_text",
+      "equals": "$25.379/hr"
+    },
+    {
+      "entry": "mackenzie",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "mackenzie",
+      "field": "deadline",
+      "equals": null
+    },
+    {
+      "entry": "mackenzie",
+      "field": "pay_text",
+      "equals": "$22.00/hr"
+    },
+    {
+      "entry": "sunnybrook",
+      "field": "status",
+      "equals": "open_unspecified"
+    },
+    {
+      "entry": "sunnybrook",
+      "field": "deadline",
+      "equals": null
+    }
+  ],
+  "slides": [
+    {
+      "layout": "cover",
+      "title": "Two Ontario extern postings close Nov 30",
+      "sub": "Southlake Health and Scarborough Health Network: what each one actually is, who it's for, and what else is open.",
+      "img": {
+        "src": "shots/{SHOTS}/top.png"
+      }
+    },
+    {
+      "title": "Southlake Health: 40 positions listed",
+      "imgFirst": true,
+      "img": {
+        "src": "shots/{SHOTS}/row-southlake.png"
+      },
+      "rows": [
+        [
+          "For",
+          "BScN/BN years 2–4, or final-year PN"
+        ],
+        [
+          "Closes",
+          "Mon, Nov 30",
+          "strong",
+          "Closing time not published"
+        ]
+      ]
+    },
+    {
+      "title": "SHN: a talent pool, also closing Nov 30",
+      "imgFirst": true,
+      "img": {
+        "src": "shots/{SHOTS}/row-shn.png"
+      },
+      "rows": [
+        [
+          "Listing",
+          "Talent pool",
+          "caution",
+          "A candidate pool for upcoming vacancies, not one specific vacant position"
+        ],
+        [
+          "For",
+          "BScN/BN years 3–4 or final year · current BCLS"
+        ]
+      ]
+    },
+    {
+      "title": "Also taking applications, no closing date listed",
+      "entries": [
+        {
+          "name": "Mackenzie Health",
+          "status": "Talent pool",
+          "tone": "caution",
+          "detail": "RN students entering years 2–4, or RPN entering final year · current BCLS · $22.00/hr"
+        },
+        {
+          "name": "Sunnybrook",
+          "status": "Posting live · vacancy count not stated",
+          "detail": "Years 2–4 of a BScN or diploma program, and IENs in a CNO-approved program · current BCLS · pay not listed"
+        }
+      ],
+      "note": "No closing date listed doesn't mean it stays up. Check the posting itself."
+    },
+    {
+      "title": "The closing time isn't published",
+      "sub": "Both Nov 30 postings list a date, not a time. **Don't leave it to the last night.**",
+      "img": {
+        "src": "shots/{SHOTS}/southlake-calendar.png",
+        "cap": "“Add to calendar” saves Nov 30 as an all-day event, with a reminder 3 days before."
+      }
+    },
+    {
+      "layout": "cta",
+      "title": "Check which ones you meet",
+      "sub": "Pick your program and year. Every listing links to the hospital's own posting.",
+      "url": {
+        "ig": "Link in bio",
+        "tt": "{HOST}/t1"
+      },
+      "how": {
+        "ig": "Free · no sign-up · {HOST}/i1",
+        "tt": "Type it into your browser · free · no sign-up"
+      }
+    }
+  ],
+  "caption": {
+    "instagram": "Southlake Health and Scarborough Health Network's nursing extern postings both close Monday, Nov 30. Southlake lists 40 positions; SHN's is a talent pool, not one specific vacancy. Neither publishes a closing time, so don't leave it to the last night.\n\nSwipe for who each one is for, plus two more that are taking applications with no closing date listed.\n\nI built a free tracker that checks every posting against the hospital's own page and shows which ones you meet the listed criteria for. Link in bio. Not affiliated with any hospital. Always confirm details on the posting.\n\n#nursingstudent #ontarionursing #nursingextern #clinicalextern #bscn #rpn #studentnurse #torontonursing",
+    "tiktok": "Ontario nursing extern deadlines: Southlake Health and SHN close Nov 30 🗓️ One lists 40 positions, one is a talent pool. Free tracker (not affiliated with any hospital): {HOST}/t1 #nursingstudent #nursingextern #ontarionursing #bscn #clinicalextern"
+  },
+  "search_terms": [
+    "nursing extern ontario",
+    "clinical extern deadline",
+    "nursing externship ontario 2026",
+    "southlake extern",
+    "scarborough health network extern",
+    "nursing student jobs ontario"
+  ],
+  "cta": "Check which postings you meet (tracker, utm_content=p1)",
+  "metrics": {
+    "content": [
+      "views / accounts reached",
+      "saves",
+      "shares",
+      "profile visits",
+      "Instagram: bio link taps; story link-sticker taps if shared to a story"
+    ],
+    "site": [
+      "visitors with utm_content=p1 (TikTok short link /t1; Instagram story sticker)",
+      "filter_used per visitor",
+      "posting_click on southlake / shn",
+      "calendar_add"
+    ]
+  }
+}

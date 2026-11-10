@@ -1,0 +1,123 @@
+{
+  "id": "02-talent-pool-vs-vacancy",
+  "message": "Vacancy vs talent-pool clarity",
+  "hypothesis": "Explaining that some live extern postings are talent pools, using the postings' own wording, is useful enough that students save or share it and open the tracker to see each posting's type.",
+  "verified": "2026-11-10",
+  "verified_label": "Nov 10, 2026",
+  "facts": [
+    {
+      "entry": "southlake",
+      "field": "status",
+      "equals": "open_vacancies"
+    },
+    {
+      "entry": "southlake",
+      "field": "positions_listed",
+      "equals": 40
+    },
+    {
+      "entry": "mackenzie",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "shn",
+      "field": "status",
+      "equals": "open_talent_pool"
+    },
+    {
+      "entry": "sunnybrook",
+      "field": "status",
+      "equals": "open_unspecified"
+    },
+    {
+      "entry": "sunnybrook",
+      "field": "posted_text",
+      "equals": "Posted Apr 9, 2026; no closing date shown"
+    }
+  ],
+  "slides": [
+    {
+      "layout": "cover",
+      "title": "That extern posting might not be a vacancy",
+      "sub": "3 live Ontario postings, 3 different things. Here's how to tell them apart.",
+      "img": {
+        "src": "shots/{SHOTS}/row-mackenzie.png"
+      }
+    },
+    {
+      "title": "1. Positions listed",
+      "meta": "Southlake Health · Newmarket",
+      "quote": {
+        "text": "Number of Positions: 40",
+        "cite": "Southlake's own posting, checked Nov 10"
+      },
+      "note": "A stated number of hires for this posting.",
+      "img": {
+        "src": "shots/{SHOTS}/row-southlake.png"
+      },
+      "imgFirst": false
+    },
+    {
+      "title": "2. Talent pool",
+      "meta": "Mackenzie Health · Richmond Hill / Vaughan",
+      "quote": {
+        "text": "This posting is not for an existing vacancy. We are sourcing candidates for potential future opportunities.",
+        "cite": "Mackenzie Health's own posting, checked Nov 10"
+      },
+      "note": "Scarborough Health Network's posting is also a talent pool: it's titled **Clinical Nurse Extern (Talent Pool, 2026)**.",
+      "layout": "statement"
+    },
+    {
+      "title": "3. Live, count not stated",
+      "meta": "Sunnybrook · Toronto",
+      "note": "Posted Apr 9, 2026. No closing date shown, and the posting doesn't say whether it's a vacancy or a pool.",
+      "img": {
+        "src": "shots/{SHOTS}/row-sunnybrook.png"
+      }
+    },
+    {
+      "title": "What a talent pool means for you",
+      "sub": "Both talent-pool postings say they're for upcoming or future openings. You're applying to be considered later, **not for one job that exists today.**",
+      "note": "Worth knowing when you decide where to spend your application time.",
+      "layout": "statement"
+    },
+    {
+      "layout": "cta",
+      "title": "See every posting's type in one list",
+      "sub": "Positions listed, talent pool or not stated, labelled for every Ontario extern posting we track, with the hospital's own link.",
+      "url": {
+        "ig": "Link in bio",
+        "tt": "{HOST}/t2"
+      },
+      "how": {
+        "ig": "Free · no sign-up · {HOST}/i2",
+        "tt": "Type it into your browser · free · no sign-up"
+      }
+    }
+  ],
+  "caption": {
+    "instagram": "Not every \"open\" extern posting is a vacancy right now.\n\nMackenzie Health's posting says it \"is not for an existing vacancy\". SHN's is titled \"Talent Pool, 2026\". Southlake's lists 40 positions. Sunnybrook's doesn't say either way.\n\nBoth talent-pool postings say they're for upcoming or future openings. You're applying to be considered later, not for one job that exists today.\n\nThe free tracker labels every Ontario extern posting by type, with the hospital's own link. Link in bio. Not affiliated with any hospital.\n\n#nursingstudent #ontarionursing #nursingextern #clinicalextern #studentnurse #bscn #nursingschool",
+    "tiktok": "Is that nursing extern posting actually a vacancy? Talent pool vs positions listed, in the postings' own words. Free Ontario tracker (not affiliated with any hospital): {HOST}/t2 #nursingstudent #nursingextern #ontarionursing #studentnurse"
+  },
+  "search_terms": [
+    "talent pool meaning job posting",
+    "nursing extern talent pool",
+    "clinical extern ontario",
+    "is a talent pool a real job",
+    "nursing student jobs toronto"
+  ],
+  "cta": "See each posting's type in the tracker (utm_content=p2)",
+  "metrics": {
+    "content": [
+      "saves and shares relative to views (the main signal for an explainer)",
+      "comments asking about specific hospitals",
+      "profile visits / bio link taps"
+    ],
+    "site": [
+      "visitors with utm_content=p2",
+      "posting_click split by status (open_vacancies vs open_talent_pool)",
+      "filter_used per visitor"
+    ]
+  }
+}
