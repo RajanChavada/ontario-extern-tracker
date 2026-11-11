@@ -135,39 +135,174 @@
       "short": "Vacancy count not stated"
     },
     {
-      "id": "thp",
-      "hospital": "Trillium Health Partners",
+      "id": "nygh",
+      "hospital": "North York General Hospital",
       "region": "gta",
-      "location": "Mississauga",
-      "program_name": "Clinical Extern (Enhanced Extern Program)",
-      "posting_type": "check_employer",
-      "window_text": "Program page only. We did not find a live posting to link.",
-      "deadline": null,
-      "pay_text": null,
-      "source_url": "https://www.trilliumhealthpartners.ca/careers/welcome/A/Extern-Opportunities.html",
-      "source_kind": "program_page",
+      "location": "Toronto",
+      "program_name": "Clinical Extern - Professional Practice",
+      "posting_type": "open_unspecified",
+      "posted_text": "Posted Oct 16, 2026",
+      "deadline": "2026-11-16",
+      "pay_text": "$23.87/hr",
+      "source_url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1",
+      "source_kind": "posting",
       "source_ok": true,
       "last_verified": "2026-11-10",
       "eligibility": {
         "listed": true,
         "programs": {
           "BSCN": {
-            "minYear": 4,
+            "minYear": 2,
+            "maxYear": 4,
+            "note": "or final year of an accelerated program"
+          },
+          "PN": {
+            "finalYearOnly": true
+          },
+          "IEN": {
+            "anyYear": true,
+            "note": "In a CNO-approved program such as BScN-IEN or PN-IEN"
+          }
+        },
+        "bcls": true,
+        "also_listed": []
+      },
+      "short": "Vacancy count not stated"
+    },
+    {
+      "id": "wch",
+      "hospital": "Women's College Hospital",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical Extern - Professional Practice",
+      "posting_type": "open_unspecified",
+      "posted_text": "Posted Nov 6, 2026",
+      "deadline": "2026-11-20",
+      "pay_text": "$20.60/hr",
+      "source_url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "anyYear": true,
+            "note": "year not specified on the posting"
+          }
+        },
+        "bcls": true,
+        "also_listed": [
+          "Up to 7.5 hours per week (as posted)"
+        ]
+      },
+      "short": "Vacancy count not stated"
+    },
+    {
+      "id": "mgh",
+      "hospital": "Michael Garron Hospital",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical & Research Extern (Hybrid)",
+      "posting_type": "open_vacancies",
+      "positions_listed": 1,
+      "deadline": null,
+      "pay_text": "$20.60/hr",
+      "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J0926-0530&BRID=362474&lang=1",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "note": "or final year of an accelerated program"
+          },
+          "PN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "note": "completed first year"
+          },
+          "IEN": {
+            "check": true,
+            "note": "Completed educational requirements and waiting to write the registration exam"
+          }
+        },
+        "bcls": null,
+        "also_listed": [
+          "Basic Life Support (BLS) required"
+        ]
+      },
+      "short": "No closing date shown"
+    },
+    {
+      "id": "humber",
+      "hospital": "Humber River Health",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Student Nurse Extern (several unit postings)",
+      "posting_type": "open_unspecified",
+      "posted_text": "10 unit postings live on Nov 10; newest posted Oct 22, 2026; no closing date shown",
+      "deadline": null,
+      "pay_text": "$17.60/hr",
+      "source_url": "https://careersen-hrrh.icims.com/jobs/search?ss=1&searchKeyword=extern",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
             "maxYear": 4
           },
           "PN": {
             "check": true,
-            "note": "Page lists Practical Nursing students without a clear year"
+            "note": "Posting says years 2–4 of a nursing program without naming the program type"
+          }
+        },
+        "bcls": null,
+        "also_listed": [
+          "Current CPR certification required"
+        ]
+      },
+      "short": "10 unit postings; vacancy count per posting not stated"
+    },
+    {
+      "id": "thp",
+      "hospital": "Trillium Health Partners",
+      "region": "gta",
+      "location": "Mississauga",
+      "program_name": "Clinical Extern - Nursing (RN, RPN, IEN)",
+      "posting_type": "open_unspecified",
+      "deadline": null,
+      "pay_text": "$26.756/hr",
+      "source_url": "https://iadyup.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_4001/job/6976/",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-10",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "anyYear": true,
+            "note": "preference to years 3 and 4"
+          },
+          "PN": {
+            "anyYear": true
           },
           "IEN": {
             "anyYear": true,
-            "note": "Needs a CNO letter of direction plus one of the routes on the page"
+            "note": "Needs a CNO letter of direction plus one of the routes on the posting"
           }
         },
         "bcls": null,
         "also_listed": []
       },
-      "short": "Program page only"
+      "short": "Open until filled; vacancy count not stated",
+      "posted_text": "Posted Apr 1, 2026; open until filled"
     },
     {
       "id": "lhsc",

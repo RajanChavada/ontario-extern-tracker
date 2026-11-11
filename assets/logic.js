@@ -71,7 +71,7 @@ export function status(entry, today, staleAfter = 7) {
   }
   if (t === 'unconfirmed') return out('unconfirmed', entry.unconfirmed_reason || 'Not confirmed on an official source.');
   if (t === 'open_vacancies') {
-    return out(t, Number.isInteger(entry.positions_listed) ? `${entry.positions_listed} positions listed on the posting.` : 'The posting lists openings.');
+    return out(t, Number.isInteger(entry.positions_listed) ? `${entry.positions_listed} position${entry.positions_listed === 1 ? '' : 's'} listed on the posting.` : 'The posting lists openings.');
   }
   if (t === 'open_talent_pool') return out(t, entry.pool_note || 'Builds a pool for future openings. Not a current vacancy.');
   if (t === 'open_unspecified') return out(t, (entry.posted_text ? entry.posted_text + '. ' : '') + "The posting doesn't say whether it's a vacancy or a pool.");

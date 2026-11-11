@@ -65,7 +65,11 @@ test('status on the verification day keeps vacancy, pool and window distinct', (
   assert.equal(status(byId.sunnybrook, t).key, 'open_unspecified');
   assert.equal(status(byId.cheo, t).key, 'typical_window');
   assert.match(status(byId.cheo, t).detail, /not a guaranteed opening/);
-  assert.equal(status(byId.thp, t).key, 'check_employer');
+  assert.equal(status(byId.thp, t).key, 'open_unspecified'); // live posting since Nov 10 data update
+  assert.equal(status(byId.mgh, t).key, 'open_vacancies');
+  assert.match(status(byId.mgh, t).detail, /^1 position listed/); // singular
+  assert.match(status(byId.southlake, t).detail, /^40 positions listed/);
+  assert.equal(status(byId.lhsc, t).key, 'check_employer');
   assert.equal(status(byId.uhn, t).key, 'closed');
   assert.equal(status(byId.osler, t).key, 'closed');
   assert.equal(status(byId.hhs, t).key, 'unconfirmed');
@@ -104,9 +108,10 @@ test('status: open needs an https posting link that was reachable', () => {
 
 test('sortEntries: open first (positions, then unstated, then talent pools), nearest deadline first; closed last', () => {
   const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
-  assert.deepEqual(ids.slice(0, 4), ['southlake', 'sunnybrook', 'shn', 'mackenzie']); // shn before mackenzie: it has a closing date
+  // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
+  assert.deepEqual(ids.slice(0, 9), ['southlake', 'mgh', 'nygh', 'wch', 'humber', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
-  assert.ok(ids.indexOf('cheo') < ids.indexOf('thp'));
+  assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
   assert.deepEqual(ids.slice(-2).sort(), ['osler', 'uhn']);
 });
@@ -144,12 +149,26 @@ test('Mackenzie: "entering" years never give a hard match; returns check', () =>
   assert.equal(eligibility(m, P('BSCN', 3, { bcls: 'no' })).verdict, 'not_met');
 });
 
-test('THP (corrected Nov 9): BScN year 4; PN unclear; IENs listed', () => {
+test('THP (live posting, Nov 10): any year BScN/PN; IENs listed', () => {
   const t = byId.thp;
   assert.equal(eligibility(t, P('BSCN', 4)).verdict, 'meets');
-  assert.equal(eligibility(t, P('BSCN', 3)).verdict, 'not_met');
-  assert.equal(eligibility(t, P('PN', 2)).verdict, 'check');
+  assert.equal(eligibility(t, P('BSCN', 1)).verdict, 'meets');
+  assert.equal(eligibility(t, P('PN', 1)).verdict, 'meets');
   assert.equal(eligibility(t, P('IEN', null)).verdict, 'meets');
+});
+
+test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
+  assert.equal(eligibility(byId.nygh, P('BSCN', 2, { bcls: 'yes' })).verdict, 'meets');
+  assert.equal(eligibility(byId.nygh, P('BSCN', 2, { bcls: 'no' })).verdict, 'not_met'); // BCLS required
+  assert.equal(eligibility(byId.nygh, P('PN', 1)).verdict, 'not_met');          // final-year PN only
+  assert.equal(eligibility(byId.wch, P('BSCN', 1, { bcls: 'yes' })).verdict, 'meets');
+  assert.equal(eligibility(byId.wch, P('PN', 2, { bcls: 'yes' })).verdict, 'not_met');   // BScN only
+  assert.equal(eligibility(byId.mgh, P('BSCN', 1)).verdict, 'not_met');
+  assert.equal(eligibility(byId.mgh, P('IEN', null)).verdict, 'check');
+  assert.equal(eligibility(byId.humber, P('BSCN', 3)).verdict, 'meets');
+  assert.equal(eligibility(byId.humber, P('PN', 2)).verdict, 'check');          // program type not named
+  assert.equal(status(byId.nygh, '2026-11-16').key, 'open_unspecified');         // closing day still open
+  assert.equal(status(byId.nygh, '2026-11-17').key, 'closed');
 });
 
 test('CHEO and LHSC per-program years', () => {
@@ -186,7 +205,7 @@ test('ics: all-day event on the closing date, no invented time, CRLF line ending
 // ---------- Data file ----------
 test('data file passes validation', () => {
   assert.deepEqual(validateData(data), []);
-  assert.equal(data.entries.length, 11);
+  assert.equal(data.entries.length, 15);
 });
 
 test('validation catches the mistakes the rules forbid', () => {

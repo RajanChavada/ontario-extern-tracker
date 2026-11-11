@@ -33,7 +33,7 @@ async function main() {
 /* ---------- Status wording: one label, one plain note ---------- */
 function statusText(e, s) {
   switch (s.key) {
-    case 'open_vacancies': return { cls: 'st-positive', label: Number.isInteger(e.positions_listed) ? `${e.positions_listed} positions listed` : 'Positions listed', note: '' };
+    case 'open_vacancies': return { cls: 'st-positive', label: Number.isInteger(e.positions_listed) ? `${e.positions_listed} position${e.positions_listed === 1 ? '' : 's'} listed` : 'Positions listed', note: '' };
     case 'open_unspecified': return { cls: 'st-neutral', label: 'Posting live', note: e.short || 'Vacancy count not stated' };
     case 'open_talent_pool': return { cls: 'st-caution', label: 'Talent pool', note: e.short || 'Not a current vacancy' };
     case 'typical_window': return { cls: 'st-quiet', label: 'Not open now', note: e.short || '' };
