@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Watcher, step 1 (manual runs only; not scheduled).
 //   node scripts/watch.mjs [--report watch/report.md] [--write-snapshot] [--today YYYY-MM-DD]
-//                          [--data <hospitals.json>] [--snapshot <snapshot.json>]   (defaults: data/hospitals.json, watch/snapshot.json)
+//                          [--data <hospitals.json>] [--snapshot <snapshot.json>] [--sources <sources.json>]   (defaults: data/hospitals.json, watch/snapshot.json)
 //
 // Reads watch/sources.json, checks each official board once, and writes a markdown report of what a
 // person should review. It NEVER edits data/hospitals.json, and nothing it finds goes live without the
@@ -64,7 +64,7 @@ export function parseSmartRecruiters(json, { company }) {
 }
 
 /** Program / posting / list pages: keep only the sentences that matter, so page chrome and timestamps don't trigger alerts. */
-export function pageExcerpt(html) {
+export function pageExcerpt(html, expect = null) {
   if (typeof html !== 'string' || html.length < 200) throw new Error('page too short');
   const text = decode(html
     .replace(/<(script|style|noscript|nav|footer|header)[\s\S]*?<\/\1>/gi, ' ')
@@ -77,7 +77,9 @@ export function pageExcerpt(html) {
   const keep = [...new Set(lines.filter(l => KEEP.test(l) && l.length >= 12 && l.length <= 600))];
   const blocked = /captcha|access denied|unusual (traffic|activity)/i.test(text);
   const expired = /(this job|posting) (has )?expired|no longer (open|available|accepting)|does not exist/i.test(text);
-  return { lines: keep, hash: sha(keep.join('\n')), blocked, expired };
+  // A page must still contain its marker phrase; otherwise a redesign or error page could pass as "no change".
+  const marker = expect ? new RegExp(expect, 'i').test(text) : true;
+  return { lines: keep, hash: sha(keep.join('\n')), blocked, expired, marker };
 }
 
 const sha = s => createHash('sha256').update(s).digest('hex').slice(0, 16);
@@ -135,8 +137,9 @@ export async function checkSource(src, fetcher = http) {
         return complete(all, total);
       }
       case 'page': {
-        const ex = pageExcerpt(await fetcher(p.url));
+        const ex = pageExcerpt(await fetcher(p.url), p.expect);
         if (ex.blocked) return { status: 'error', reason: 'bot challenge or access denied' };
+        if (!ex.marker) return { status: 'error', reason: `expected text "${p.expect}" not found (page moved or redesigned?)` };
         return { status: 'ok', page: ex };
       }
       default: return { status: 'error', reason: `unknown adapter ${src.adapter}` };
@@ -243,7 +246,8 @@ async function main() {
   const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
   const today = opt('--today') || ontarioToday();
   const now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
-  const { sources } = JSON.parse(readFileSync(`${ROOT}watch/sources.json`, 'utf8'));
+  const abs0 = f => (f.startsWith('/') ? f : `${ROOT}${f}`);
+  const { sources } = JSON.parse(readFileSync(abs0(opt('--sources') || 'watch/sources.json'), 'utf8'));
   const abs = f => (f.startsWith('/') ? f : `${ROOT}${f}`);
   const data = JSON.parse(readFileSync(abs(opt('--data') || 'data/hospitals.json'), 'utf8'));
   const snapPath = abs(opt('--snapshot') || 'watch/snapshot.json');

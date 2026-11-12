@@ -64,6 +64,11 @@ So about 13 of 18 boards can be watched automatically. Five go on a short **manu
 
 ## Step 1 status (built Nov 12, 2026; manual runs only, not scheduled)
 - `node scripts/watch.mjs --report watch/report.md --write-snapshot` checks all 19 boards in about 5 seconds. It's sequential and makes one request per page.
-- Tests: `tests/watch.test.mjs` (16 tests, no network). They cover parsers on saved official responses, new/missing/changed detection, page-sentence diffs, pagination, and the rule that **an unreadable, partially read or suspiciously empty board is listed as NOT CHECKED, never as unchanged, and never produces "removed" signals**.
+- Tests: `tests/watch.test.mjs` (17 tests, no network). They cover parsers on saved official responses, new/missing/changed detection, page-sentence diffs, pagination, and the rule that **an unreadable, partially read or suspiciously empty board is listed as NOT CHECKED, never as unchanged, and never produces "removed" signals**.
 - Samples: `watch/report-live-2026-11-12.md` is a real run against the current data, with nothing to review. `watch/sample-change-report-2026-11-12.md` is a real run against the pre-update data (`main` on Nov 12). It flags exactly the 11 postings the Nov 10–11 coverage update added by hand: Humber ×10 and Trillium 6976.
 - The watcher doesn't write verification dates, doesn't edit `data/hospitals.json`, and has no schedule.
+- Further testing (Nov 12):
+  - **Stability:** a second live run minutes later against the saved snapshot showed 0 differences and no false page changes.
+  - **Live failure injection:** a wrong Workday tenant (HTTP 422), a DNS failure and a moved page (HTTP 404) were all reported as NOT CHECKED with their last successful time. Their snapshots were carried forward unchanged, and none produced "removed" items.
+  - **Page markers:** every page source now requires a marker phrase (`params.expect`), so an error or redesigned page can't pass as "no change". This came from Holland Bloorview's list, which has no extern lines today.
+  - **Known quirk:** Oracle's search ignores the site number. Matching uses the requisition id, so results stay correct.

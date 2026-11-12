@@ -154,6 +154,14 @@ test('a partially read board is not checked; Workday and SmartRecruiters page th
   assert.match((await checkSource(S('uhn-smartrecruiters'), sr)).reason, /150 results but only 100/);
 });
 
+test('a page that lost its marker phrase (moved / redesigned) is not checked', async () => {
+  const page = fx('program-page.html');
+  assert.equal(pageExcerpt(page, 'Clinical Extern').marker, true);
+  const r = await checkSource({ ...S('sickkids-page'), params: { ...S('sickkids-page').params, expect: 'Clinical Extern' } }, async () => page.replace(/Clinical Extern/g, 'Student Programs'));
+  assert.equal(r.status, 'error'); assert.match(r.reason, /not found/);
+  for (const src of sources.filter(s => s.adapter === 'page')) assert.ok(src.params.expect, `${src.id} needs an expect marker`);
+});
+
 test('every tracked data entry is covered by at least one watch source (automatic or manual)', () => {
   const covered = new Set(sources.flatMap(s => s.entries));
   assert.deepEqual(data.entries.map(e => e.id).filter(id => !covered.has(id)), []);
