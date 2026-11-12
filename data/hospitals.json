@@ -16,7 +16,7 @@
       "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -47,7 +47,7 @@
       "source_url": "https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-_JR105532",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -77,7 +77,7 @@
       "source_url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -112,7 +112,7 @@
       "source_url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -147,7 +147,7 @@
       "source_url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -182,7 +182,7 @@
       "source_url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -211,7 +211,7 @@
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J0926-0530&BRID=362474&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -232,7 +232,78 @@
         },
         "bcls": null,
         "also_listed": [
+          "Basic Life Support (BLS) required",
+          "Hybrid role: clinical and research duties (as posted)"
+        ]
+      },
+      "short": "No closing date shown"
+    },
+    {
+      "hospital": "Michael Garron Hospital",
+      "region": "gta",
+      "location": "Toronto",
+      "id": "mgh-help",
+      "program_name": "HELP Externs (Hospital Elder Life Program)",
+      "posting_type": "open_vacancies",
+      "positions_listed": 4,
+      "deadline": null,
+      "pay_text": "$20.60/hr",
+      "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1072&BRID=366266&lang=1",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-11",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "semantics": "entering",
+            "note": "entering 2nd, 3rd or final year"
+          },
+          "PN": {
+            "check": true,
+            "note": "Entering 2nd, 3rd or final semester"
+          }
+        },
+        "bcls": null,
+        "also_listed": [
           "Basic Life Support (BLS) required"
+        ]
+      },
+      "short": "No closing date shown"
+    },
+    {
+      "hospital": "Michael Garron Hospital",
+      "region": "gta",
+      "location": "Toronto",
+      "id": "mgh-hro",
+      "program_name": "Student Clinical Extern, HRO Team (no direct patient care)",
+      "posting_type": "open_vacancies",
+      "positions_listed": 2,
+      "deadline": null,
+      "pay_text": "$20.60/hr",
+      "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1085&BRID=366273&lang=1",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-11",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "note": "or final year of an accelerated program"
+          },
+          "PN": {
+            "minYear": 2,
+            "maxYear": 4,
+            "note": "completed first year"
+          }
+        },
+        "bcls": null,
+        "also_listed": [
+          "Weekday day shifts, minimum two 8-hour shifts per 2-week pay period (as posted)"
         ]
       },
       "short": "No closing date shown"
@@ -242,15 +313,15 @@
       "hospital": "Humber River Health",
       "region": "gta",
       "location": "Toronto",
-      "program_name": "Student Nurse Extern (several unit postings)",
+      "program_name": "Student Nurse Extern (one posting per unit)",
       "posting_type": "open_unspecified",
-      "posted_text": "10 unit postings live on Nov 10; newest posted Oct 22, 2026; no closing date shown",
+      "posted_text": "10 postings live on Nov 11, posted Jun 4 to Oct 22, 2026; no closing dates shown",
       "deadline": null,
-      "pay_text": "$17.60/hr",
+      "pay_text": "$17.60/hr ($17.95/hr on 10 East & West)",
       "source_url": "https://careersen-hrrh.icims.com/jobs/search?ss=1&searchKeyword=extern",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -268,7 +339,59 @@
           "Current CPR certification required"
         ]
       },
-      "short": "10 unit postings; vacancy count per posting not stated"
+      "short": "10 postings, each for an existing vacancy (as posted)",
+      "postings": [
+        {
+          "label": "Critical Care 6 West (ICU)",
+          "url": "https://careersen-hrrh.icims.com/jobs/24856/job",
+          "note": "job 24856 · posted Oct 22"
+        },
+        {
+          "label": "10 East & West Inpatient Surgery",
+          "url": "https://careersen-hrrh.icims.com/jobs/24463/job",
+          "note": "job 24463 · posted Oct 5 · $17.95/hr"
+        },
+        {
+          "label": "Alternative Level of Care, Finch Reactivation Care Centre",
+          "url": "https://careersen-hrrh.icims.com/jobs/24456/job",
+          "note": "job 24456 · posted Sep 29"
+        },
+        {
+          "label": "Critical Care 6 East",
+          "url": "https://careersen-hrrh.icims.com/jobs/24221/job",
+          "note": "job 24221 · posted Aug 27"
+        },
+        {
+          "label": "8th Floor (8 West Medicine)",
+          "url": "https://careersen-hrrh.icims.com/jobs/24004/job",
+          "note": "job 24004 · posted Aug 18"
+        },
+        {
+          "label": "Critical Care 6 West (ICU)",
+          "url": "https://careersen-hrrh.icims.com/jobs/24123/job",
+          "note": "job 24123 · posted Aug 10"
+        },
+        {
+          "label": "Alternative Level of Care, Finch Reactivation Care Centre",
+          "url": "https://careersen-hrrh.icims.com/jobs/23993/job",
+          "note": "job 23993 · posted Jul 23"
+        },
+        {
+          "label": "7th Floor (7 West Cardiology Medicine)",
+          "url": "https://careersen-hrrh.icims.com/jobs/23813/job",
+          "note": "job 23813 · posted Jun 15"
+        },
+        {
+          "label": "Critical Care 6 East",
+          "url": "https://careersen-hrrh.icims.com/jobs/23753/job",
+          "note": "job 23753 · posted Jun 4"
+        },
+        {
+          "label": "Critical Care 6 East",
+          "url": "https://careersen-hrrh.icims.com/jobs/23752/job",
+          "note": "job 23752 · posted Jun 4"
+        }
+      ]
     },
     {
       "id": "thp",
@@ -282,7 +405,7 @@
       "source_url": "https://iadyup.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_4001/job/6976/",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-11",
       "eligibility": {
         "listed": true,
         "programs": {

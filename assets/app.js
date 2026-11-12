@@ -1,4 +1,4 @@
-import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl } from './logic.js';
+import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl, countHospitals } from './logic.js';
 import { initAnalytics, track, markVisit } from './analytics.js';
 import { CONFIG } from './config.js';
 
@@ -114,10 +114,11 @@ function render() {
   const nPos = all.filter(([, s]) => s.key === 'open_vacancies').length;
   const nPool = all.filter(([, s]) => s.key === 'open_talent_pool').length;
   const nOther = nLive - nPos - nPool;
+  const nLiveHosp = countHospitals(all.filter(([, s]) => s.group === 0).map(([e]) => e));
   const next = all.filter(([e, s]) => s.group === 0 && e.deadline && deadlineInfo(e, today)?.daysAway >= 0).map(([e]) => e.deadline).sort()[0];
   const parts = [nPos && `${nPos} ${nPos === 1 ? 'lists' : 'list'} positions`, nPool && `${nPool} ${nPool === 1 ? 'is a talent pool' : 'are talent pools'}`, nOther && `${nOther} ${nOther === 1 ? "doesn't" : "don't"} say`].filter(Boolean);
-  $('#standfirst').innerHTML = `<strong>${nLive} ${nLive === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
-  $('#dateline').textContent = `Verified ${shortDate(DATA.dataset_checked)} on ${DATA.entries.length} hospitals' own career pages`;
+  $('#standfirst').innerHTML = `<strong>${nLiveHosp} ${nLiveHosp === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${nLiveHosp !== nLive ? ` (${nLive} listings)` : ''}${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
+  $('#dateline').textContent = `Verified ${shortDate(DATA.dataset_checked)} on ${countHospitals(DATA.entries)} hospitals' own career pages`;
 
   const meets = live.filter(e => eligibility(e, state).verdict === 'meets').length;
   $('#summary').innerHTML = profileSet()

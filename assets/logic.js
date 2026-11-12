@@ -167,6 +167,11 @@ export function describeRule(r) {
   return `${pre}${yrs}${r.finalYearOk ? ' or final year' : ''}${r.note ? ` (${r.note})` : ''}`;
 }
 
+/** Distinct hospitals among entries (one hospital can have several listings, e.g. Michael Garron). */
+export function countHospitals(entries) {
+  return new Set(entries.map(e => e.hospital)).size;
+}
+
 /** Sort: status group, then nearest deadline, then name. */
 // Within open listings: stated positions first, then live postings that don't say, then talent pools.
 const OPEN_RANK = { open_vacancies: 0, open_unspecified: 1, open_talent_pool: 2 };

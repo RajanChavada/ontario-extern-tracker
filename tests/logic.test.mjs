@@ -6,8 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   ontarioToday, daysBetween, isIsoDate, status, deadlineInfo, eligibility,
-  icsForDeadline, validateData, sortEntries, foldIcsLine, googleCalendarUrl,
-} from '../assets/logic.js';
+  icsForDeadline, validateData, sortEntries, foldIcsLine, googleCalendarUrl, countHospitals } from '../assets/logic.js';
 import { execFileSync } from 'node:child_process';
 
 const data = JSON.parse(readFileSync(new URL('../data/hospitals.json', import.meta.url)));
@@ -109,7 +108,9 @@ test('status: open needs an https posting link that was reachable', () => {
 test('sortEntries: open first (positions, then unstated, then talent pools), nearest deadline first; closed last', () => {
   const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
-  assert.deepEqual(ids.slice(0, 9), ['southlake', 'mgh', 'nygh', 'wch', 'humber', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.equal(ids[0], 'southlake');                                    // positions listed + closing date
+  assert.deepEqual(ids.slice(1, 4).sort(), ['mgh', 'mgh-help', 'mgh-hro']); // positions listed, no date
+  assert.deepEqual(ids.slice(4, 11), ['nygh', 'wch', 'humber', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
@@ -167,6 +168,11 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(eligibility(byId.mgh, P('IEN', null)).verdict, 'check');
   assert.equal(eligibility(byId.humber, P('BSCN', 3)).verdict, 'meets');
   assert.equal(eligibility(byId.humber, P('PN', 2)).verdict, 'check');          // program type not named
+  assert.equal(byId.humber.postings.length, 10);
+  assert.equal(new Set(byId.humber.postings.map(q => q.url)).size, 10);          // ten distinct job ids
+  assert.equal(eligibility(byId['mgh-help'], P('BSCN', 2)).verdict, 'check');    // "entering" wording
+  assert.equal(eligibility(byId['mgh-hro'], P('BSCN', 1)).verdict, 'not_met');
+  assert.match(status(byId['mgh-help'], '2026-11-11').detail, /^4 positions listed/);
   assert.equal(status(byId.nygh, '2026-11-16').key, 'open_unspecified');         // closing day still open
   assert.equal(status(byId.nygh, '2026-11-17').key, 'closed');
 });
@@ -219,7 +225,8 @@ test('ics: all-day event on the closing date, no invented time, CRLF line ending
 // ---------- Data file ----------
 test('data file passes validation', () => {
   assert.deepEqual(validateData(data), []);
-  assert.equal(data.entries.length, 15);
+  assert.equal(data.entries.length, 17);
+  assert.equal(countHospitals(data.entries), 15); // Michael Garron has 3 listings
 });
 
 test('validation catches the mistakes the rules forbid', () => {
