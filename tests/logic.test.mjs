@@ -110,7 +110,8 @@ test('sortEntries: open first (positions, then unstated, then talent pools), nea
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
   assert.equal(ids[0], 'southlake');                                    // positions listed + closing date
   assert.deepEqual(ids.slice(1, 5).sort(), ['humber', 'mgh', 'mgh-help', 'mgh-hro']); // vacancies stated, no date
-  assert.deepEqual(ids.slice(5, 11), ['nygh', 'wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.deepEqual(ids.slice(5, 10), ['wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.ok(ids.indexOf('nygh') > ids.indexOf('hhs'));                            // removed before its closing date (Nov 12)
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
@@ -176,8 +177,8 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(eligibility(byId['mgh-help'], P('BSCN', 2)).verdict, 'check');    // "entering" wording
   assert.equal(eligibility(byId['mgh-hro'], P('BSCN', 1)).verdict, 'not_met');
   assert.match(status(byId['mgh-help'], '2026-11-11').detail, /^4 positions listed/);
-  assert.equal(status(byId.nygh, '2026-11-16').key, 'open_unspecified');         // closing day still open
-  assert.equal(status(byId.nygh, '2026-11-17').key, 'closed');
+  assert.equal(status(byId.nygh, '2026-11-12').key, 'closed');                   // hospital removed the posting early
+  assert.equal(byId.nygh.deadline, null);                                         // so no calendar file or countdown is offered
 });
 
 test('postings list: 2+ distinct postings, https, same official host', () => {

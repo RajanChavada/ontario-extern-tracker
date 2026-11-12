@@ -140,14 +140,13 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Clinical Extern - Professional Practice",
-      "posting_type": "open_unspecified",
-      "posted_text": "Posted Oct 16, 2026",
-      "deadline": "2026-11-16",
+      "posting_type": "closed",
+      "deadline": null,
       "pay_text": "$23.87/hr",
       "source_url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -167,7 +166,8 @@
         "bcls": true,
         "also_listed": []
       },
-      "short": "Vacancy count not stated"
+      "short": "Posting removed before its Nov 16 closing date",
+      "window_text": "The hospital's posting page says the job is no longer available (checked Nov 12, 2026). It had listed a Nov 16 closing date."
     },
     {
       "id": "wch",

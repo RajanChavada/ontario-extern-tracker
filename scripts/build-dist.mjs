@@ -53,7 +53,8 @@ const PUBLIC = [
   'index.html', 'what-is-a-clinical-extern-ontario.html', '404.html', 'favicon.svg',
   'assets/app.js', 'assets/logic.js', 'assets/analytics.js', 'assets/article.js', 'assets/styles.css',
   'data/hospitals.json',
-  ...readdirSync(root + 'cal').filter(f => f.endsWith('.ics')).map(f => 'cal/' + f),
+  // Only calendar files for entries that still have a closing date (a removed posting must not leave a stale .ics behind).
+  ...readdirSync(root + 'cal').filter(f => f.endsWith('.ics') && data.entries.some(e => e.deadline && `${e.id}.ics` === f)).map(f => 'cal/' + f),
 ];
 for (const f of PUBLIC) { mkdirSync(dist + f.split('/').slice(0, -1).join('/'), { recursive: true }); copyFileSync(root + f, dist + f); }
 
