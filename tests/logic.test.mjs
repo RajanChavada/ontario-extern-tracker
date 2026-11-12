@@ -109,8 +109,8 @@ test('sortEntries: open first (positions, then unstated, then talent pools), nea
   const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
   assert.equal(ids[0], 'southlake');                                    // positions listed + closing date
-  assert.deepEqual(ids.slice(1, 4).sort(), ['mgh', 'mgh-help', 'mgh-hro']); // positions listed, no date
-  assert.deepEqual(ids.slice(4, 11), ['nygh', 'wch', 'humber', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.deepEqual(ids.slice(1, 5).sort(), ['humber', 'mgh', 'mgh-help', 'mgh-hro']); // vacancies stated, no date
+  assert.deepEqual(ids.slice(5, 11), ['nygh', 'wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
@@ -169,6 +169,9 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(eligibility(byId.humber, P('BSCN', 3)).verdict, 'meets');
   assert.equal(eligibility(byId.humber, P('PN', 2)).verdict, 'check');          // program type not named
   assert.equal(byId.humber.postings.length, 10);
+  assert.equal(status(byId.humber, '2026-11-12').key, 'open_vacancies');       // each posting: 'existing vacancy'
+  assert.equal(byId.humber.positions_listed, undefined);                         // no count is stated, so none is invented
+  assert.doesNotMatch(status(byId.humber, '2026-11-12').detail, /vacancy or a pool/);
   assert.equal(new Set(byId.humber.postings.map(q => q.url)).size, 10);          // ten distinct job ids
   assert.equal(eligibility(byId['mgh-help'], P('BSCN', 2)).verdict, 'check');    // "entering" wording
   assert.equal(eligibility(byId['mgh-hro'], P('BSCN', 1)).verdict, 'not_met');

@@ -314,7 +314,7 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Student Nurse Extern (one posting per unit)",
-      "posting_type": "open_unspecified",
+      "posting_type": "open_vacancies",
       "posted_text": "10 postings live on Nov 11, posted Jun 4 to Oct 22, 2026; no closing dates shown",
       "deadline": null,
       "pay_text": "$17.60/hr ($17.95/hr on 10 East & West)",
@@ -339,7 +339,7 @@
           "Current CPR certification required"
         ]
       },
-      "short": "10 postings, each for an existing vacancy (as posted)",
+      "short": "10 postings, each for an existing vacancy (count per posting not stated)",
       "postings": [
         {
           "label": "Critical Care 6 West (ICU)",
