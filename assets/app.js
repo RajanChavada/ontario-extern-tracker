@@ -56,7 +56,11 @@ function row(e) {
   const fit = profileSet() && !closed
     ? `<p class="fit fit-${el.verdict} ${live ? '' : 'fit-quiet'}">${esc(el.label)}</p>` : '';
   const id = esc(e.id);
-  const primary = live
+  // Several distinct live postings (e.g. one per unit): the primary action lists them all, each a direct link.
+  const multi = live && Array.isArray(e.postings) && e.postings.length > 1;
+  const primary = multi
+    ? `<button type="button" class="btn" aria-expanded="false" aria-controls="pst-${id}" data-toggle="pst-${id}">${e.postings.length} postings</button>`
+    : live
     ? `<a class="btn" href="${esc(e.source_url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">View posting</a>`
     : `<a class="sec" href="${esc(e.source_url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">${e.source_kind !== 'posting' ? 'Hospital page' : closed ? 'Expired posting' : 'View posting'}</a>`;
   const canSave = live && dl && dl.daysAway >= 0;
@@ -73,6 +77,11 @@ function row(e) {
       ${canSave ? `<button type="button" class="tlink" aria-expanded="false" aria-controls="cal-${id}" data-toggle="cal-${id}">Add to calendar</button>` : ''}
     </div></div>
     <div class="c-panel">
+      ${multi ? `
+      <div class="panel" id="pst-${id}" hidden>
+        <ul class="plist" aria-label="Separate postings">${e.postings.map(q => `<li><a href="${esc(q.url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">${esc(q.label)}</a>${q.note ? ` <span class="meta">${esc(q.note)}</span>` : ''}</li>`).join('')}</ul>
+        <p class="src">All listed on <a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(host(e.source_url))}</a>, checked ${esc(longDate(e.last_verified))}</p>
+      </div>` : ''}
       <div class="panel" id="req-${id}" hidden>
         <ul class="reqs" aria-label="Listed requirements">${reqs}</ul>
         ${s.detail ? `<p>${esc(s.detail)}</p>` : ''}

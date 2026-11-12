@@ -1,5 +1,7 @@
 # Data refresh checklist (about 20 minutes, every 2–3 days while the experiment runs)
 
+Full process and rationale: docs/DATA-WORKFLOW.md. Also search each tracked hospital's board for "extern": hospitals add separate postings (one per unit, or a new intake) without changing the old URL.
+
 The page marks every entry **Unconfirmed** once it's 8 or more days since it was checked. Nothing goes stale silently.
 
 1. Run `node scripts/check-data.mjs` to see what each entry shows today and which are due for a check.

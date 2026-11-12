@@ -171,6 +171,20 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(status(byId.nygh, '2026-11-17').key, 'closed');
 });
 
+test('postings list: 2+ distinct postings, https, same official host', () => {
+  const base = { ...byId.sunnybrook, id: 'x', source_url: 'https://careersen-hrrh.icims.com/jobs/search?ss=1&searchKeyword=extern' };
+  const ok = { ...base, postings: [{ label: 'A', url: 'https://careersen-hrrh.icims.com/jobs/1/job' }, { label: 'B', url: 'https://careersen-hrrh.icims.com/jobs/2/job' }] };
+  assert.deepEqual(validateData({ entries: [ok] }), []);
+  const probs = validateData({ entries: [
+    { ...base, id: 'one', postings: [{ label: 'A', url: 'https://careersen-hrrh.icims.com/jobs/1/job' }] },
+    { ...base, id: 'agg', postings: [{ label: 'A', url: 'https://careersen-hrrh.icims.com/jobs/1/job' }, { label: 'B', url: 'https://www.indeed.com/viewjob?jk=1' }] },
+    { ...base, id: 'http', postings: [{ label: 'A', url: 'http://careersen-hrrh.icims.com/jobs/1/job' }, { label: 'B', url: 'https://careersen-hrrh.icims.com/jobs/2/job' }] },
+  ] }).join('\n');
+  assert.match(probs, /one: postings must list 2 or more/);
+  assert.match(probs, /agg: posting url not on the official host/);
+  assert.match(probs, /http: posting url must be https/);
+});
+
 test('CHEO and LHSC per-program years', () => {
   assert.equal(eligibility(byId.cheo, P('BSCN', 3)).verdict, 'meets');
   assert.equal(eligibility(byId.cheo, P('BSCN', 2)).verdict, 'not_met');

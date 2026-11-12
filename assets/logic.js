@@ -262,6 +262,16 @@ export function validateData(data) {
     if (OPEN_TYPES.has(e.posting_type) && e.source_kind !== 'posting') p('open status needs a posting as source');
     if (e.posting_type === 'open_vacancies' && !Number.isInteger(e.positions_listed) && e.positions_listed !== undefined) p('positions_listed must be an integer');
     if (e.positions_listed !== undefined && e.posting_type !== 'open_vacancies') p('positions_listed only allowed on open_vacancies');
+    if (e.postings !== undefined) {
+      if (!Array.isArray(e.postings) || e.postings.length < 2) p('postings must list 2 or more separate postings');
+      else for (const q of e.postings) {
+        if (!q || !q.label || !q.url) { p('each posting needs a label and url'); continue; }
+        if (!/^https:\/\//.test(q.url)) { p('posting url must be https'); continue; }
+        try { if (e.source_url && new URL(q.url).hostname !== new URL(e.source_url).hostname) p(`posting url not on the official host ${new URL(e.source_url).hostname}`); }
+        catch { p('bad posting url'); }
+      }
+      if (e.source_kind !== 'posting') p('postings need source_kind "posting"');
+    }
   }
   return problems;
 }

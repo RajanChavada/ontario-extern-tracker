@@ -125,6 +125,10 @@ select { height: 38px; border: 1px solid var(--control); border-radius: var(--ra
 
 .btn { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--radius); background: var(--accent); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .btn:hover { background: var(--accent-hover); color: #fff; }
+button.btn { border: 0; cursor: pointer; font-family: inherit; }
+.plist { list-style: none; margin: 0; padding: 0; }
+.plist li { padding: 3px 0; }
+.plist a { font-weight: 600; }
 .c-act a.sec { font-size: 14px; }
 .tlink[aria-expanded="true"] { color: var(--ink); text-decoration-style: solid; }
 
