@@ -110,6 +110,7 @@ export function eligibility(entry, profile) {
     for (const [k, r] of Object.entries(e.programs)) items.push({ text: `${PROGRAM_NAMES[k]}: ${describeRule(r)}`, state: 'info' });
     if (e.bcls === true) items.push({ text: 'Current BCLS required', state: 'info' });
     for (const a of e.also_listed || []) items.push({ text: a, state: 'info' });
+    if (!certShown(e)) items.push({ text: CERT_NOT_SHOWN, state: 'info' });
     return { verdict: 'incomplete', label: LABEL.incomplete, items };
   }
   const states = [];
@@ -134,6 +135,7 @@ export function eligibility(entry, profile) {
     states.push(s);
   }
   for (const a of e.also_listed || []) items.push({ text: `${a} (check yourself)`, state: 'info' });
+  if (!certShown(e)) items.push({ text: CERT_NOT_SHOWN, state: 'info' });
   const verdict = states.includes('not_met') ? 'not_met' : states.includes('check') ? 'check' : 'meets';
   return { verdict, label: LABEL[verdict], items };
 }
@@ -157,6 +159,9 @@ function checkYear(rule, p) {
   if (rule.finalYearOk && p.finalYear) return 'meets';
   return 'not_met';
 }
+
+const CERT_NOT_SHOWN = "CPR, BCLS or BLS isn't mentioned on the posting. That doesn't confirm it isn't required.";
+const certShown = e => e.bcls === true || (e.also_listed || []).some(a => /\b(BCLS|BLS|CPR|life support)\b/i.test(a));
 
 export function describeRule(r) {
   if (r.check) return r.note || 'criteria unclear, check the posting';

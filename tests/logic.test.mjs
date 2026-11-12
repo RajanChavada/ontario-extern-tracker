@@ -191,6 +191,16 @@ test('postings list: 2+ distinct postings, https, same official host', () => {
   assert.match(probs, /http: posting url must be https/);
 });
 
+test('a certification the posting does not mention is flagged, never treated as not required', () => {
+  const txt = r => r.items.map(i => i.text).join(' | ');
+  for (const id of ['thp', 'southlake', 'mgh-hro']) {
+    assert.match(txt(eligibility(byId[id], P('BSCN', 3, { bcls: 'no' }))), /isn't mentioned on the posting/, id);
+    assert.match(txt(eligibility(byId[id], null)), /isn't mentioned on the posting/, id);
+  }
+  for (const id of ['shn', 'nygh', 'humber', 'mgh-help']) // BCLS required, or CPR/BLS listed
+    assert.doesNotMatch(txt(eligibility(byId[id], P('BSCN', 3))), /isn't mentioned/, id);
+});
+
 test('CHEO and LHSC per-program years', () => {
   assert.equal(eligibility(byId.cheo, P('BSCN', 3)).verdict, 'meets');
   assert.equal(eligibility(byId.cheo, P('BSCN', 2)).verdict, 'not_met');

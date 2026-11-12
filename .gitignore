@@ -13,3 +13,6 @@ docs/compare.html
 .env.*
 .dev.vars
 .leakscan.local
+
+# User-supplied photo library: kept locally only (no authors/licences recorded; backup in workspace/assets/)
+marketing/assets/photos/

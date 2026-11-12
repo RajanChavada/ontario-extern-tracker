@@ -1,5 +1,5 @@
 {
-  "dataset_checked": "2026-11-10",
+  "dataset_checked": "2026-11-11",
   "stale_after_days": 7,
   "note": "Facts in our own words. Every entry links to the employer's own page. Verification captures are kept outside this repository. 'short' fields are display summaries of the facts above, not new facts.",
   "entries": [
@@ -440,7 +440,7 @@
       "source_url": "https://www.lhsc.on.ca/nursing/recruitment",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -472,7 +472,7 @@
       "source_url": "https://www.cheo.on.ca/en/about-us/careers/nursing-health-human-resources-programs-students-and-clinical-externs/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -505,7 +505,7 @@
       "source_url": "https://www.sickkids.ca/en/learning/student-centre/nursing-learners/nursing-clinical-extern-program/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -532,7 +532,7 @@
       "source_url": "https://www.uhn.ca/healthcareprofessionals/Meet_Professions/Collaborative_Academic_Practice/ClinicalExterns",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -561,7 +561,7 @@
       "source_url": "https://jobs.smartrecruiters.com/WilliamOslerHealthSystem1/744000151923218-clinical-extern-medicine-and-surgery",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": false,
         "programs": {},
@@ -583,7 +583,7 @@
       "source_url": "https://www.hhscareers.ca/",
       "source_kind": "careers_home",
       "source_ok": true,
-      "last_verified": "2026-11-10",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": false,
         "programs": {},
