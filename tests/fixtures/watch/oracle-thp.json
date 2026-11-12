@@ -1,0 +1,36 @@
+{
+ "items": [
+  {
+   "requisitionList": [
+    {
+     "Id": "6976",
+     "Title": "Clinical Extern - Nursing (RN, RPN, IEN)",
+     "PostedDate": "2026-04-01",
+     "PostingEndDate": null,
+     "PrimaryLocation": "Mississauga, ON, Canada"
+    },
+    {
+     "Id": "6977",
+     "Title": "Clinical Extern - Allied Health (OT, PT, RT, Paramedic)",
+     "PostedDate": "2026-04-01",
+     "PostingEndDate": null,
+     "PrimaryLocation": "Mississauga, ON, Canada"
+    },
+    {
+     "Id": "8850",
+     "Title": "Unit Coordination Assistant| Part-Time| 82 Buttonwood Ave- BUT 2W IP Rehab",
+     "PostedDate": "2026-11-10",
+     "PostingEndDate": null,
+     "PrimaryLocation": "ON, Canada"
+    },
+    {
+     "Id": "8859",
+     "Title": "Unit Coordination Assistant| Full-Time| 82 Buttonwood Ave - BUT 2E IP Rehab",
+     "PostedDate": "2026-11-10",
+     "PostingEndDate": null,
+     "PrimaryLocation": "Etobicoke, ON, Canada"
+    }
+   ]
+  }
+ ]
+}

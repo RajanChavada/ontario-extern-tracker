@@ -16,3 +16,7 @@ docs/compare.html
 
 # User-supplied photo library: kept locally only (no authors/licences recorded; backup in workspace/assets/)
 marketing/assets/photos/
+
+# Watcher: live state stays local until scheduling is approved
+watch/snapshot.json
+watch/report.md

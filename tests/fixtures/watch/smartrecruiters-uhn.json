@@ -1,0 +1,59 @@
+{
+ "totalFound": 215,
+ "content": [
+  {
+   "id": "744000161324075",
+   "name": "Patient Flow Coordinator",
+   "releasedDate": "2026-11-12T15:15:37.225Z",
+   "ref": "https://api.smartrecruiters.com/v1/companies/UniversityHealthNetwork/postings/744000161324075",
+   "location": {
+    "city": "Toronto",
+    "region": "ON",
+    "country": "ca",
+    "address": "610 University Avenue",
+    "postalCode": "M5G 2M9",
+    "remote": false,
+    "hybrid": false,
+    "latitude": "43.6581597",
+    "longitude": "-79.3906264",
+    "fullLocation": "Toronto, ON, Canada"
+   }
+  },
+  {
+   "id": "744000161320597",
+   "name": "Registered Practical Nurse - Operating Room",
+   "releasedDate": "2026-11-12T15:08:18.987Z",
+   "ref": "https://api.smartrecruiters.com/v1/companies/UniversityHealthNetwork/postings/744000161320597",
+   "location": {
+    "city": "Toronto",
+    "region": "ON",
+    "country": "ca",
+    "address": "399 Bathurst Street",
+    "postalCode": "M5T 2S8",
+    "remote": false,
+    "hybrid": false,
+    "latitude": "43.6535326",
+    "longitude": "-79.4051892",
+    "fullLocation": "Toronto, ON, Canada"
+   }
+  },
+  {
+   "id": "744000161323858",
+   "name": "Personal Support Worker",
+   "releasedDate": "2026-11-12T15:06:43.246Z",
+   "ref": "https://api.smartrecruiters.com/v1/companies/UniversityHealthNetwork/postings/744000161323858",
+   "location": {
+    "city": "Toronto",
+    "region": "ON",
+    "country": "ca",
+    "address": "47 Austin Terrace",
+    "postalCode": "M5R 1Y6",
+    "remote": false,
+    "hybrid": false,
+    "latitude": "43.6775586",
+    "longitude": "-79.41558239999999",
+    "fullLocation": "Toronto, ON, Canada"
+   }
+  }
+ ]
+}
