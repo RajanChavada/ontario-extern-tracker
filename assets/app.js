@@ -1,4 +1,4 @@
-import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl } from './logic.js';
+import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl, countHospitals } from './logic.js';
 import { initAnalytics, track, markVisit } from './analytics.js';
 import { CONFIG } from './config.js';
 
@@ -33,7 +33,7 @@ async function main() {
 /* ---------- Status wording: one label, one plain note ---------- */
 function statusText(e, s) {
   switch (s.key) {
-    case 'open_vacancies': return { cls: 'st-positive', label: Number.isInteger(e.positions_listed) ? `${e.positions_listed} positions listed` : 'Positions listed', note: '' };
+    case 'open_vacancies': return { cls: 'st-positive', label: Number.isInteger(e.positions_listed) ? `${e.positions_listed} position${e.positions_listed === 1 ? '' : 's'} listed` : 'Positions listed', note: Number.isInteger(e.positions_listed) ? '' : (e.short || '') };
     case 'open_unspecified': return { cls: 'st-neutral', label: 'Posting live', note: e.short || 'Vacancy count not stated' };
     case 'open_talent_pool': return { cls: 'st-caution', label: 'Talent pool', note: e.short || 'Not a current vacancy' };
     case 'typical_window': return { cls: 'st-quiet', label: 'Not open now', note: e.short || '' };
@@ -56,7 +56,11 @@ function row(e) {
   const fit = profileSet() && !closed
     ? `<p class="fit fit-${el.verdict} ${live ? '' : 'fit-quiet'}">${esc(el.label)}</p>` : '';
   const id = esc(e.id);
-  const primary = live
+  // Several distinct live postings (e.g. one per unit): the primary action lists them all, each a direct link.
+  const multi = live && Array.isArray(e.postings) && e.postings.length > 1;
+  const primary = multi
+    ? `<button type="button" class="btn" aria-expanded="false" aria-controls="pst-${id}" data-toggle="pst-${id}">${e.postings.length} postings</button>`
+    : live
     ? `<a class="btn" href="${esc(e.source_url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">View posting</a>`
     : `<a class="sec" href="${esc(e.source_url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">${e.source_kind !== 'posting' ? 'Hospital page' : closed ? 'Expired posting' : 'View posting'}</a>`;
   const canSave = live && dl && dl.daysAway >= 0;
@@ -73,6 +77,11 @@ function row(e) {
       ${canSave ? `<button type="button" class="tlink" aria-expanded="false" aria-controls="cal-${id}" data-toggle="cal-${id}">Add to calendar</button>` : ''}
     </div></div>
     <div class="c-panel">
+      ${multi ? `
+      <div class="panel" id="pst-${id}" hidden>
+        <ul class="plist" aria-label="Separate postings">${e.postings.map(q => `<li><a href="${esc(q.url)}" target="_blank" rel="noopener" data-src="${id}" data-status="${esc(s.key)}">${esc(q.label)}</a>${q.note ? ` <span class="meta">${esc(q.note)}</span>` : ''}</li>`).join('')}</ul>
+        <p class="src">All listed on <a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(host(e.source_url))}</a>, checked ${esc(longDate(e.last_verified))}</p>
+      </div>` : ''}
       <div class="panel" id="req-${id}" hidden>
         <ul class="reqs" aria-label="Listed requirements">${reqs}</ul>
         ${s.detail ? `<p>${esc(s.detail)}</p>` : ''}
@@ -105,10 +114,11 @@ function render() {
   const nPos = all.filter(([, s]) => s.key === 'open_vacancies').length;
   const nPool = all.filter(([, s]) => s.key === 'open_talent_pool').length;
   const nOther = nLive - nPos - nPool;
+  const nLiveHosp = countHospitals(all.filter(([, s]) => s.group === 0).map(([e]) => e));
   const next = all.filter(([e, s]) => s.group === 0 && e.deadline && deadlineInfo(e, today)?.daysAway >= 0).map(([e]) => e.deadline).sort()[0];
   const parts = [nPos && `${nPos} ${nPos === 1 ? 'lists' : 'list'} positions`, nPool && `${nPool} ${nPool === 1 ? 'is a talent pool' : 'are talent pools'}`, nOther && `${nOther} ${nOther === 1 ? "doesn't" : "don't"} say`].filter(Boolean);
-  $('#standfirst').innerHTML = `<strong>${nLive} ${nLive === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
-  $('#dateline').textContent = `Verified ${shortDate(DATA.dataset_checked)} on ${DATA.entries.length} hospitals' own career pages`;
+  $('#standfirst').innerHTML = `<strong>${nLiveHosp} ${nLiveHosp === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${nLiveHosp !== nLive ? ` (${nLive} listings)` : ''}${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
+  $('#dateline').textContent = `Verified ${shortDate(DATA.dataset_checked)} on ${countHospitals(DATA.entries)} hospitals' own career pages`;
 
   const meets = live.filter(e => eligibility(e, state).verdict === 'meets').length;
   $('#summary').innerHTML = profileSet()

@@ -2,7 +2,7 @@
 
 **Workflow:** Hermes changes code or data on a `preview/*` branch → tests pass → you review the preview URL → merge to `main` → Cloudflare builds → ontarioexterns.ca updates.
 
-Until the first launch is verified, production stays **manually gated**. Automatic production deploys stay off, and you trigger each one yourself (§4).
+**Automatic production deploys are enabled (Rajan, Nov 11, 2026): merging a PR into `main` is the release.** The review gate is the preview URL plus the PR diff. Never push directly to `main`. The full data process is in docs/DATA-WORKFLOW.md.
 
 ## 1. Cloudflare Pages project settings (exact values)
 Workers & Pages → Create → Pages → **Connect to Git** → GitHub → install the Cloudflare app on the **RajanChavada** account with **"Only select repositories" → `ontario-extern-tracker`**.
@@ -28,7 +28,7 @@ Cloudflare installs dependencies from `package-lock.json` before the build comma
 **Preview builds** (any branch other than `main`) never load analytics, only warn on stale data, and are served on `*.pages.dev` with `X-Robots-Tag: noindex`.
 
 ## 2. Branch control (Settings → Builds → Branch control)
-- **Production branch:** `main`. **Untick "Enable automatic production branch deployments"** until the launch is verified.
+- **Production branch:** `main`, with automatic production branch deployments **enabled**.
 - **Preview branches:** "Custom branches", include `preview/*`.
 - On GitHub Free, private repositories can't enforce branch protection. The rule is procedural: Hermes never pushes to `main`. Changes reach `main` only when you merge a pull request.
 
@@ -42,7 +42,7 @@ Cloudflare installs dependencies from `package-lock.json` before the build comma
 Connecting the repository starts one build of `main` straight away. It's served only on the noindex pages.dev address. After that, with automatic production deploys off:
 - **To deploy `main`:** Settings → Builds → **Deploy hooks** → add one (name `manual-main`, branch `main`). Keep the URL private. Run `curl -X POST "<hook URL>"` when you approve a release.
 - **Rollback:** Deployments → pick an earlier production deployment → "Rollback to this deployment".
-- Once launch is verified, turn automatic production deploys on (§2) if you want merge = deploy.
+- Launch verified and automatic deploys turned on (Nov 11, 2026). The deploy hook is optional now: it rebuilds `main` without a new commit.
 
 ## 5. Verification before attaching or announcing the domain
 Run on the pages.dev address first, then on https://ontarioexterns.ca:
@@ -74,4 +74,4 @@ npm test                          # 25 tests
 node scripts/check-data.mjs       # exits 1 on invalid data
 node scripts/build-dist.mjs       # dist/ for https://ontarioexterns.ca (--umami-id <uuid> to include analytics locally)
 ```
-Data refresh: REFRESH.md, committed on a `preview/data-<date>` branch, reviewed, then merged.
+Data refresh: REFRESH.md (checklist) and docs/DATA-WORKFLOW.md (full process), committed on a `preview/data-<date>` branch, reviewed, then merged.

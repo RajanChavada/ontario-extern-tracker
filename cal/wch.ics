@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ontario Extern Tracker//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wch-20261120@extern-tracker.local
+DTSTAMP:20261111T120000Z
+DTSTART;VALUE=DATE:20261120
+DTEND;VALUE=DATE:20261121
+SUMMARY:Closing date: Women's College Hospital – Clinical Extern - Profes
+ sional Practice
+DESCRIPTION:Closing date listed on the posting. Closing time not published
+ \, so apply early. Official posting: https://jobs.dayforcehcm.com/en-US/wc
+ h/CANDIDATEPORTAL/jobs/3892
+URL:https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P3D
+DESCRIPTION:Women's College Hospital extern closes in 3 days
+END:VALARM
+END:VEVENT
+END:VCALENDAR

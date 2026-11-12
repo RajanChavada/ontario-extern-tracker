@@ -71,7 +71,7 @@ export function status(entry, today, staleAfter = 7) {
   }
   if (t === 'unconfirmed') return out('unconfirmed', entry.unconfirmed_reason || 'Not confirmed on an official source.');
   if (t === 'open_vacancies') {
-    return out(t, Number.isInteger(entry.positions_listed) ? `${entry.positions_listed} positions listed on the posting.` : 'The posting lists openings.');
+    return out(t, Number.isInteger(entry.positions_listed) ? `${entry.positions_listed} position${entry.positions_listed === 1 ? '' : 's'} listed on the posting.` : 'The posting lists openings.');
   }
   if (t === 'open_talent_pool') return out(t, entry.pool_note || 'Builds a pool for future openings. Not a current vacancy.');
   if (t === 'open_unspecified') return out(t, (entry.posted_text ? entry.posted_text + '. ' : '') + "The posting doesn't say whether it's a vacancy or a pool.");
@@ -110,6 +110,7 @@ export function eligibility(entry, profile) {
     for (const [k, r] of Object.entries(e.programs)) items.push({ text: `${PROGRAM_NAMES[k]}: ${describeRule(r)}`, state: 'info' });
     if (e.bcls === true) items.push({ text: 'Current BCLS required', state: 'info' });
     for (const a of e.also_listed || []) items.push({ text: a, state: 'info' });
+    if (!certShown(e)) items.push({ text: CERT_NOT_SHOWN, state: 'info' });
     return { verdict: 'incomplete', label: LABEL.incomplete, items };
   }
   const states = [];
@@ -134,6 +135,7 @@ export function eligibility(entry, profile) {
     states.push(s);
   }
   for (const a of e.also_listed || []) items.push({ text: `${a} (check yourself)`, state: 'info' });
+  if (!certShown(e)) items.push({ text: CERT_NOT_SHOWN, state: 'info' });
   const verdict = states.includes('not_met') ? 'not_met' : states.includes('check') ? 'check' : 'meets';
   return { verdict, label: LABEL[verdict], items };
 }
@@ -158,6 +160,9 @@ function checkYear(rule, p) {
   return 'not_met';
 }
 
+const CERT_NOT_SHOWN = "CPR, BCLS or BLS isn't mentioned on the posting. That doesn't confirm it isn't required.";
+const certShown = e => e.bcls === true || (e.also_listed || []).some(a => /\b(BCLS|BLS|CPR|life support)\b/i.test(a));
+
 export function describeRule(r) {
   if (r.check) return r.note || 'criteria unclear, check the posting';
   if (r.anyYear) return 'any year' + (r.note ? ` (${r.note})` : '');
@@ -165,6 +170,11 @@ export function describeRule(r) {
   if (r.finalYearOnly) return `${pre}final year only`;
   const yrs = r.minYear === r.maxYear ? `year ${r.minYear}` : `years ${r.minYear}–${r.maxYear}`;
   return `${pre}${yrs}${r.finalYearOk ? ' or final year' : ''}${r.note ? ` (${r.note})` : ''}`;
+}
+
+/** Distinct hospitals among entries (one hospital can have several listings, e.g. Michael Garron). */
+export function countHospitals(entries) {
+  return new Set(entries.map(e => e.hospital)).size;
 }
 
 /** Sort: status group, then nearest deadline, then name. */
@@ -262,6 +272,16 @@ export function validateData(data) {
     if (OPEN_TYPES.has(e.posting_type) && e.source_kind !== 'posting') p('open status needs a posting as source');
     if (e.posting_type === 'open_vacancies' && !Number.isInteger(e.positions_listed) && e.positions_listed !== undefined) p('positions_listed must be an integer');
     if (e.positions_listed !== undefined && e.posting_type !== 'open_vacancies') p('positions_listed only allowed on open_vacancies');
+    if (e.postings !== undefined) {
+      if (!Array.isArray(e.postings) || e.postings.length < 2) p('postings must list 2 or more separate postings');
+      else for (const q of e.postings) {
+        if (!q || !q.label || !q.url) { p('each posting needs a label and url'); continue; }
+        if (!/^https:\/\//.test(q.url)) { p('posting url must be https'); continue; }
+        try { if (e.source_url && new URL(q.url).hostname !== new URL(e.source_url).hostname) p(`posting url not on the official host ${new URL(e.source_url).hostname}`); }
+        catch { p('bad posting url'); }
+      }
+      if (e.source_kind !== 'posting') p('postings need source_kind "posting"');
+    }
   }
   return problems;
 }

@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ontario Extern Tracker//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:nygh-20261116@extern-tracker.local
+DTSTAMP:20261111T120000Z
+DTSTART;VALUE=DATE:20261116
+DTEND;VALUE=DATE:20261117
+SUMMARY:Closing date: North York General Hospital – Clinical Extern - Pro
+ fessional Practice
+DESCRIPTION:Closing date listed on the posting. Closing time not published
+ \, so apply early. Official posting: https://clients.njoyn.com/cl4/xweb/xw
+ eb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1
+URL:https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&
+ Jobid=J1026-0161&BRID=461175&lang=1
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P3D
+DESCRIPTION:North York General Hospital extern closes in 3 days
+END:VALARM
+END:VEVENT
+END:VCALENDAR
