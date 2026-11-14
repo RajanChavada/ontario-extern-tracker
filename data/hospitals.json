@@ -9,14 +9,13 @@
       "region": "gta",
       "location": "Newmarket",
       "program_name": "Clinical Extern",
-      "posting_type": "open_vacancies",
-      "positions_listed": 40,
-      "deadline": "2026-11-30",
+      "posting_type": "closed",
+      "deadline": null,
       "pay_text": "$21.80/hr",
       "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -32,7 +31,9 @@
         "also_listed": [
           "Recent acute care experience (preferred)"
         ]
-      }
+      },
+      "window_text": "Southlake's posting page now says the page doesn't exist, and the posting is no longer on Southlake's job board (checked Nov 14, 2026). It had listed an end date of Nov 30 and 40 positions.",
+      "short": "Posting removed before its Nov 30 end date"
     },
     {
       "id": "shn",

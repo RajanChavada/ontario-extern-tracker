@@ -11,6 +11,10 @@ import { execFileSync } from 'node:child_process';
 
 const data = JSON.parse(readFileSync(new URL('../data/hospitals.json', import.meta.url)));
 const byId = Object.fromEntries(data.entries.map(e => [e.id, e]));
+// Southlake's entry as verified on Nov 11, 2026 (open, 40 positions, end date Nov 30). The posting was removed on Nov 14;
+// the generic status/calendar/eligibility tests keep using this frozen copy as their 'open with a closing date' example.
+const SOUTHLAKE_NOV11 = {"id": "southlake", "hospital": "Southlake Health", "region": "gta", "location": "Newmarket", "program_name": "Clinical Extern", "posting_type": "open_vacancies", "positions_listed": 40, "deadline": "2026-11-30", "pay_text": "$21.80/hr", "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401", "source_kind": "posting", "source_ok": true, "last_verified": "2026-11-11", "eligibility": {"listed": true, "programs": {"BSCN": {"minYear": 2, "maxYear": 4}, "PN": {"finalYearOnly": true}}, "bcls": null, "also_listed": ["Recent acute care experience (preferred)"]}};
+const fx = { ...byId, southlake: SOUTHLAKE_NOV11 };
 const fresh = (e, verified) => ({ ...e, last_verified: verified });
 
 // ---------- Ontario dates (hand-computed reference values) ----------
@@ -44,7 +48,7 @@ test('isIsoDate rejects impossible dates', () => {
 
 // ---------- Deadline display ----------
 test('deadlineInfo: boundaries, and no invented closing time', () => {
-  const s = byId.southlake;
+  const s = fx.southlake;
   assert.equal(deadlineInfo(s, '2026-11-09').daysAway, 21);
   assert.equal(deadlineInfo(s, '2026-11-09').when, 'in 21 days');
   assert.equal(deadlineInfo(s, '2026-11-29').when, 'tomorrow');
@@ -57,8 +61,8 @@ test('deadlineInfo: boundaries, and no invented closing time', () => {
 // ---------- Status ----------
 test('status on the verification day keeps vacancy, pool and window distinct', () => {
   const t = '2026-11-09';
-  assert.equal(status(byId.southlake, t).key, 'open_vacancies');
-  assert.match(status(byId.southlake, t).detail, /40 positions listed/);
+  assert.equal(status(fx.southlake, t).key, 'open_vacancies');
+  assert.match(status(fx.southlake, t).detail, /40 positions listed/);
   assert.equal(status(byId.shn, t).key, 'open_talent_pool');
   assert.equal(status(byId.mackenzie, t).key, 'open_talent_pool');
   assert.equal(status(byId.sunnybrook, t).key, 'open_unspecified');
@@ -67,7 +71,7 @@ test('status on the verification day keeps vacancy, pool and window distinct', (
   assert.equal(status(byId.thp, t).key, 'open_unspecified'); // live posting since Nov 10 data update
   assert.equal(status(byId.mgh, t).key, 'open_vacancies');
   assert.match(status(byId.mgh, t).detail, /^1 position listed/); // singular
-  assert.match(status(byId.southlake, t).detail, /^40 positions listed/);
+  assert.match(status(fx.southlake, t).detail, /^40 positions listed/);
   assert.equal(status(byId.lhsc, t).key, 'check_employer');
   assert.equal(status(byId.uhn, t).key, 'closed');
   assert.equal(status(byId.osler, t).key, 'closed');
@@ -75,7 +79,7 @@ test('status on the verification day keeps vacancy, pool and window distinct', (
 });
 
 test('status: deadline day is still open; the day after is closed', () => {
-  const s = fresh(byId.southlake, '2026-11-28');
+  const s = fresh(fx.southlake, '2026-11-28');
   assert.equal(status(s, '2026-11-30').key, 'open_vacancies');
   assert.equal(status(s, '2026-12-01').key, 'closed');
 });
@@ -84,9 +88,9 @@ test('status: deadline day is still open; the day after is closed', () => {
 const plusDays = (iso, n) => { const [y, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };
 
 test('status: 7 days after verification is still current; 8 days is unconfirmed', () => {
-  const v = byId.southlake.last_verified;
-  assert.equal(status(byId.southlake, plusDays(v, 7)).key, 'open_vacancies');
-  const st = status(byId.southlake, plusDays(v, 8));
+  const v = fx.southlake.last_verified;
+  assert.equal(status(fx.southlake, plusDays(v, 7)).key, 'open_vacancies');
+  const st = status(fx.southlake, plusDays(v, 8));
   assert.equal(st.key, 'unconfirmed');
   assert.match(st.detail, /8 days/);
 });
@@ -97,32 +101,32 @@ test('status: every entry is unconfirmed once stale, so no stale "Open" can show
 
 test('status: open needs an https posting link that was reachable', () => {
   const t = '2026-11-09';
-  assert.equal(status({ ...byId.southlake, source_url: '' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_url: 'http://x.example' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_ok: false }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_kind: 'program_page' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, last_verified: 'yesterday' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, posting_type: 'made_up' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_url: '' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_url: 'http://x.example' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_ok: false }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_kind: 'program_page' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, last_verified: 'yesterday' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, posting_type: 'made_up' }, t).key, 'unconfirmed');
 });
 
 test('sortEntries: open first (positions, then unstated, then talent pools), nearest deadline first; closed last', () => {
   const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
-  assert.equal(ids[0], 'southlake');                                    // positions listed + closing date
-  assert.deepEqual(ids.slice(1, 5).sort(), ['humber', 'mgh', 'mgh-help', 'mgh-hro']); // vacancies stated, no date
-  assert.deepEqual(ids.slice(5, 10), ['wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.deepEqual(ids.slice(0, 4).sort(), ['humber', 'mgh', 'mgh-help', 'mgh-hro']); // vacancies stated, no date
+  assert.deepEqual(ids.slice(4, 9), ['wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.ok(ids.indexOf('southlake') > ids.indexOf('hhs'));                       // removed before its end date (Nov 14)
   assert.ok(ids.indexOf('nygh') > ids.indexOf('hhs'));                            // removed before its closing date (Nov 12)
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
-  assert.deepEqual(ids.slice(-2).sort(), ['osler', 'uhn']);
+  assert.deepEqual(ids.slice(-4).sort(), ['nygh', 'osler', 'southlake', 'uhn']);  // closed entries last
 });
 
 // ---------- Eligibility (wording: "Meets listed criteria", never "eligible") ----------
 const P = (program, year, extra = {}) => ({ program, year, finalYear: false, bcls: '', ...extra });
 
 test('Southlake: BScN years 2–4, or final-year PN; BCLS not listed', () => {
-  const s = byId.southlake;
+  const s = fx.southlake;
   assert.equal(eligibility(s, P('BSCN', 2)).verdict, 'meets');
   assert.equal(eligibility(s, P('BSCN', 4)).verdict, 'meets');
   assert.equal(eligibility(s, P('BSCN', 1)).verdict, 'not_met');
@@ -198,8 +202,8 @@ test('postings list: 2+ distinct postings, https, same official host', () => {
 test('a certification the posting does not mention is flagged, never treated as not required', () => {
   const txt = r => r.items.map(i => i.text).join(' | ');
   for (const id of ['thp', 'southlake', 'mgh-hro']) {
-    assert.match(txt(eligibility(byId[id], P('BSCN', 3, { bcls: 'no' }))), /isn't mentioned on the posting/, id);
-    assert.match(txt(eligibility(byId[id], null)), /isn't mentioned on the posting/, id);
+    assert.match(txt(eligibility(fx[id], P('BSCN', 3, { bcls: 'no' }))), /isn't mentioned on the posting/, id);
+    assert.match(txt(eligibility(fx[id], null)), /isn't mentioned on the posting/, id);
   }
   for (const id of ['shn', 'nygh', 'humber', 'mgh-help']) // BCLS required, or CPR/BLS listed
     assert.doesNotMatch(txt(eligibility(byId[id], P('BSCN', 3))), /isn't mentioned/, id);
@@ -217,14 +221,14 @@ test('CHEO and LHSC per-program years', () => {
 test('Unconfirmed criteria always return check, and an incomplete profile asks for input', () => {
   assert.equal(eligibility(byId.hhs, P('BSCN', 3)).verdict, 'check');
   assert.equal(eligibility(byId.osler, P('BSCN', 3)).verdict, 'check');
-  assert.equal(eligibility(byId.southlake, P('', null)).verdict, 'incomplete');
-  assert.equal(eligibility(byId.southlake, P('BSCN', null)).verdict, 'incomplete');
+  assert.equal(eligibility(fx.southlake, P('', null)).verdict, 'incomplete');
+  assert.equal(eligibility(fx.southlake, P('BSCN', null)).verdict, 'incomplete');
   assert.equal(eligibility(byId.sickkids, P('BSCN', 3)).verdict, 'check'); // "halfway through" can't be mapped to a year
 });
 
 // ---------- Calendar export ----------
 test('ics: all-day event on the closing date, no invented time, CRLF line endings', () => {
-  const ics = icsForDeadline(byId.southlake, new Date('2026-11-09T12:00:00Z'));
+  const ics = icsForDeadline(fx.southlake, new Date('2026-11-09T12:00:00Z'));
   assert.match(ics, /DTSTART;VALUE=DATE:20261130\r\n/);
   assert.match(ics, /DTEND;VALUE=DATE:20261201\r\n/);
   assert.doesNotMatch(ics, /DTSTART:\d{8}T/);
@@ -232,7 +236,7 @@ test('ics: all-day event on the closing date, no invented time, CRLF line ending
   assert.match(ics, /TRIGGER:-P3D/);
   assert.ok(ics.split('\r\n').every(l => !l.includes('\n')));
   assert.equal(icsForDeadline(byId.mackenzie), null);
-  const ye = icsForDeadline({ ...byId.southlake, deadline: '2026-12-31' });
+  const ye = icsForDeadline({ ...fx.southlake, deadline: '2026-12-31' });
   assert.match(ye, /DTEND;VALUE=DATE:20270101/);
 });
 
@@ -245,7 +249,7 @@ test('data file passes validation', () => {
 
 test('validation catches the mistakes the rules forbid', () => {
   const bad = { entries: [
-    { ...byId.southlake, id: 'a', source_kind: 'program_page' },
+    { ...fx.southlake, id: 'a', source_kind: 'program_page' },
     { ...byId.cheo, id: 'b', positions_listed: 10 },
     { ...byId.shn, id: 'c', deadline: '2026-11-31' },
   ] };
@@ -269,12 +273,12 @@ test('ics: every physical line is at most 75 octets, and unfolding restores the 
 });
 
 test('ics: generated files are reproducible (DTSTAMP from the verification date)', () => {
-  assert.equal(icsForDeadline(byId.southlake), icsForDeadline(byId.southlake));
-  assert.match(icsForDeadline(byId.southlake), new RegExp(`DTSTAMP:${byId.southlake.last_verified.replace(/-/g, '')}T120000Z`));
+  assert.equal(icsForDeadline(fx.southlake), icsForDeadline(fx.southlake));
+  assert.match(icsForDeadline(fx.southlake), new RegExp(`DTSTAMP:${fx.southlake.last_verified.replace(/-/g, '')}T120000Z`));
 });
 
 test('Google Calendar link: an all-day event with an exclusive end date and no time', () => {
-  const u = new URL(googleCalendarUrl(byId.southlake));
+  const u = new URL(googleCalendarUrl(fx.southlake));
   assert.equal(u.hostname, 'calendar.google.com');
   assert.equal(u.searchParams.get('dates'), '20261130/20261201');
   assert.doesNotMatch(u.searchParams.get('dates'), /T/);
@@ -347,4 +351,13 @@ test('production build fails on stale data (blocks the deploy)', () => {
   catch (e) { failed = true; assert.match(String(e.stderr), /BUILD FAILED: data last checked/); }
   assert.ok(failed, 'build should fail');
   rmSync(out, { recursive: true, force: true });
+});
+
+test('data: postings removed before their closing date are closed, with no date, countdown or calendar file', () => {
+  for (const [id, checked] of [['nygh', '2026-11-12'], ['southlake', '2026-11-14']]) {
+    assert.equal(status(byId[id], '2026-11-14').key, 'closed', id);
+    assert.equal(byId[id].deadline, null, id);
+    assert.equal(byId[id].last_verified, checked, id);
+  }
+  assert.equal(byId.southlake.positions_listed, undefined);   // no vacancy count shown for a removed posting
 });
