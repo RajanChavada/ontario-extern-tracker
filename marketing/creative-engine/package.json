@@ -5,12 +5,14 @@
   "description": "Spec-driven TikTok / Instagram carousel renderer for Ontario Extern Tracker",
   "type": "module",
   "bin": {
-    "creative": "./bin/creative.mjs"
+    "creative": "./bin/creative.mjs",
+    "oet": "./bin/oet.mjs"
   },
   "scripts": {
     "creative": "node bin/creative.mjs",
     "examples": "node bin/creative.mjs render specs/examples/*.json --today 2026-11-13 --out out/examples",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "oet": "node bin/oet.mjs"
   },
   "engines": {
     "node": ">=20"

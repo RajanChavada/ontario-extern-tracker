@@ -27,6 +27,13 @@ line breaks; it does not judge whether the post is good. If a slide is dense
 Hand off `out/<id>/manifest.json`. Publish nothing unless `manifest.publishable` is
 `true` **and** a human approved it, and never after `verification.postBy`.
 
+## Posts about specific postings
+
+For anything naming a hospital posting (deadline, pay, eligibility, vacancies), write a campaign in
+`specs/tracker/` with a `"tracker": {"entries": [...]}` block and cite the generated fact ids
+(`<entry>-deadline`, `-pay`, `-vacancy`, `-eligibility`, `-bcls`, `-listed-N`). Run
+`node bin/oet.mjs check` then `build`. Hand-typed posting facts are refused. See docs/TRACKER-BRIDGE.md.
+
 ## Rules that are not negotiable
 
 1. **Never invent** a posting, deadline, pay rate, eligibility rule, vacancy count or

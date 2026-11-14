@@ -7,6 +7,11 @@ a manifest a publishing step can trust. No code changes per post.
 
 Agents: read [AGENT.md](AGENT.md) first.
 
+**Posts about specific hospital postings go through the tracker bridge** (`bin/oet.mjs`): facts come from
+`data/hospitals.json` plus saved captures of the hospitals' own pages, never from hand-typed specs.
+See [docs/TRACKER-BRIDGE.md](docs/TRACKER-BRIDGE.md). Output for a future supervised publisher (one
+artifact per platform, with approval bound to the exact images and caption): [docs/PUBLISH-CONTRACT.md](docs/PUBLISH-CONTRACT.md).
+
 ## Quick start
 
 ```bash
