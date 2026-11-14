@@ -1,5 +1,6 @@
 import { html } from './h.js';
 import { LAYOUT_COMPONENTS } from './layouts.js';
+import { FORMAT_COMPONENTS, FormatSlide } from './formats.js';
 import { THEMES, themeVars } from '../themes.js';
 import { longDate, monthYear } from '../util/dates.js';
 
@@ -26,6 +27,7 @@ function citation(slide, ctx) {
  * marks and QA in the browser; a video renderer can mount this component as is.
  */
 export function Slide({ slide, ctx }) {
+  if (FORMAT_COMPONENTS[slide.layout]) return html`<${FormatSlide} slide=${slide} ctx=${ctx} />`;
   const themeId = slide.theme ?? ctx.spec.theme;
   const theme = THEMES[themeId];
   const { width, height, box, unit, id: platformId } = ctx.platform;

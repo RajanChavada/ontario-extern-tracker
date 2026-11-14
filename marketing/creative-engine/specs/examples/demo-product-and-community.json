@@ -11,11 +11,7 @@
   "slides": [
     {
       "layout": "hook",
-      "variant": "reply",
-      "reply": {
-        "user": "@rpn.era",
-        "comment": "how do you keep track of every posting??"
-      },
+      "variant": "plain",
       "title": "how to stop missing extern deadlines",
       "sub": "the setup takes less time than your coffee order ☕"
     },

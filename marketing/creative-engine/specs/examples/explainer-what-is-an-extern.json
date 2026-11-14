@@ -7,8 +7,7 @@
   "slides": [
     {
       "layout": "hook",
-      "variant": "reply",
-      "reply": { "user": "@future.rn", "comment": "wait what even is an extern 😭" },
+      "variant": "plain",
       "title": "the student job nobody explains properly",
       "sub": "here’s the 60-second version, with receipts 🧾"
     },

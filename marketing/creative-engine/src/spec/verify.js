@@ -1,6 +1,8 @@
 import { PLATFORMS } from '../platforms.js';
 import { addDays, daysBetween, findDates, longDate, shortDay, textHasDate } from '../util/dates.js';
 import { findRealOrg } from './ontario-hospitals.js';
+import { sourceLine } from './sourceLine.js';
+import { checkImagery, loadRegistry } from '../assets/registry.js';
 
 // Rules, in plain words:
 // 1. Every fact cites at least one source, and every reference resolves.
@@ -18,8 +20,66 @@ import { findRealOrg } from './ontario-hospitals.js';
 export const SENSITIVE = new Set(['deadline', 'pay', 'eligibility', 'vacancy']);
 export const MAX_AGE_DAYS = { deadline: 7, vacancy: 7, pay: 30, eligibility: 30, product: 90, program: 180, stat: 180, other: 180 };
 
-const FACT_LAYOUTS = new Set(['text_stack', 'big_stat', 'board', 'wristbands', 'deadline', 'versus']);
-const DEFAULT_BASIS = { checklist: 'advice', phone: 'promo', badge: 'promo', hook: 'opinion', cta: 'opinion', receipts: 'opinion' };
+const FACT_LAYOUTS = new Set(['text_stack', 'big_stat', 'board', 'wristbands', 'deadline', 'versus', 'c_notes', 'c_paper', 'b_card']);
+const DEFAULT_BASIS = { checklist: 'advice', phone: 'promo', badge: 'promo', hook: 'opinion', cta: 'opinion', receipts: 'opinion', c_photo: 'opinion', b_cover: 'opinion', b_cta: 'promo' };
+
+/** 'classic' | 'c' | 'b' | 'mixed', from the layouts a spec uses (auto-added slides ignored). */
+export function formatOf(spec) {
+  const kinds = new Set(spec.slides.filter((s) => !s._auto).map((s) => (s.layout.startsWith('c_') ? 'c' : s.layout.startsWith('b_') ? 'b' : 'classic')));
+  return kinds.size === 1 ? [...kinds][0] : 'mixed';
+}
+
+// Brand voice (R7): the account is not a student and never speaks as one.
+const FIRST_PERSON_CLAIM = /\b(?:I|we)\s+(?:just\s+)?(?:got|landed|matched|was hired|were hired|got hired|got accepted|got in)\b|\bI['’]m\s+(?:an?\s+)?(?:extern|nursing student|student nurse|nurse|RPN|RN)\b|\bmy\s+(?:extern(?:ship)?|first|offer|interview|placement|preceptor|unit|shift|hospital)\b/i;
+// Context rule: no first-person copy over stock photos (it reads as the pictured person speaking).
+const FIRST_PERSON = /\bI\b|\bI['’](?:m|ve|d|ll)\b|\b(?:[Mm]e|[Mm]y|[Mm]ine|[Ww]e|[Oo]urs?|[Uu]s)\b/;
+const PERSON_LABEL = /\b(?:students?|nurses?|externs?|RNs?|RPNs?|nursing)\b/i;
+// Asides are decoration: never money, dates or counts.
+const ASIDE_SPECIFIC = /[\d$%]|\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?|monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow|tonight|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|hundred|thousand|million|once|twice)\b/i;
+const CLINICAL_EMOJI = /[\u{1FA7A}\u{1F489}\u{1F48A}\u{1FA7B}\u{1FA78}\u{1F321}\u{1F9EA}\u{1FA79}]/u;
+const EMOJI = /\p{Extended_Pictographic}/gu;
+const wordsIn = (s) => String(s).split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+export const DENSITY = { c: { cover: 12, inner: 40 }, b: { cover: 12, inner: 45 } };
+const B_SERIES = 'clinical extern 101';
+
+/** Words a C/B slide shows, including its generated source line and fixed labels. */
+export function slideWordCount(slide, spec) {
+  const parts = slideTexts(slide).filter(([p]) => p !== 'mark.phrase').map(([, t]) => t);
+  const line = sourceLine(slide, spec);
+  if (line) parts.push(line);
+  if (slide.layout === 'b_card' || slide.layout === 'b_cta') parts.push(B_SERIES);
+  return parts.reduce((n, t) => n + wordsIn(t), 0);
+}
+
+function checkFormat(spec, fmt, err, warn) {
+  const slides = spec.slides.filter((s) => !s._auto);
+  const last = slides.length;
+  if (fmt === 'c') {
+    const designed = slides.filter((s) => s.layout === 'c_notes' || s.layout === 'c_paper').length;
+    if (designed > 2) err('C_DESIGNED_MAX', 'slides', `${designed} designed slides (notes card / lined paper); format C allows at most two.`);
+    const asides = slides.flatMap((s) => (s.asides ?? []).map((a) => ({ s, a })));
+    if (asides.length > 2) err('ASIDE_COUNT', 'slides', `${asides.length} handwritten asides; at most two per carousel (cover and CTA).`);
+    for (const { s } of asides) if (s._n !== 1 && s._n !== last) err('ASIDE_PLACEMENT', `slides[${s._n}] ${s.layout}`, 'Handwritten asides go on the cover or the CTA only.');
+  }
+  for (const s of slides) {
+    const where = `slides[${s._n}] ${s.layout}`;
+    for (const [p, t] of [...(s.asides ?? []).map((a, i) => [`asides[${i}]`, a.text]), ...(s.titleTail ? [['titleTail', s.titleTail]] : [])])
+      if (ASIDE_SPECIFIC.test(t)) err('ASIDE_SPECIFIC', `${where} ${p}`, `"${t}": handwritten asides never carry money, dates or counts. Put specifics in the cited copy.`);
+    if (s.mark) {
+      const target = s.mark.in === 'title' ? s.title : s.body;
+      if (!target || !target.includes(s.mark.phrase)) err('MARK_NOT_FOUND', `${where} mark`, `"${s.mark.phrase}" does not appear in the slide's ${s.mark.in}.`);
+    }
+    const texts = slideTexts(s).filter(([p]) => p !== 'mark.phrase').map(([, t]) => t).join(' ');
+    if (fmt === 'c' && (texts.match(EMOJI) ?? []).length > 1) err('EMOJI_COUNT', where, 'Format C allows at most one emoji per slide.');
+    if (CLINICAL_EMOJI.test(texts)) warn('CLINICAL_EMOJI', where, 'An emoji shows a clinical tool. Externs work in unregulated care provider roles; check it doesn\'t imply clinical duties.');
+    if (fmt === 'c' && s.title && /^\p{Lu}/u.test(s.title)) warn('VOICE_CASE', where, 'Format C headlines are lowercase.');
+    const n = slideWordCount(s, spec);
+    const max = s._n === 1 ? DENSITY[fmt].cover : DENSITY[fmt].inner;
+    if (n > max) err('DENSITY', where, `${n} words (including the source line); ${s._n === 1 ? 'covers' : 'inner slides'} in format ${fmt.toUpperCase()} allow ${max}.`, 'Cut copy or split the slide.');
+  }
+  if (fmt === 'b' && slides[0].layout !== 'b_cover') warn('B_ORDER', 'slides[1]', 'Format B carousels open with a b_cover.');
+  if (fmt === 'b' && slides.slice(1).some((s) => s.layout === 'b_cover')) err('B_ORDER', 'slides', 'Only the first slide can be a b_cover.');
+}
 
 const SPECIFIC_PATTERNS = [
   /\$\s?\d[\d,]*(?:\.\d+)?(?:\s?(?:-|–|to)\s?\$?\s?\d[\d,]*(?:\.\d+)?)?/gi,
@@ -48,7 +108,7 @@ export function prepareSpec(spec) {
     _n: i + 1,
     basis: slide.basis ?? (slide.facts?.length || FACT_LAYOUTS.has(slide.layout) ? 'facts' : DEFAULT_BASIS[slide.layout] ?? 'opinion'),
   }));
-  if (s.facts.length && !s.slides.some((x) => x.layout === 'receipts')) {
+  if (s.facts.length && formatOf(s) === 'classic' && !s.slides.some((x) => x.layout === 'receipts')) {
     const receipts = { layout: 'receipts', title: 'receipts', basis: 'opinion', _auto: true };
     const last = s.slides.at(-1);
     if (last.layout === 'cta') s.slides.splice(s.slides.length - 1, 0, receipts);
@@ -74,9 +134,11 @@ export function slideFactIds(slide, spec) {
 export function slideTexts(slide) {
   const out = [];
   const push = (path, v) => typeof v === 'string' && out.push([path, v]);
-  ['title', 'sub', 'value', 'label', 'context', 'name', 'role', 'body', 'note'].forEach((k) => push(k, slide[k]));
+  ['title', 'sub', 'value', 'label', 'context', 'name', 'role', 'body', 'note', 'titleTail', 'fine', 'footer', 'sticker', 'chip', 'site'].forEach((k) => push(k, slide[k]));
   slide.lines?.forEach((l, i) => push(`lines[${i}]`, l));
   slide.items?.forEach((it, i) => typeof it === 'string' && push(`items[${i}]`, it));
+  slide.tags?.forEach((t, i) => push(`tags[${i}]`, t));
+  slide.asides?.forEach((a, i) => push(`asides[${i}]`, a.text));
   slide.rows?.forEach((r, i) => { push(`rows[${i}].label`, r.label); push(`rows[${i}].value`, r.value); });
   slide.callouts?.forEach((c, i) => push(`callouts[${i}]`, c));
   if (slide.reply) push('reply.comment', slide.reply.comment);
@@ -111,7 +173,8 @@ function unsupportedSpecifics(text, facts) {
   return [...new Set(problems)];
 }
 
-export function verifySpec(spec, { today }) {
+export function verifySpec(spec, opts) {
+  const { today } = opts;
   const errors = [];
   const warnings = [];
   const err = (code, where, message, fix) => errors.push({ code, where, message, ...(fix && { fix }) });
@@ -198,7 +261,7 @@ export function verifySpec(spec, { today }) {
       const f = facts.get(slide[k].fact);
       if (f && !f.value) err('NEEDS_VALUE', `${where} ${k}`, `Fact "${f.id}" needs a short "value" to display.`);
     });
-    if (slide.layout === 'hook' && slide.variant === 'reply' && !slide.reply) err('HOOK_FIELDS', where, 'variant "reply" needs reply: {user, comment}.');
+    if (slide.layout === 'hook' && (slide.variant === 'reply' || slide.reply)) err('REPLY_STICKER_RETIRED', where, 'The comment-reply sticker is retired: it shows a comment nobody wrote. Use a plain hook.', 'Set "variant": "plain", remove "reply", and put the question in the title or "sub".');
     if (slide.layout === 'hook' && slide.variant === 'count' && !slide.count) err('HOOK_FIELDS', where, 'variant "count" needs count: {of, label}.');
     if (slide.layout === 'hook' && slide.variant === 'versus' && !slide.versus) err('HOOK_FIELDS', where, 'variant "versus" needs versus: {left, right, op}.');
 
@@ -210,7 +273,23 @@ export function verifySpec(spec, { today }) {
       if (HIRING_PATTERN.test(text) && !resolved.some((f) => (f.kind === 'vacancy' || f.kind === 'deadline') && f.status !== 'closed' && f.status !== 'talent-pool'))
         err('HIRING_CLAIM', loc, `"${text}" says someone is hiring, but the slide cites no open vacancy or deadline.`);
       if (demo) { const real = findRealOrg(text); if (real && ids.some((id) => SENSITIVE.has(facts.get(id)?.kind))) err('DEMO_REAL_ORG', loc, `Demo slide mentions a real hospital ("${real}") next to sample postings.`); }
+      if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', loc, `"${text}" speaks as a student. The account isn't one and can't claim an experience.`, 'Say what the source says, in the second or third person.');
+      else if (slide.photo && FIRST_PERSON.test(text)) err('STOCK_FIRST_PERSON', loc, `"${text}" is first person over a stock photo; it reads as the pictured person speaking.`);
     }
+    if (slide.photo && slide.alt && PERSON_LABEL.test(slide.alt)) {
+      const a = (opts.registry ?? loadRegistry()).byId.get(slide.photo);
+      if (a?.contains_people) err('PHOTO_PERSON_LABEL', `${where} alt`, 'Alt text calls the pictured stock model a student, nurse or extern. Describe the scene, not who they are.');
+    }
+  }
+
+  // --- formats C and B, and photo provenance
+  const fmt = formatOf(spec);
+  if (fmt === 'mixed') err('FORMAT_MIX', 'slides', 'Use one format per carousel: classic layouts, format C (c_*) or format B (b_*).');
+  if (fmt === 'c' || fmt === 'b') checkFormat(spec, fmt, err, warn);
+  if (spec.slides.some((s) => s.photo)) {
+    const img = checkImagery(spec, opts.registry ?? loadRegistry());
+    errors.push(...img.errors);
+    warnings.push(...img.warnings);
   }
 
   // --- caption
@@ -228,6 +307,7 @@ export function verifySpec(spec, { today }) {
     const bad = unsupportedSpecifics(text, spec.facts);
     if (bad.length) err('UNSUPPORTED_SPECIFIC', `caption.${key}`, `"${bad.join('", "')}" is not backed by any fact in the spec.`);
     if (promisesOutcome(text)) err('OUTCOME_CLAIM', `caption.${key}`, 'Caption promises an application outcome.');
+    if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', `caption.${key}`, 'Caption speaks as a student. The account isn\'t one.');
   }
   if (spec.slides.length > 10) warn('LONG_CAROUSEL', 'slides', `${spec.slides.length} slides. Swipe-through drops off after about 8–10.`);
 

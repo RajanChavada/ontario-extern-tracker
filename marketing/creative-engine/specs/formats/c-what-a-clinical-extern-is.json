@@ -1,0 +1,218 @@
+{
+  "id": "c-what-a-clinical-extern-is",
+  "title": "Format C reference: what a clinical extern actually is (prototype, not published)",
+  "status": "verified",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "facts": [
+    {
+      "id": "oh-paid-hands-on",
+      "kind": "program",
+      "claim": "The Enhanced Extern Program gives nursing and allied health students paid, hands-on work in Ontario hospitals.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "By offering paid, hands-on work in hospitals, students get to step into the heart of health care",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "oh-ucp-supervised",
+      "kind": "program",
+      "claim": "Externs work in unregulated care provider roles under the supervision of regulated health care professionals.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "These externs, working under the supervision of regulated health care professionals, contribute in unregulated care provider roles",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "oh-matching-rounds",
+      "kind": "program",
+      "claim": "Through the program, students are matched with hospitals twice a year, in October and February. This describes the program, not every posting.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "Each year, students are matched with hospitals twice – once in October and again in February",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "oh-allied-health",
+      "kind": "program",
+      "claim": "The program is gradually including more allied health students, such as physiotherapy, occupational therapy and respiratory therapy.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "the gradual inclusion of more allied health students – like those in physiotherapy, occupational therapy, and respiratory therapy",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "oh-permanent-hires",
+      "kind": "program",
+      "claim": "Ontario Health says hospitals are hiring externs for permanent positions. Program-level pattern, not an individual outcome.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "Hospitals are hiring externs for permanent positions, strengthening their teams for the long term.",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "tracker-description",
+      "kind": "product",
+      "claim": "ontarioexterns.ca lists paid clinical extern postings at Ontario hospitals, checked against each hospital's careers page, showing listed positions vs talent pools and closing dates; it states it is not affiliated with any hospital or Ontario Health.",
+      "sources": [
+        "ontarioexterns-home"
+      ],
+      "verifiedAt": "2026-11-14",
+      "quote": "Not affiliated with any hospital or Ontario Health."
+    }
+  ],
+  "sources": [
+    {
+      "id": "ontario-health-extern",
+      "publisher": "Ontario Health",
+      "title": "Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program",
+      "url": "https://www.ontariohealth.ca/news/enhanced-extern-program",
+      "accessedAt": "2026-11-14",
+      "primary": true,
+      "updated": "2026-06-04",
+      "label": "Enhanced Extern Program page"
+    },
+    {
+      "id": "ontarioexterns-home",
+      "publisher": "Ontario Extern Tracker",
+      "title": "Nursing externships in Ontario: what's open, closing dates and criteria",
+      "url": "https://ontarioexterns.ca/",
+      "accessedAt": "2026-11-14",
+      "primary": true
+    }
+  ],
+  "caption": {
+    "text": "what a clinical extern actually is, in plain words. every fact here is from Ontario Health's Enhanced Extern Program page (updated June 4, 2026). looking for postings? ontarioexterns.ca (not affiliated with any hospital or Ontario Health). which part was new to you?",
+    "hashtags": [
+      "#nursingstudent",
+      "#clinicalextern",
+      "#ontario",
+      "#studentnurse"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5537938",
+      "title": "what a clinical extern actually is",
+      "titleTail": "(ontario edition)",
+      "nudge": 10,
+      "asides": [
+        {
+          "text": "save for later ↓",
+          "at": {
+            "x": 0.516,
+            "y": 0.84
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-3973981",
+      "label": "extern notes 🩺",
+      "title": "it’s a paid job in an Ontario hospital",
+      "body": "Ontario Health describes the extern program as paid, hands-on hospital work for nursing and allied health students.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "paid, hands-on hospital work"
+      },
+      "facts": [
+        "oh-paid-hands-on"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5386483",
+      "title": "you work in an unregulated care provider role",
+      "body": "Externs work under the supervision of regulated health care professionals.",
+      "mark": {
+        "kind": "circle",
+        "phrase": "unregulated",
+        "in": "title"
+      },
+      "nudge": -10,
+      "facts": [
+        "oh-ucp-supervised"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5499136",
+      "title": "program matching happens twice a year",
+      "body": "Through the Enhanced Extern Program, students are matched with hospitals in October and February. Check each posting’s own closing date.",
+      "mark": {
+        "kind": "circle",
+        "phrase": "October and February"
+      },
+      "nudge": 0,
+      "facts": [
+        "oh-matching-rounds"
+      ]
+    },
+    {
+      "layout": "c_paper",
+      "title": "it’s not only nursing students",
+      "body": "Ontario Health says more allied health students, like physiotherapy, occupational therapy and respiratory therapy, are gradually being included.",
+      "tags": [
+        "physio",
+        "OT",
+        "respiratory therapy"
+      ],
+      "facts": [
+        "oh-allied-health"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965524",
+      "title": "some externs get hired into permanent positions",
+      "body": "Ontario Health says hospitals are hiring externs for permanent positions. That’s a program-wide pattern, not a promise for any one student.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "not a promise for any one student"
+      },
+      "nudge": -10,
+      "facts": [
+        "oh-permanent-hires"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "looking for postings?",
+      "body": "ontarioexterns.ca lists Ontario extern postings checked against each hospital’s own careers page, with closing dates and talent pools labelled.",
+      "fine": "Not affiliated with any hospital or Ontario Health.",
+      "basis": "promo",
+      "facts": [
+        "tracker-description"
+      ],
+      "asides": [
+        {
+          "text": "bookmark it!",
+          "at": {
+            "x": 0.516,
+            "y": 0.782
+          },
+          "size": 70,
+          "rotate": -5
+        }
+      ]
+    }
+  ]
+}

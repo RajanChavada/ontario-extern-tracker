@@ -34,6 +34,12 @@ For anything naming a hospital posting (deadline, pay, eligibility, vacancies), 
 (`<entry>-deadline`, `-pay`, `-vacancy`, `-eligibility`, `-bcls`, `-listed-N`). Run
 `node bin/oet.mjs check` then `build`. Hand-typed posting facts are refused. See docs/TRACKER-BRIDGE.md.
 
+## Formats C and B
+
+For new carousels, start from `specs/formats/c-what-a-clinical-extern-is.json` (format C, primary) or the B spec,
+and read [docs/FORMATS.md](docs/FORMATS.md). Photos come only from `assets/registry.json`: never add an
+unregistered image, never call a stock model a student, nurse or extern, and never write first-person copy over a photo.
+
 ## Rules that are not negotiable
 
 1. **Never invent** a posting, deadline, pay rate, eligibility rule, vacancy count or

@@ -135,12 +135,96 @@ const cta = z.strictObject({
   ...common,
 });
 
+// --- Formats C (student-made hybrid) and B (saveable guide) -----------------------------
+// Reference package 2026-11-14 (HANDOFF.md). Sizes are drawn for the 3:4 safe box and scale.
+// These layouts take no theme or marker note: the format fixes the look.
+const fmtCommon = { facts: z.array(id).optional(), basis: basis.optional(), alt: text(400).optional() };
+const photo = id.describe('asset id from assets/registry.json');
+// Handwritten aside (Caveat, red, white outline). Never facts or numbers. At most two per
+// carousel, only on the cover and the CTA. "below" flows under the text; {x, y} places it
+// at a fraction of the safe box (top-left of the aside).
+const aside = z.strictObject({
+  text: text(32),
+  at: z.union([z.literal('below'), z.strictObject({ x: z.number().min(0).max(0.9), y: z.number().min(0).max(0.95) })]).default('below'),
+  size: z.number().int().min(56).max(90).optional(),
+  rotate: z.number().min(-7).max(-4).optional(),
+});
+// One word-mark per slide: a hand-drawn circle or a highlighter stroke on a phrase.
+const wordMark = z.strictObject({ kind: z.enum(['circle', 'highlight']), phrase: text(60), in: z.enum(['title', 'body']).default('body') });
+
+const cPhoto = z.strictObject({
+  layout: z.literal('c_photo'),
+  photo,
+  title: text(90),
+  titleTail: text(30).optional(), // handwritten continuation of the headline, e.g. "(ontario edition)"
+  body: text(220).optional(),
+  fine: text(90).optional(), // fine print in the source-line slot (CTA: "Not affiliated with …")
+  place: z.enum(['auto', 'top', 'bottom']).default('auto'), // auto = the photo's registered quiet area
+  nudge: z.number().int().min(-10).max(10).default(0), // px at 3:4, keeps the block in y 110–130 / 620–640
+  asides: z.array(aside).max(2).optional(),
+  mark: wordMark.optional(),
+  ...fmtCommon,
+});
+const cNotes = z.strictObject({
+  layout: z.literal('c_notes'),
+  photo, // shown blurred behind the card
+  label: text(40).optional(),
+  title: text(90),
+  body: text(220),
+  mark: wordMark.optional(),
+  ...fmtCommon,
+});
+const cPaper = z.strictObject({
+  layout: z.literal('c_paper'),
+  title: text(90),
+  body: text(220),
+  tags: z.array(text(24)).max(3).default([]),
+  ...fmtCommon,
+});
+export const B_ICONS = { hospital: '🏥', clipboard: '📋', calendar: '🗓️', handshake: '🤝', briefcase: '💼' };
+export const B_COLORS = {
+  rose: { k: '#AE2A52', p: '#FCE3EA' },
+  teal: { k: '#22766C', p: '#DDF1EC' },
+  violet: { k: '#5B4AB3', p: '#E9E4FA' },
+  amber: { k: '#94600C', p: '#FFF0CC' },
+  blue: { k: '#24609F', p: '#DCEAFB' },
+};
+const bCover = z.strictObject({
+  layout: z.literal('b_cover'),
+  photo,
+  title: text(90),
+  sticker: text(30).optional(),
+  ...fmtCommon,
+});
+const bCard = z.strictObject({
+  layout: z.literal('b_card'),
+  chip: text(20),
+  icon: z.enum(Object.keys(B_ICONS)), // topic icons only; nothing that depicts a clinical task
+  title: text(90),
+  body: text(220),
+  color: z.enum(Object.keys(B_COLORS)).optional(), // default: rose, teal, violet, amber, blue in order
+  ...fmtCommon,
+});
+const bCta = z.strictObject({
+  layout: z.literal('b_cta'),
+  title: text(60),
+  site: text(40),
+  body: text(220),
+  fine: text(90).optional(),
+  footer: text(60).optional(),
+  ...fmtCommon,
+});
+
+export const FORMAT_C_LAYOUTS = ['c_photo', 'c_notes', 'c_paper'];
+export const FORMAT_B_LAYOUTS = ['b_cover', 'b_card', 'b_cta'];
+
 export const SlideSchema = z.discriminatedUnion('layout', [
   hook, textStack, bigStat, board, checklist, wristbands, deadline, versus, phone, badge, receipts, cta,
+  cPhoto, cNotes, cPaper, bCover, bCard, bCta,
 ]);
 
 export const LAYOUTS = {
-  hook: 'Cover. Variants: reply (TikTok comment-reply sticker), count (number of deadline facts), versus (two labels + operator), plain.',
+  hook: 'Cover. Variants: count (number of deadline facts), versus (two labels + operator), plain. (reply is retired: no fabricated comment stickers.)',
   text_stack: 'TikTok-native caption boxes stacked on the theme surface. 1–5 short lines, optional emoji sticker.',
   big_stat: 'One number, hand-circled, with a label. Number must appear in a referenced fact.',
   board: 'Patient whiteboard: printed labels with marker values. Good for explainers and timelines.',
@@ -152,6 +236,12 @@ export const LAYOUTS = {
   badge: 'Community announcement styled as a hospital ID badge on a badge reel.',
   receipts: 'Sources as a receipt. Auto-added at the end when a spec has facts.',
   cta: 'Closing call to action; a marker arrow points at the real platform button (save, follow, comment, share).',
+  c_photo: 'Format C: full-bleed licensed photo + white TikTok caption boxes on the photo\'s quiet area; optional circle/highlight, handwritten asides (cover/CTA only), fine print.',
+  c_notes: 'Format C designed slide: white notes card over the blurred photo, one highlight.',
+  c_paper: 'Format C designed slide: lined paper with up to three sticky-note tags.',
+  b_cover: 'Format B cover: study-desk photo (no people), outlined title, "save this" sticker.',
+  b_card: 'Format B reference card: number circle, topic chip, series label, headline, tinted panel with one topic icon, source line.',
+  b_cta: 'Format B closing card: site name, verified tracker copy, not-affiliated line, save prompt.',
 };
 
 export const FactSchema = z.strictObject({
@@ -176,6 +266,8 @@ export const SourceSchema = z.strictObject({
   title: text(160),
   url: z.url(),
   published: isoDate.optional(),
+  updated: isoDate.optional(), // the page's own "last updated" date, when it shows one instead of a publish date
+  label: text(60).optional(), // short name for source lines, e.g. "Enhanced Extern Program page"
   accessedAt: isoDate,
   primary: z.boolean(), // true = the hospital / agency's own page
 });

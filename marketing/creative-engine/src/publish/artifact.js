@@ -54,9 +54,10 @@ export function buildArtifacts({ manifest, outDir, factual, provenance = {}, app
   const verifiedDates = facts.map((f) => f.verifiedAt).sort();
 
   for (const [platform, p] of Object.entries(manifest.platforms)) {
+    if (p.candidate) continue; // e.g. tiktok-3x4: preview only until checked on a real device
     const pubDir = path.join(outDir, 'publish');
     const rel = (f) => path.relative(pubDir, path.join(outDir, f));
-    const images = p.slides.map((s) => ({ order: s.n, path: rel(s.file), sha256: s.sha256, alt: s.alt ?? '', layout: s.layout }));
+    const images = p.slides.map((s) => ({ order: s.n, path: rel(s.file), sha256: s.sha256, alt: s.alt ?? '', layout: s.layout, ...(s.assets && { assets: s.assets }) }));
     const visualErrors = p.slides.flatMap((s) => s.qa.errors.map((e) => ({ ...e, where: `slide ${s.n} ${s.layout}` })));
     const visualWarnings = p.slides.flatMap((s) => s.qa.warnings.map((e) => ({ ...e, where: `slide ${s.n} ${s.layout}` })));
     const visual = { passed: visualErrors.length === 0, errors: visualErrors, warnings: visualWarnings };

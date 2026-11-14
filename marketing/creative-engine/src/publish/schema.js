@@ -22,6 +22,10 @@ export const PublishArtifactSchema = z.strictObject({
     sha256: z.string().regex(/^[0-9a-f]{64}$/),
     alt: z.string(),
     layout: z.string(),
+    assets: z.array(z.strictObject({
+      id: z.string(), role: z.enum(['photo', 'blurred-background']), source: z.string(), page_url: z.string(), photographer: z.string(),
+      licence: z.string().nullable(), licence_url: z.string().nullable(), checked: isoDate.nullable(), shoot_id: z.string().nullable().optional(), file_sha256: z.string().nullable(),
+    })).optional().describe('Provenance of each photo on the slide (formats C and B).'),
   })).min(1).max(20),
   previews: z.array(z.string()).describe('Interface-overlay previews for human review. Never publish these.'),
   contactSheet: z.string(),
