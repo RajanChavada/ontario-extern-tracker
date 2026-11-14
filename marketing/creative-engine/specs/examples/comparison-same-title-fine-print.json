@@ -8,34 +8,44 @@
     {
       "layout": "hook",
       "variant": "versus",
-      "versus": { "left": "clinical extern", "right": "clinical extern", "op": "≠" },
+      "versus": {
+        "left": "clinical extern",
+        "right": "clinical extern",
+        "op": "≠"
+      },
       "title": "same job title. very different fine print.",
       "sub": "two real Ontario postings, side by side 👀"
     },
     {
       "layout": "versus",
       "title": "is there actually a job?",
-      "a": { "fact": "halton-positions" },
-      "b": { "fact": "mackenzie-talent-pool" },
+      "a": {
+        "fact": "halton-positions"
+      },
+      "b": {
+        "fact": "mackenzie-talent-pool"
+      },
       "note": "read the post category line first"
     },
     {
       "layout": "versus",
       "title": "pay",
-      "a": { "fact": "halton-pay" },
-      "b": { "fact": "mackenzie-pay" }
+      "a": {
+        "fact": "halton-pay"
+      },
+      "b": {
+        "fact": "mackenzie-pay"
+      }
     },
     {
       "layout": "versus",
       "title": "who can apply",
-      "a": { "fact": "halton-eligibility" },
-      "b": { "fact": "mackenzie-eligibility" }
-    },
-    {
-      "layout": "versus",
-      "title": "how long it lasts",
-      "a": { "fact": "halton-contract" },
-      "b": { "fact": "mackenzie-contract" }
+      "a": {
+        "fact": "halton-eligibility"
+      },
+      "b": {
+        "fact": "mackenzie-eligibility"
+      }
     },
     {
       "layout": "checklist",
@@ -65,19 +75,23 @@
       "status": "closed",
       "asOf": "2026-04-02",
       "quote": "50 Positions",
-      "sources": ["halton-posting"],
+      "sources": [
+        "halton-posting"
+      ],
       "verifiedAt": "2026-11-13"
     },
     {
       "id": "mackenzie-talent-pool",
       "kind": "vacancy",
-      "claim": "Mackenzie Health's Clinical Extern (Nursing) posting 2026-18113 says it is not for an existing vacancy and that the hospital is sourcing candidates for potential future opportunities.",
+      "claim": "Mackenzie Health's Clinical Extern (Nursing) posting 2026-18701 says it is not for an existing vacancy and that the hospital is sourcing candidates for potential future opportunities.",
       "value": "talent pool",
       "org": "Mackenzie Health",
       "status": "talent-pool",
       "quote": "This posting is not for an existing vacancy. We are sourcing candidates for potential future opportunities.",
-      "sources": ["mackenzie-posting"],
-      "verifiedAt": "2026-11-13"
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
     },
     {
       "id": "halton-pay",
@@ -88,7 +102,9 @@
       "status": "closed",
       "asOf": "2026-04-02",
       "quote": "Salary:  $23.45 to $28.79 per hour",
-      "sources": ["halton-posting"],
+      "sources": [
+        "halton-posting"
+      ],
       "verifiedAt": "2026-11-13"
     },
     {
@@ -99,8 +115,10 @@
       "org": "Mackenzie Health",
       "status": "talent-pool",
       "quote": "CAD $22.00/Hr.",
-      "sources": ["mackenzie-posting"],
-      "verifiedAt": "2026-11-13"
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
     },
     {
       "id": "halton-eligibility",
@@ -111,7 +129,9 @@
       "status": "closed",
       "asOf": "2026-04-02",
       "quote": "Baccalaureate Nursing Program (BScN) in 2nd, 3rd or 4th year of study or Practical Nursing Program in final year of study",
-      "sources": ["halton-posting"],
+      "sources": [
+        "halton-posting"
+      ],
       "verifiedAt": "2026-11-13"
     },
     {
@@ -122,31 +142,10 @@
       "org": "Mackenzie Health",
       "status": "talent-pool",
       "quote": "Enrolled in a Registered Nursing Program (RN) and entering the 2nd , 3rd or 4th year of the Program or Enrolled in a Registered Practical Nursing Program (RPN) and entering the final year of the Program.",
-      "sources": ["mackenzie-posting"],
-      "verifiedAt": "2026-11-13"
-    },
-    {
-      "id": "halton-contract",
-      "kind": "vacancy",
-      "claim": "Halton Healthcare's temporary contract was approximately 3 months.",
-      "value": "about 3 months",
-      "org": "Halton Healthcare",
-      "status": "closed",
-      "asOf": "2026-04-02",
-      "quote": "Length of temporary contract: Approx. 3 months",
-      "sources": ["halton-posting"],
-      "verifiedAt": "2026-11-13"
-    },
-    {
-      "id": "mackenzie-contract",
-      "kind": "vacancy",
-      "claim": "Mackenzie Health's posting lists a contract length of five months.",
-      "value": "5 months",
-      "org": "Mackenzie Health",
-      "status": "talent-pool",
-      "quote": "five (5) months",
-      "sources": ["mackenzie-posting"],
-      "verifiedAt": "2026-11-13"
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
     }
   ],
   "sources": [
@@ -162,14 +161,19 @@
     {
       "id": "mackenzie-posting",
       "publisher": "Mackenzie Health",
-      "title": "Clinical Extern (Nursing), competition 2026-18113, careers site",
-      "url": "https://employment-mackenziehealth.icims.com/jobs/18113/2026-18113/job",
-      "accessedAt": "2026-11-13",
+      "title": "Clinical Extern (Nursing), competition 2026-18701, careers site",
+      "url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
+      "accessedAt": "2026-11-11",
       "primary": true
     }
   ],
   "caption": {
     "text": "same title, very different fine print ✍️ one was a closed posting with 50 positions, the other is a talent pool, not a current vacancy. always read the post category line before you write a cover letter. both postings are on the receipts slide.",
-    "hashtags": ["#nursingstudent", "#studentnurse", "#ontarionursing", "#externship"]
+    "hashtags": [
+      "#nursingstudent",
+      "#studentnurse",
+      "#ontarionursing",
+      "#externship"
+    ]
   }
 }
