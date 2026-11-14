@@ -3,6 +3,9 @@
 // Exit codes: 0 ok, 1 factual/visual errors or refused decision, 2 usage error.
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import os from 'node:os';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseSpec } from '../src/spec/schema.js';
@@ -12,6 +15,9 @@ import { loadEvidence } from '../src/tracker/evidence.js';
 import { compileCampaign } from '../src/tracker/bridge.js';
 import { buildArtifacts, recordDecision } from '../src/publish/artifact.js';
 import { artifactJsonSchema } from '../src/publish/schema.js';
+import { exportPackage, imageInfo, SCHEMA_PATH } from '../src/handoff/pubkit.js';
+import { checkSourceQuotes } from '../src/handoff/sources.js';
+import { composeCaption } from '../src/spec/verify.js';
 
 const ENGINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REPO = path.resolve(ENGINE, '../..');
@@ -28,6 +34,18 @@ Usage
   oet approve <out/<id>> --platform tiktok|instagram|all --by "<name>" [--note "…"]
   oet reject  <out/<id>> --platform tiktok|instagram|all --by "<name>" [--note "…"]
   oet schema                    Print the publish-artifact JSON Schema (schema/publish-artifact.schema.json)
+  oet export <spec.json> --post-id <id>
+                                Grokbot handoff (manifest v1): factual + source checks, TikTok render + visual QA,
+                                JPEG export, validation (ours, then Grokbot's bin/validate.py), atomic write of
+                                <inbox>/<project>/<post_id>/ with READY.json last. Never publishes or approves.
+      --inbox <dir>             default ~/AgentHandoff/publishing/inbox
+      --project <id>            default ontario-extern-tracker
+      --account <@handle>       default @ontarioextern
+      --visibility <v>          default only_you
+      --supersedes <post_id>    earlier post this one replaces
+      --kit <dir>               Grokbot publishing kit (default $PUBKIT_DIR or ~/Downloads/publishing-kit)
+      --validator-python <py>   Python with Pillow for the kit's validate.py (default $PUBKIT_PYTHON or python3)
+      --offline                 skip the live source fetch (saved captures only)
 
 Options
   --data <file>        tracker data (default: data/hospitals.json in this repo)
@@ -43,7 +61,7 @@ function parseArgs(argv) {
     const t = argv[i];
     if (!t.startsWith('--')) { a._.push(t); continue; }
     const [k, v] = t.slice(2).split('=');
-    const val = ['data', 'evidence', 'today', 'out', 'platform', 'by', 'note'].includes(k) ? v ?? argv[++i] : v ?? true;
+    const val = ['data', 'evidence', 'today', 'out', 'platform', 'by', 'note', 'post-id', 'inbox', 'project', 'account', 'visibility', 'supersedes', 'kit', 'validator-python'].includes(k) ? v ?? argv[++i] : v ?? true;
     if (k === 'evidence') a.evidence.push(val); else a.flags[k] = val;
   }
   return a;
@@ -96,6 +114,7 @@ async function main() {
     return code;
   }
 
+  if (cmd === 'export') return exportCmd(target, flags, evidence, today, json);
   if (!['check', 'build'].includes(cmd)) return usage(`Unknown command "${cmd}".`);
   const dataFile = flags.data ?? DEFAULT_DATA;
   const evidenceDirs = evidence.length ? evidence : [process.env.OET_EVIDENCE_DIR ?? DEFAULT_EVIDENCE];
@@ -130,6 +149,111 @@ async function main() {
   }
   if (json) console.log(JSON.stringify({ factual: fc.factual, artifacts: Object.fromEntries(Object.entries(artifacts).map(([p, a]) => [p, { postId: a.postId, passed: a.validation.passed, approval: a.approval.status }])) }, null, 2));
   return ok ? 0 : 1;
+}
+
+
+// ---------------------------------------------------------------- Grokbot handoff export
+const sha256 = (b) => createHash('sha256').update(b).digest('hex');
+
+/** Run the kit's own validator on a finished (temp) folder. The only failure allowed is the missing approval. */
+export function grokbotValidator({ kit, python, today }) {
+  return async (dir) => {
+    let out;
+    try { out = execFileSync(python, [path.join(kit, 'bin/validate.py'), dir, '--kit', kit, '--today', today, '--json'], { encoding: 'utf8' }); }
+    catch (e) { out = e.stdout?.toString() ?? ''; if (!out) return { ok: false, detail: `validate.py did not run: ${e.message.split('\n')[0]}` }; }
+    let r; try { r = JSON.parse(out); } catch { return { ok: false, detail: `validate.py output unreadable: ${out.slice(0, 200)}` }; }
+    const failed = r.checks.filter((c) => !c.ok);
+    const ok = r.verdict === 'APPROVAL_REQUIRED' && failed.every((c) => c.category === 'approval');
+    return { ok, verdict: r.verdict, checks: r.checks, detail: ok ? 'APPROVAL_REQUIRED (content checks all pass; approval is Grokbot/Rajan only)' : `${r.verdict}: ${failed.map((c) => `${c.check} (${c.detail})`).join('; ')}` };
+  };
+}
+
+async function exportCmd(target, flags, evidenceFlags, today, json) {
+  const postId = flags['post-id'];
+  if (!postId) return usage('export needs --post-id');
+  const inbox = flags.inbox ?? path.join(os.homedir(), 'AgentHandoff/publishing/inbox');
+  const project = flags.project ?? 'ontario-extern-tracker';
+  const kit = flags.kit ?? process.env.PUBKIT_DIR ?? path.join(os.homedir(), 'Downloads/publishing-kit');
+  const python = flags['validator-python'] ?? process.env.PUBKIT_PYTHON ?? 'python3';
+  const dataFile = flags.data ?? DEFAULT_DATA;
+  const evidenceDirs = evidenceFlags.length ? evidenceFlags : [process.env.OET_EVIDENCE_DIR ?? DEFAULT_EVIDENCE];
+  const preflight = [];
+  const log = (s) => { if (!json) console.log(s); };
+
+  // the kit's schema must be the one we vendored
+  const kitSchema = path.join(kit, 'schema/publish-manifest.v1.schema.json');
+  if (!existsSync(kitSchema)) preflight.push({ code: 'KIT_MISSING', message: `Grokbot kit not found at ${kit} (schema + validate.py are required)` });
+  else if (sha256(readFileSync(kitSchema)) !== sha256(readFileSync(SCHEMA_PATH))) preflight.push({ code: 'SCHEMA_DRIFT', message: `${kitSchema} differs from the vendored schema/grokbot copy; update deliberately before exporting` });
+  const projectFile = path.join(kit, 'projects', `${project}.json`);
+  const projectConfig = existsSync(projectFile) ? JSON.parse(readFileSync(projectFile, 'utf8')) : null;
+  if (!projectConfig) preflight.push({ code: 'PROJECT_CONFIG', message: `no ${projectFile}` });
+  const dest = projectConfig?.destinations?.find((d) => d.platform === 'tiktok');
+  const destination = { platform: 'tiktok', account: flags.account ?? dest?.account ?? '@ontarioextern', format: 'photo_carousel', visibility_requested: flags.visibility ?? dest?.default_visibility ?? 'only_you' };
+
+  // 1. facts (tracker bridge + engine rules)
+  const fc = factualCheck(target, { dataFile, evidenceDirs, today });
+  log(`${fc.factual.passed ? '✓' : '✗'} factual check   ${target}`);
+  if (!fc.factual.passed) preflight.push(...fc.factual.errors);
+  const spec = fc.spec;
+  if (spec && spec.status !== 'verified') preflight.push({ code: 'NOT_VERIFIED', message: 'demo specs are never exported' });
+  if (spec && !spec.platforms.includes('tiktok')) preflight.push({ code: 'PLATFORM', message: 'spec does not target tiktok' });
+
+  // 2. sources: every quote on its primary page (saved capture + live page)
+  let src = { results: [], blockers: [], warnings: [] };
+  if (spec) {
+    src = await checkSourceQuotes(spec, { evidence: loadEvidence(evidenceDirs), online: !flags.offline });
+    log(`${src.blockers.length ? '✗' : '✓'} source checks   ${src.results.length} quote checks (${src.results.filter((r) => r.capture?.found).length} in saved capture, ${src.results.filter((r) => r.online?.found).length} on live page)`);
+    for (const b of src.blockers) log(`    ✗ ${b}`);
+    for (const w of src.warnings) log(`    ! ${w}`);
+  }
+
+  // 3. render (TikTok) + visual QA, only if the facts passed
+  let res = null; let browser = null; const outDir = path.join(ENGINE, 'out', `${spec?.id ?? 'x'}--${postId}`);
+  try {
+    if (spec && !preflight.length) {
+      const { renderSpec, launchBrowser } = await import('../src/render/render.js');
+      browser = await launchBrowser();
+      res = await renderSpec(spec, { outDir, today, specPath: path.resolve(target), platforms: ['tiktok'], browser });
+      const qa = res.manifest.platforms.tiktok.slides.flatMap((s) => s.qa.errors.map((e) => ({ ...e, where: `slide ${s.n} ${s.layout}` })));
+      log(`${qa.length ? '✗' : '✓'} visual QA       tiktok ${res.manifest.platforms.tiktok.slides.length} slides`);
+      preflight.push(...qa);
+      if (!res.manifest.verification.publishable) preflight.push({ code: 'ENGINE_NOT_PUBLISHABLE', message: res.manifest.verification.blockers.join('; ') });
+    }
+    const toJpeg = async (png) => {
+      const { width, height } = imageInfo(png);
+      const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 });
+      try {
+        await page.setContent(`<!doctype html><html><body style="margin:0;background:#fff"><img id="i" style="display:block" src="data:image/png;base64,${png.toString('base64')}"></body></html>`);
+        await page.waitForFunction(() => document.getElementById('i').complete);
+        return await page.locator('#i').screenshot({ type: 'jpeg', quality: 92 });
+      } finally { await page.close(); }
+    };
+    const tt = res?.manifest.platforms.tiktok;
+    const r = await exportPackage({
+      inbox, project, postId, today, projectConfig, destination,
+      supersedes: flags.supersedes ?? null,
+      preflight: [...preflight, ...src.blockers.map((b) => ({ code: 'SOURCE', message: b }))],
+      slides: tt ? tt.slides.map((s) => ({ png: path.join(outDir, s.file), layout: s.layout, alt: s.alt })) : [],
+      contactSheetPng: tt ? path.join(outDir, tt.contactSheet) : null,
+      toJpeg,
+      caption: spec ? composeCaption(spec, 'tiktok') : '',
+      generator: { name: '@oet/creative-engine', version: JSON.parse(readFileSync(path.join(ENGINE, 'package.json'), 'utf8')).version, created_by: 'hermes', ...(spec && { spec_id: spec.id, spec_sha256: sha256(readFileSync(target)) }) },
+      sourceVerification: {
+        state: src.blockers.length ? 'failed' : 'verified', checked_at: today,
+        reverify_by: res?.report.reverifyBy ?? null, expires_at: res?.report.postBy ?? null,
+        sources: (spec?.sources ?? []).map((s) => ({ url: s.url, publisher: s.publisher, title: s.title, primary: s.primary, accessed_at: s.accessedAt })),
+        blockers: src.blockers, conflicts: [], engagement_claims: [],
+      },
+      notes: spec ? `Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.` : undefined,
+      externalCheck: grokbotValidator({ kit, python, today }),
+    });
+    const report = { ok: r.ok, post_id: postId, dir: r.dir, errors: r.errors, source_checks: src, ready: r.ready ?? null, fingerprint: r.manifest?.content_fingerprint ?? null };
+    if (res) writeFileSync(path.join(outDir, 'handoff-report.json'), JSON.stringify(report, null, 2) + '\n');
+    if (json) console.log(JSON.stringify(report, null, 2));
+    else if (r.ok) console.log(`✓ exported        ${r.dir}\n  post_id ${postId}  assets ${r.ready.asset_count}  fingerprint ${r.manifest.content_fingerprint}\n  READY.json written last; Grokbot validate.py: APPROVAL_REQUIRED (approval is Rajan's, via Grokbot)`);
+    else { console.log('✗ not exported (nothing written to the inbox)'); for (const e of r.errors) console.log(`    ✗ ${e.code} ${e.where ?? ''} ${e.message}`); }
+    return r.ok ? 0 : 1;
+  } finally { await browser?.close(); }
 }
 
 function usage(msg) { console.error(`${msg}\n\n${HELP}`); return 2; }

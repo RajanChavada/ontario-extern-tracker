@@ -1,0 +1,122 @@
+{
+  "manifest_version": "1.0",
+  "post_id": "test-001",
+  "project": "ontario-extern-tracker",
+  "created_at": "2026-11-14T17:00:11.777Z",
+  "generator": {
+    "name": "@oet/creative-engine",
+    "version": "0.1.0",
+    "created_by": "hermes (rendered on box for test-001)",
+    "spec_id": "explainer-what-is-an-extern-v2",
+    "spec_sha256": "20d08e1d2b1740760e80693eb7b53c038be633fa9336aa9e3e959c0bfcd5a1ce"
+  },
+  "destination": {
+    "platform": "tiktok",
+    "account": "@ontarioextern",
+    "format": "photo_carousel",
+    "visibility_requested": "only_you"
+  },
+  "assets": [
+    {
+      "index": 1,
+      "file": "assets/01-hook.jpg",
+      "sha256": "2f8822d94ed7e6b1e2ff3b7e9b69fb3f8f13794c58c75799857006180955de49",
+      "width": 1080,
+      "height": 1920,
+      "alt": "what’s an extern, actually? the student hospital job nobody explains properly. 60 seconds, with receipts 🧾. swipe. Ontario Extern Tracker."
+    },
+    {
+      "index": 2,
+      "file": "assets/02-text_stack.jpg",
+      "sha256": "3cad3b7363568db1c2cd9c188ce1af074fe403742e08ef2b1d237d4ab3363135",
+      "width": 1080,
+      "height": 1920,
+      "alt": "it’s a real, paid hospital job. you work in an Ontario hospital while you’re still a student. paid, hands-on experience with a real unit team. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 3,
+      "file": "assets/03-board.jpg",
+      "sha256": "3e3e166efb686e5ec10f5a528f23a67377b9734a4132c90b8a9588935fab10b7",
+      "width": 1080,
+      "height": 1920,
+      "alt": "your role on the unit. Your role today. unregulated care provider. Supervised by. regulated health professionals. not a nurse yet, still part of the team. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 4,
+      "file": "assets/04-big_stat.jpg",
+      "sha256": "331171f9a1918c8b2a5782212e8bde8f74458932597c50ccbb9ec8add9c925d2",
+      "width": 1080,
+      "height": 1920,
+      "alt": "4.5M+. hours of coverage from externs every year. thousands of students take part, per Ontario Health. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 5,
+      "file": "assets/05-board.jpg",
+      "sha256": "325085a27dbf332d451bd6d9da034fb48389604bc70441a635721fff50feedf1",
+      "width": 1080,
+      "height": 1920,
+      "alt": "two matching rounds a year. Round one. October. Round two. February. put both in your calendar. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 6,
+      "file": "assets/06-text_stack.jpg",
+      "sha256": "a0b2d15a2ac06ddde09633001fa66f16a96db9cf612631c586b176de5563f4f9",
+      "width": 1080,
+      "height": 1920,
+      "alt": "🙌. not just nursing students. more allied health students are joining. think physio, OT and respiratory therapy. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 7,
+      "file": "assets/07-text_stack.jpg",
+      "sha256": "aacca814204e12248c4eff702f703851f4d121d8d601ccd9b895b358e000cb82",
+      "width": 1080,
+      "height": 1920,
+      "alt": "and it can lead to a job. Ontario Health says hospitals are hiring externs into permanent roles. no promises for anyone, but it’s a real foot in the door. source: Ontario Health, Jun 2026. checked Nov 13, 2026."
+    },
+    {
+      "index": 8,
+      "file": "assets/08-receipts.jpg",
+      "sha256": "33d1999fe6f0316f5807be6e38acb98723d58c29792d71715f32f70f0fd990d0",
+      "width": 1080,
+      "height": 1920,
+      "alt": "receipts 🧾. every claim in this post, and where it came from. Ontario Health. Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program. published Jun 4, 2026. checked Nov 13, 2026. ontariohealth.ca/news/enhanced-extern-program. claims checked. 6. last check. Nov 13, 2026."
+    },
+    {
+      "index": 9,
+      "file": "assets/09-cta.jpg",
+      "sha256": "eb61247d78b51f8d87f381a19fa53d119da593597c100df6c37e82d811f4c3d2",
+      "width": 1080,
+      "height": 1920,
+      "alt": "save this for the next matching round. follow for extern deadlines across Ontario. Ontario Extern Tracker."
+    }
+  ],
+  "caption": "externing, explained 🩺 paid hospital work while you’re a student, two matching rounds a year, and it’s not just for nursing. every claim comes from Ontario Health (checked Nov 13, 2026). save this + follow for deadline drops\n\n#nursingstudent #studentnurse #ontarionursing #externship",
+  "hashtags": [
+    "#nursingstudent",
+    "#studentnurse",
+    "#ontarionursing",
+    "#externship"
+  ],
+  "source_verification": {
+    "state": "verified",
+    "checked_at": "2026-11-14",
+    "reverify_by": "2027-05-12",
+    "expires_at": null,
+    "sources": [
+      {
+        "url": "https://www.ontariohealth.ca/news/enhanced-extern-program",
+        "publisher": "Ontario Health",
+        "title": "Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program",
+        "primary": true,
+        "accessed_at": "2026-11-13"
+      }
+    ],
+    "blockers": [],
+    "conflicts": [],
+    "engagement_claims": []
+  },
+  "approval_state": "not_requested",
+  "content_fingerprint": "f20c243e89cf3d2b0ca2be314d9de8c185a754373387602204001295cabdf58d",
+  "supersedes": null,
+  "notes": "Derived from the real test-001 files. Engine PNGs were exported to JPEG before upload; hashes are of the JPEGs actually uploaded."
+}
