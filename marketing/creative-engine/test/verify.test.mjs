@@ -17,15 +17,17 @@ test('example specs: verified ones are publishable, demos never are', () => {
   }
 });
 
-test('rejects an expired deadline (real case: Michael Garron posting closed Nov 10, 2026)', () => {
+test('rejects an expired deadline', () => {
+  // Fictional posting. (This test previously named Michael Garron J1026-1085 as a "real case" closed on
+  // Nov 10, 2026; our saved captures of that posting show no closing date, so it stays unverified.)
   const s = base();
   s.facts.push({
-    id: 'mgh', kind: 'deadline', org: 'Michael Garron Hospital', role: 'Student Clinical Extern', date: '2026-11-10', status: 'open',
-    claim: 'Position closing date November 10, 2026.', quote: 'Position Closing Date:(or until filled) November 10, 2026',
-    sources: ['mgh-src'], verifiedAt: TODAY,
+    id: 'kbh', kind: 'deadline', org: 'Kestrel Bay Hospital', role: 'Student Clinical Extern', date: '2026-11-10', status: 'open',
+    claim: 'Position closing date November 10, 2026.', quote: 'Position Closing Date: November 10, 2026',
+    sources: ['kbh-src'], verifiedAt: TODAY,
   });
-  s.sources.push({ id: 'mgh-src', publisher: 'Toronto East Health Network', title: 'J1026-1085', url: 'https://tehn.njoyn.com/', accessedAt: TODAY, primary: true });
-  s.slides.splice(1, 0, { layout: 'wristbands', title: 'closing soon', items: [{ fact: 'mgh' }] });
+  s.sources.push({ id: 'kbh-src', publisher: 'Kestrel Bay Hospital', title: 'Student Clinical Extern', url: 'https://example.com/kestrel-bay/extern', accessedAt: TODAY, primary: true });
+  s.slides.splice(1, 0, { layout: 'wristbands', title: 'closing soon', items: [{ fact: 'kbh' }] });
   assert.ok(codes(check(s)).includes('EXPIRED_DEADLINE'));
 });
 
