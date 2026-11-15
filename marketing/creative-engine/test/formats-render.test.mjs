@@ -55,7 +55,7 @@ test('C renders 7 slides on 3:4, 9:16 and 4:5 with zero QA errors, in the approv
     }
     // per-slide photo provenance, in slide order
     assert.deepEqual(p.slides.map((s) => (s.assets ?? []).map((a) => `${a.id}:${a.role}`)), [
-      ['pexels-5537938:photo'], ['pexels-3973981:blurred-background'], ['pexels-5386483:photo'], ['pexels-5499136:photo'], [], ['pexels-5965524:photo'], ['pexels-7439131:photo'],
+      ['pexels-5537938:photo'], ['pexels-3973981:blurred-background'], ['pexels-5386483:photo'], ['pexels-5499136:photo'], [], ['pexels-2440970:photo'], ['pexels-7439131:photo'],
     ]);
     assert.deepEqual(Object.keys(p.slides[0].assets[0]), ['id', 'role', 'source', 'page_url', 'photographer', 'licence', 'licence_url', 'checked', 'shoot_id', 'file_sha256']);
     assert.equal(p.slides[0].assets[0].photographer, 'Zen Chung');

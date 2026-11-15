@@ -116,3 +116,16 @@ C and B sizes are the reference's 3:4 pixels times `--cu`, so 3:4 matches the re
 6. **C4's text block starts at y 630** (reference 640, spec range 620–640), so it fits without shrinking at 3:4.
 7. **The `composition` field (hands/object/scene)** was added to the registry by Hermes from the images. Claude's register has no such field.
 8. **C/B alt text drops pictographs and arrows**: icons, stickers and "↓" are decoration.
+
+## Content corrections after approval (Rajan, 2026-11-14)
+
+- **C2's notes label is "extern notes 📝"**, not "extern notes 🩺". A stethoscope is a clinical tool, and externs work in
+  unregulated care provider roles.
+- **C6 uses pexels-2440970 (glasses on a notebook, no people)** instead of pexels-5965524 (two people walking on campus).
+  Under "some externs get hired into permanent positions", a photo of people could read as those people being externs who were
+  hired. The claim and highlight are unchanged. This leaves C6 and C7 as two desk photos in a row, which the
+  validator flags as a `SAME_COMPOSITION` warning (editorial only).
+- **The caption separates the sources.** "The program facts are from Ontario Health's … page", and ontarioexterns.ca is "our own
+  independent tracker". The deck's "every fact here is from Ontario Health" was wrong for the CTA slide.
+- **Every unblurred C photo gets the format's one grade** (HANDOFF §2), whatever its registry `treatment`, which describes
+  where the asset was first used. B covers stay ungraded.

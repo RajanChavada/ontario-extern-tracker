@@ -7,6 +7,7 @@
 // data-free, data-mark). New: data-mark="ring" is the C word-circle (reference geometry,
 // checked word by word for collisions), and the canvas carries data-photo so contrast QA
 // knows text there has no solid background unless it sits on a box or carries an outline.
+import { Fragment } from 'react';
 import { html } from './h.js';
 import { tidy } from './text.js';
 import { sourceLine } from '../spec/sourceLine.js';
@@ -37,7 +38,7 @@ function Marked({ text, mark }) {
   const span = mark.kind === 'circle'
     ? html`<span className="c-ring" data-mark="ring">${inner}</span>`
     : html`<span className="hl">${nb(inner)}</span>`;
-  return html`${nb(t.slice(0, i))}${span}${nb(t.slice(end))}`;
+  return html`<${Fragment}>${nb(t.slice(0, i))}${span}${nb(t.slice(end))}</${Fragment}>`;
 }
 const markFor = (slide, field) => (slide.mark && slide.mark.in === field ? slide.mark : null);
 
@@ -113,7 +114,7 @@ function BCover({ slide }) {
   const m = tidy(slide.title, { heading: true }).match(/^(.*\S)\s+(\([^()]+\))$/u);
   return html`
     <div className="main b-cover-main" key="main">
-      <h1 className="b-cover-title" data-qa="block" data-role="heading" data-fitw>${m ? html`${m[1]}<span className="b-tail">${m[2]}</span>` : tidy(slide.title, { heading: true })}</h1>
+      <h1 className="b-cover-title" data-qa="block" data-role="heading" data-fitw>${m ? html`<${Fragment}>${m[1]}<span className="b-tail">${m[2]}</span></${Fragment}>` : tidy(slide.title, { heading: true })}</h1>
     </div>
     ${slide.sticker && html`<div className="b-sticker" data-qa="block" data-free key="sticker">📌 ${tidy(slide.sticker)}</div>`}`;
 }
@@ -169,7 +170,7 @@ export function FormatSlide({ slide, ctx }) {
   const Layout = FORMAT_COMPONENTS[slide.layout];
   const photo = slide.photo ? ctx.photo(slide.photo) : null;
   const blurred = slide.layout === 'c_notes';
-  const graded = !blurred && photo?.treatment === 'c-grade';
+  const graded = fmt === 'c' && Boolean(photo) && !blurred; // HANDOFF §2: one grade on every C photo (B covers are ungraded)
   const surface = slide.layout === 'c_paper' ? '#FFFDF7' : fmt === 'b' ? '#FBF6F0' : '#3A3633';
   const pal = fmt === 'b' ? bPalette(slide, ctx.spec) : null;
   const style = {
@@ -185,7 +186,7 @@ export function FormatSlide({ slide, ctx }) {
       data-photo=${photo ? photo.id : undefined}
     >
       ${photo && html`<img className=${`photo${graded ? ' graded' : ''}${blurred ? ' blurred' : ''}`} src=${photo.url} alt="" />`}
-      ${slide.layout === 'c_paper' && html`<div className="paper-lines"></div><div className="paper-margin"></div>`}
+      ${slide.layout === 'c_paper' && html`<${Fragment}><div className="paper-lines"></div><div className="paper-margin"></div></${Fragment}>`}
       ${pal && html`<div className="b-band"></div>`}
       <section className="safe" style=${{ left: `${box.x}px`, top: `${box.y}px`, width: `${box.width}px`, height: `${box.height}px` }}>
         ${ctx.demo && html`<div className="stamp" data-qa="block" data-free>sample data, not real postings</div>`}

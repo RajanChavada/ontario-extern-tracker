@@ -67,8 +67,16 @@ test('C and B carry the copy deck verbatim: same headlines, bodies, fine print, 
   assert.deepEqual(b.slides.map((s) => s.facts ?? []), DECK.slides.map((s) => s.facts));
   for (const spec of [c, b]) {
     assert.deepEqual(spec.facts.map((f) => [f.id, f.claim, f.verifiedAt]), DECK.facts.map((f) => [f.id, f.claim, f.verifiedAt]));
-    assert.deepEqual(spec.caption, DECK.caption);
+    // Caption corrected 2026-11-14 (Rajan): the deck said "every fact here is from Ontario Health", but the
+    // last slide describes our own site. Hashtags unchanged.
+    assert.deepEqual(spec.caption.hashtags, DECK.caption.hashtags);
+    assert.equal(spec.caption.text, "what a clinical extern actually is, in plain words. the program facts are from Ontario Health's Enhanced Extern Program page (updated June 4, 2026). looking for postings? ontarioexterns.ca is our own independent tracker, not affiliated with any hospital or Ontario Health. which part was new to you?");
+    assert.doesNotMatch(spec.caption.text, /every fact/);
   }
+  // C2 label: no clinical-tool emoji; C6: no people under the permanent-positions claim
+  assert.equal(c.slides[1].label, 'extern notes 📝');
+  assert.equal(c.slides[5].photo, 'pexels-2440970');
+  assert.equal(loadRegistry().byId.get(c.slides[5].photo).contains_people, false);
   assert.deepEqual(c.facts, b.facts);
   assert.deepEqual(c.sources, b.sources);
   // the one documented change: Ontario Health shows "Last Updated", not a publish date
@@ -80,7 +88,7 @@ test('C and B carry the copy deck verbatim: same headlines, bodies, fine print, 
 test('both reference carousels pass the fact rules: 7 slides, no receipts slide added', () => {
   const rc = check(C());
   assert.deepEqual(codes(rc), []);
-  assert.deepEqual(warnCodes(rc), ['CLINICAL_EMOJI']); // 🩺 on the notes label, from the reference
+  assert.deepEqual(warnCodes(rc), ['SAME_COMPOSITION']); // C6 and C7 are both desk/object photos (editorial)
   assert.equal(rc.publishable, true);
   const rb = check(B());
   assert.deepEqual(codes(rb), []);
@@ -193,6 +201,12 @@ test('at most two asides, on the cover and the CTA only; at most two designed sl
   assert.ok(codes(check(designed)).includes('C_DESIGNED_MAX'));
 });
 
+test('a clinical-tool emoji still warns (the stethoscope removed from C2 would be flagged)', () => {
+  const s = C();
+  s.slides[1].label = 'extern notes 🩺';
+  assert.deepEqual(warnCodes(check(s)), ['CLINICAL_EMOJI', 'SAME_COMPOSITION']);
+});
+
 test('a word-mark must mark text that is on the slide', () => {
   const s = C();
   s.slides[3].mark = { kind: 'circle', phrase: 'March and April' };
@@ -219,11 +233,14 @@ test('no first-person copy over stock photos, and alt text never labels a stock 
   s.slides[5].body = 'We think hospitals are hiring externs for permanent positions.';
   assert.ok(codes(check(s)).includes('STOCK_FIRST_PERSON'));
   const alt = C();
-  alt.slides[5].alt = 'Two nursing students walking to class.';
+  alt.slides[0].alt = 'Two nursing students studying in a park.'; // C1's photo shows people (hands)
   assert.deepEqual(codes(check(alt)), ['PHOTO_PERSON_LABEL']);
   const scene = C();
-  scene.slides[5].alt = 'Two people walking on a campus path, seen from behind.';
+  scene.slides[0].alt = 'Hands writing in a notebook next to a laptop, outdoors.';
   assert.deepEqual(codes(check(scene)), []);
+  const noPeople = C();
+  noPeople.slides[5].alt = 'Glasses on a student notebook.'; // C6's photo has no people, so nobody is being labelled
+  assert.deepEqual(codes(check(noPeople)), []);
 });
 
 test('the fabricated reply sticker is retired; other hook variants are unchanged', () => {
