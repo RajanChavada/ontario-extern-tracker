@@ -36,7 +36,7 @@ For anything naming a hospital posting (deadline, pay, eligibility, vacancies), 
 
 ## Formats C and B
 
-Posts are `"voice": "brand"` (default) or `"student"` (first person, Rajan; claims only from workspace/voice/voice-profile.json; see docs/CONTENT.md). Write marketing posts hook-first (docs/CONTENT.md): relatable hook → value → the Ontario posting as the real example → CTA, with a `brief` (candidate hooks, why, payoff, research evidence). Reference: `specs/tracker/shn-talent-pool-explainer.json`.
+Posts are `"voice": "brand"` (default) or `"student"` (first person, the account owner, never named; claims only from workspace/voice/voice-profile.json; see docs/CONTENT.md). Write marketing posts hook-first (docs/CONTENT.md): relatable hook → value → the Ontario posting as the real example → CTA, with a `brief` (candidate hooks, why, payoff, research evidence). Reference: `specs/tracker/shn-talent-pool-explainer.json`.
 Campaigns (`oet`) default to format C and fail with `FORMAT_NOT_RENDERED` if the slides are another format; deadline posts start from `specs/tracker/wch-closes-nov20-c.json`. Set `"format": "b"` for dense reference posts and `"format": "classic"` only on purpose.
 For new carousels, start from `specs/formats/c-what-a-clinical-extern-is.json` (format C, primary) or the B spec,
 and read [docs/FORMATS.md](docs/FORMATS.md). Photos come only from `assets/registry.json`: never add an

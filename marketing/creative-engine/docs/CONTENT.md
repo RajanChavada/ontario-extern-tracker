@@ -1,4 +1,4 @@
-# Content strategy for marketing posts (Rajan, 2026-11-14)
+# Content strategy for marketing posts (2026-11-14)
 
 Write like a nursing-student creator, not a hospital job board. A post earns the swipe with a student problem and pays it off with something useful. The Ontario posting arrives as the real example, not as the headline.
 
@@ -36,7 +36,7 @@ Write 3–8 candidate hooks in `brief.hooks` and pick the one that best fits all
 Record the choice in `brief.why`, the payoff in `brief.payoff`, and the research IDs in `brief.evidence`. `oet check` warns when a marketing post has no brief (BRIEF_MISSING) and fails if the cover isn't one of the candidate hooks (BRIEF_HOOK_MISMATCH).
 
 ## Honesty (validator-enforced where it can be checked)
-- **Voice (decision 9, 2026-11-15).** Posts are either `"voice": "brand"` (the default: second and third person, no first person; FIRST_PERSON_CLAIM, STOCK_FIRST_PERSON) or `"voice": "student"`. In the student voice, the "i" is the real student in the voice profile: Rajan, who runs the tracker and consented on 2026-11-15. The profile lives at `workspace/voice/voice-profile.json`, outside the repo; override it with `OET_VOICE_PROFILE`.
+- **Voice (decision 9, 2026-11-15).** Posts are either `"voice": "brand"` (the default: second and third person, no first person; FIRST_PERSON_CLAIM, STOCK_FIRST_PERSON) or `"voice": "student"`. In the student voice, the "i" is the real student in the voice profile: the account owner, who runs the tracker and consented on 2026-11-15. Never name the voice in posts, specs, docs or handoffs. The profile lives at `workspace/voice/voice-profile.json`, outside the repo; override it with `OET_VOICE_PROFILE`.
   - **Profile required.** A student-voice post needs the profile with signed consent (VOICE_PROFILE_MISSING, VOICE_CONSENT).
   - **Claims.** First person is fine. Experience claims ("when i applied…", "i'm in third year", "my placement", "i got…") must appear word for word in the profile's `true_statements` (VOICE_UNSUPPORTED_CLAIM). Never fill those in on the student's behalf. Program, year and experience are blank until he adds them.
   - **The link to the tracker.** Wherever ontarioexterns.ca appears, say the link plainly: "the list i help run" or "i run" (VOICE_LINK_UNDISCLOSED).
