@@ -1,4 +1,4 @@
-import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl, countHospitals } from './logic.js';
+import { ontarioToday, formatDate, status, deadlineInfo, eligibility, sortEntries, googleCalendarUrl, countHospitals, openSummary, shownDeadline } from './logic.js';
 import { initAnalytics, track, markVisit } from './analytics.js';
 import { CONFIG } from './config.js';
 
@@ -48,10 +48,12 @@ const MARK = { ok: '✓', no: '✕', check: '?', info: '·' };
 function row(e) {
   const s = st(e), t = statusText(e, s), el = eligibility(e, state);
   const live = s.group === 0, closed = s.key === 'closed';
-  const dl = deadlineInfo(e, today);
+  const dl = shownDeadline(e, today); // never a date for an Unconfirmed listing
   const close = dl
     ? `<p class="close-date ${dl.daysAway <= 7 && dl.daysAway >= 0 ? 'soon' : ''}"><span class="lbl">Closes </span><b>${esc(shortDate(dl.date))}</b><span class="meta">${esc(dl.when)}</span></p>`
-    : (live ? `<p class="close-date none">No closing date</p>` : `<p class="close-date none dash" aria-hidden="true">—</p>`);
+    : (live ? `<p class="close-date none">No closing date</p>`
+      : s.key === 'unconfirmed' && e.deadline ? `<p class="close-date none">Closing date not confirmed</p>`
+      : `<p class="close-date none dash" aria-hidden="true">—</p>`);
   const pay = e.pay_text ? `<p class="pay">${esc(e.pay_text)}</p>` : `<p class="pay none">${live ? 'Pay not listed' : ''}</p>`;
   const fit = profileSet() && !closed
     ? `<p class="fit fit-${el.verdict} ${live ? '' : 'fit-quiet'}">${esc(el.label)}</p>` : '';
@@ -68,7 +70,7 @@ function row(e) {
   return `
   <article class="row ${closed ? 'is-closed' : ''}" data-id="${id}">
     <div class="c-hosp"><h3 class="name">${esc(e.hospital)}</h3><p class="meta">${esc(e.location)} · ${esc(e.program_name)}</p></div>
-    <div class="c-status"><p class="status ${t.cls}">${esc(t.label)}</p>${t.note ? `<p class="meta">${esc(t.note)}</p>` : ''}</div>
+    <div class="c-status"><p class="status ${t.cls}">${esc(t.label)}</p>${t.note ? `<p class="meta">${esc(t.note)}</p>` : ''}<p class="meta checked">Checked ${esc(shortDate(e.last_verified))}</p></div>
     <div class="c-when"><div class="c-close">${close}</div><div class="c-pay">${pay}</div></div>
     <div class="c-fit">${fit}</div>
     <div class="c-actions"><div class="c-act">${primary}</div>
@@ -109,16 +111,12 @@ function render() {
   const closed = list.filter(e => st(e).group === 4);
 
   // Intro facts come from the full dataset, so they don't move with filters.
-  const all = DATA.entries.map(e => [e, st(e)]);
-  const nLive = all.filter(([, s]) => s.group === 0).length;
-  const nPos = all.filter(([, s]) => s.key === 'open_vacancies').length;
-  const nPool = all.filter(([, s]) => s.key === 'open_talent_pool').length;
-  const nOther = nLive - nPos - nPool;
-  const nLiveHosp = countHospitals(all.filter(([, s]) => s.group === 0).map(([e]) => e));
-  const next = all.filter(([e, s]) => s.group === 0 && e.deadline && deadlineInfo(e, today)?.daysAway >= 0).map(([e]) => e.deadline).sort()[0];
+  const sum = openSummary(DATA.entries, today); // Unconfirmed listings are never counted as taking applications
+  const nLive = sum.listings, nPos = sum.positions, nPool = sum.pools, nOther = sum.other, nLiveHosp = sum.hospitals, next = sum.nextDeadline;
   const parts = [nPos && `${nPos} ${nPos === 1 ? 'lists' : 'list'} positions`, nPool && `${nPool} ${nPool === 1 ? 'is a talent pool' : 'are talent pools'}`, nOther && `${nOther} ${nOther === 1 ? "doesn't" : "don't"} say`].filter(Boolean);
   $('#standfirst').innerHTML = `<strong>${nLiveHosp} ${nLiveHosp === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${nLiveHosp !== nLive ? ` (${nLive} listings)` : ''}${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
-  $('#dateline').textContent = `Verified ${shortDate(DATA.dataset_checked)} on ${countHospitals(DATA.entries)} hospitals' own career pages`;
+  // dataset_checked = last day ALL listings were checked (never later than the oldest listing's check); each row shows its own date.
+  $('#dateline').textContent = `Last full check of all ${countHospitals(DATA.entries)} hospitals' own career pages: ${shortDate(DATA.dataset_checked)}. Each listing shows the date we last checked it.`;
 
   const meets = live.filter(e => eligibility(e, state).verdict === 'meets').length;
   $('#summary').innerHTML = profileSet()

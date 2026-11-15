@@ -270,6 +270,7 @@ export function validateData(data) {
     if (e.last_verified && !isIsoDate(e.last_verified)) p('bad last_verified');
     if (!STATUS[e.posting_type]) p(`unknown posting_type ${e.posting_type}`);
     if (OPEN_TYPES.has(e.posting_type) && e.source_kind !== 'posting') p('open status needs a posting as source');
+    if (e.posting_type === 'unconfirmed' && !e.unconfirmed_reason) p('unconfirmed needs an unconfirmed_reason (say why, and when it was last seen)');
     if (e.posting_type === 'open_vacancies' && !Number.isInteger(e.positions_listed) && e.positions_listed !== undefined) p('positions_listed must be an integer');
     if (e.positions_listed !== undefined && e.posting_type !== 'open_vacancies') p('positions_listed only allowed on open_vacancies');
     if (e.postings !== undefined) {
@@ -283,5 +284,43 @@ export function validateData(data) {
       if (e.source_kind !== 'posting') p('postings need source_kind "posting"');
     }
   }
+  // The page's date line ("Verified <dataset_checked> on N hospitals' own career pages") must not claim a later
+  // check than the oldest entry actually had.
+  if (data.dataset_checked !== undefined) {
+    const oldest = (data.entries || []).map(e => e.last_verified).filter(isIsoDate).sort()[0];
+    if (!isIsoDate(data.dataset_checked)) problems.push('dataset_checked: bad date');
+    else if (oldest && data.dataset_checked > oldest) problems.push(`dataset_checked ${data.dataset_checked} is later than the oldest entry check (${oldest})`);
+  }
   return problems;
+}
+
+/**
+ * Release gate: entries the page would show as taking applications (group 0) on `today` whose last check is
+ * more than maxAge days old. Entries shown as Closed, Not open now, No live posting linked or Unconfirmed are not
+ * included: they claim nothing open, so they must not block a correction from shipping.
+ */
+export function staleOpenEntries(data, today, maxAge = 2) {
+  return (data.entries || []).filter(e => status(e, today).group === 0 && daysBetween(e.last_verified, today) > maxAge);
+}
+
+/**
+ * Headline numbers. Only listings whose status is open on `today` count (group 0): an Unconfirmed listing, whether
+ * marked so in the data or gone stale, is never counted as taking applications.
+ */
+export function openSummary(entries, today) {
+  const all = entries.map(e => [e, status(e, today)]);
+  const open = all.filter(([, s]) => s.group === 0);
+  const positions = open.filter(([, s]) => s.key === 'open_vacancies').length;
+  const pools = open.filter(([, s]) => s.key === 'open_talent_pool').length;
+  return {
+    hospitals: countHospitals(open.map(([e]) => e)),
+    listings: open.length, positions, pools, other: open.length - positions - pools,
+    unconfirmed: all.filter(([, s]) => s.key === 'unconfirmed').length,
+    nextDeadline: open.filter(([e]) => e.deadline && deadlineInfo(e, today)?.daysAway >= 0).map(([e]) => e.deadline).sort()[0] || null,
+  };
+}
+
+/** Closing date to display, or null. An Unconfirmed listing never shows a closing date as if it were confirmed. */
+export function shownDeadline(entry, today) {
+  return status(entry, today).key === 'unconfirmed' ? null : deadlineInfo(entry, today);
 }

@@ -21,9 +21,9 @@ Workers & Pages → Create → Pages → **Connect to Git** → GitHub → insta
 Cloudflare installs dependencies from `package-lock.json` before the build command. The only dependency, `puppeteer-core`, is used by the carousel tools and downloads no browser.
 
 **The build fails, so nothing deploys and the previous deployment stays live, if any of these happen:**
-- a test fails (25 tests: dates, deadlines, staleness, eligibility, calendar files, build output, stale-data blocking);
+- a test fails (dates, deadlines, staleness, eligibility, calendar files, build output, stale-data blocking);
 - `check-data` finds invalid data;
-- on `main`, the data was last checked more than 2 days before the build date, or the output contains private paths, debug mode, `JobPosting` markup or unexpected files.
+- on `main`, a listing would be shown as open on a check more than 2 days before the build date, or the whole dataset is more than 7 days old, or the output contains private paths, debug mode, `JobPosting` markup or unexpected files.
 
 **Preview builds** (any branch other than `main`) never load analytics, only warn on stale data, and are served on `*.pages.dev` with `X-Robots-Tag: noindex`.
 

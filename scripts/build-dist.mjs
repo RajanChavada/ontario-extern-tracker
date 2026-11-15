@@ -10,10 +10,11 @@
 //
 // Builds dist/: the only folder that is ever uploaded. It contains an explicit allow-list of public files.
 // Research notes, docs, tests, scripts and git metadata are never copied.
-// The build fails if the data is invalid, older than 2 days, or if dist/ contains anything that looks private.
+// The build fails if the data is invalid, if anything would be shown as open on a check older than 2 days, if the
+// whole dataset is older than 7 days, or if dist/ contains anything that looks private.
 import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { validateData, ontarioToday, daysBetween } from '../assets/logic.js';
+import { validateData, ontarioToday, daysBetween, staleOpenEntries } from '../assets/logic.js';
 
 const root = new URL('../', import.meta.url).pathname;
 const args = process.argv.slice(2);
@@ -34,13 +35,21 @@ const host = new URL(site).hostname;
 const umamiDomains = host.startsWith('www.') ? host : `${host},www.${host}`; // tracker only runs on these hosts (never pages.dev, previews or localhost)
 
 // 1. Data gate
-const data = JSON.parse(readFileSync(root + 'data/hospitals.json'));
+const data = JSON.parse(readFileSync(process.env.ET_DATA || root + 'data/hospitals.json')); // ET_DATA: tests only
 const problems = validateData(data);
 if (problems.length) fail('data problems:\n  ' + problems.join('\n  '));
 const today = process.env.ET_TODAY || ontarioToday(); // ET_TODAY: tests only
 const age = daysBetween(data.dataset_checked, today);
-if (age > 2 && isPreview) console.warn(`WARNING (preview only): data last checked ${data.dataset_checked}, ${age} days ago`);
-else if (age > 2 && !args.includes('--allow-stale')) fail(`data last checked ${data.dataset_checked} (${age} days ago). Re-verify (REFRESH.md) before deploying.`);
+// Nothing may be SHOWN as open on a check older than 2 days. Entries shown as Closed / Not open now / Unconfirmed
+// don't block, so a correction can ship while another hospital's board can't be re-checked. The date line stays
+// honest because validateData requires dataset_checked <= the oldest entry check. Backstop: 7 days, the point at
+// which every entry would show as Unconfirmed anyway.
+const staleOpen = staleOpenEntries(data, today).map(e => `${e.id} (checked ${e.last_verified})`);
+const strict = !isPreview && !args.includes('--allow-stale');
+if (isPreview && (staleOpen.length || age > 2)) console.warn(`WARNING (preview only): data last checked ${data.dataset_checked}, ${age} days ago; shown open on an old check: ${staleOpen.join(', ') || 'none'}`);
+if (strict && age > 7) fail(`data last checked ${data.dataset_checked} (${age} days ago). Re-verify (REFRESH.md) before deploying.`);
+if (strict && staleOpen.length) fail(`shown as open on a check older than 2 days: ${staleOpen.join(', ')}. Re-verify them, or mark them unconfirmed (REFRESH.md), before deploying.`);
+if (age > 2) console.log(`note: the page's "Last full check" line reads ${data.dataset_checked} (the oldest entry check, ${age} days ago)`);
 const oldest = data.entries.map(e => e.last_verified).sort()[0];
 
 // 2. Calendar files from the current data

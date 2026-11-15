@@ -35,7 +35,7 @@ A lead is anything that suggests a posting exists or changed. **A lead is never 
 ## 3. The data file
 `data/hospitals.json` is the single source the site reads:
 - one entry per hospital programme;
-- `dataset_checked` = the day of the most recent full check;
+- `dataset_checked` = the last day every entry was checked (never later than the oldest `last_verified`; shown as "Last full check");
 - each entry's `last_verified` = the day that entry was checked on the official page.
 
 `scripts/build-ics.mjs` regenerates `cal/<id>.ics` for entries with a closing date. `build-dist.mjs` runs it.
@@ -68,5 +68,5 @@ So closings take care of themselves, but **every entry needs re-verifying at lea
 1. Commit on a `preview/<topic>-<date>` branch and push it. Cloudflare builds a preview at `https://<branch-slug>.ontario-externtracker.pages.dev`. Previews have analytics off and noindex.
 2. Rajan reviews the preview and the PR diff. For data changes, the diff of `data/hospitals.json` is the review.
 3. Merge to `main` → **Cloudflare deploys to ontarioexterns.ca automatically** (automatic production deploys are enabled).
-4. **Production guard:** a `main` build fails if `dataset_checked` is more than 2 days old, if any test or data check fails, or if the leak scan finds private paths, `JobPosting` markup or unexpected files. A failed build leaves the previous version live. This applies to *any* merge, including non-data ones, so refresh the data before merging if it's more than 2 days old.
+4. **Production guard:** a `main` build fails if any listing would be shown as open (taking applications) on a check more than 2 days old, if the whole dataset (`dataset_checked`) is more than 7 days old (backstop: by then every entry shows Unconfirmed anyway), if any test or data check fails, or if the leak scan finds private paths, `JobPosting` markup or unexpected files. A failed build leaves the previous version live. This applies to *any* merge, including non-data ones. Listings shown as Closed, Not open now or Unconfirmed don't block a deploy, so a correction can ship while another hospital's board can't be re-checked.
 5. Spot-check after deploy: the live JSON shows the new `dataset_checked`; the changed rows render correctly on a phone.
