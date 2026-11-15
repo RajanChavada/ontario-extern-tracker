@@ -75,7 +75,7 @@ test('status on the verification day keeps vacancy, pool and window distinct', (
   assert.equal(status(byId.lhsc, t).key, 'check_employer');
   assert.equal(status(byId.uhn, t).key, 'closed');
   assert.equal(status(byId.osler, t).key, 'closed');
-  assert.equal(status(byId.hhs, t).key, 'unconfirmed');
+  assert.equal(status(byId.hhs, t).key, 'check_employer'); // official board searched Nov 14: no extern posting (not a blocked check)
 });
 
 test('status: deadline day is still open; the day after is closed', () => {
@@ -466,5 +466,27 @@ test('data (Nov 14 release): Michael Garron x3 Unconfirmed with links and real c
   assert.equal(byId.southlake.positions_listed, undefined);
   assert.ok(data.dataset_checked <= data.entries.map(e => e.last_verified).sort()[0]);
   const sum = openSummary(data.entries, '2026-11-14');
-  assert.deepEqual(sum, { hospitals: 6, listings: 6, positions: 1, pools: 2, other: 3, unconfirmed: 4, nextDeadline: '2026-11-20' });
+  assert.deepEqual(sum, { hospitals: 6, listings: 6, positions: 1, pools: 2, other: 3, unconfirmed: 3, nextDeadline: '2026-11-20' });
+});
+
+test('data (Nov 14 release): HHS is a verified search that found nothing, not an Unconfirmed (blocked) check', () => {
+  const e = byId.hhs;
+  assert.equal(e.posting_type, 'check_employer');
+  assert.equal(e.unconfirmed_reason, undefined);
+  assert.match(e.window_text, /searched HHS's official job board for external applicants \(Taleo\) on Nov 14 and found no clinical extern posting/);
+  assert.equal(e.last_verified, '2026-11-14');
+  assert.equal(status(e, '2026-11-14').label, 'No live posting linked');
+  // Unconfirmed is reserved for postings we could not read: only the CAPTCHA-blocked Michael Garron ones
+  assert.deepEqual(data.entries.filter(x => status(x, '2026-11-14').key === 'unconfirmed').map(x => x.id).sort(), ['mgh', 'mgh-help', 'mgh-hro']);
+});
+
+test('page units reconcile: sections count listings; 17 listings at 15 hospitals', () => {
+  const t = '2026-11-14';
+  const g = (n) => data.entries.filter(e => status(e, t).group === n).length;
+  const sections = { taking: g(0), notOpenOrNoPosting: g(1) + g(2), unconfirmed: g(3), closed: g(4) };
+  assert.deepEqual(sections, { taking: 6, notOpenOrNoPosting: 4, unconfirmed: 3, closed: 4 });
+  assert.equal(Object.values(sections).reduce((a, b) => a + b, 0), data.entries.length);
+  assert.equal(data.entries.length, 17);
+  assert.equal(countHospitals(data.entries), 15); // Michael Garron has 3 listings; the date line names both units
+  assert.equal(openSummary(data.entries, t).hospitals, openSummary(data.entries, t).listings); // so the headline needs no "(N listings)"
 });

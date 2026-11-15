@@ -21,6 +21,9 @@ The page marks every entry **Unconfirmed** once it's 8 or more days since it was
    and nobody has checked it by hand: set `posting_type: "unconfirmed"` with an `unconfirmed_reason` that says when it
    was last seen and why it isn't re-checked, remove `positions_listed`, keep `source_url` and leave `last_verified` at the
    real date it was last seen. Never move `last_verified` for a page nobody read.
+   Keep two cases apart: **we could not read it** (blocked, error) → `unconfirmed`; **we read the official board and
+   it has no such posting** → `check_employer` with a `window_text` saying which board was searched and when (or `closed`
+   if a posting we listed is gone). A clean search is a finding, not an unknown.
 6. **New posting found** (e.g. the HHS official posting, or CHEO in February): add an entry with `source_kind: "posting"`. An "Open" status is only allowed with a posting link.
 7. Run `node scripts/build-ics.mjs`, then `node --test tests/*.test.mjs` and `node scripts/check-data.mjs`; all must pass.
 8. Set `dataset_checked` to the **oldest** `last_verified` in the file (today only if every entry was checked today). It is

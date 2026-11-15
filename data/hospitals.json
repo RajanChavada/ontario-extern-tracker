@@ -577,8 +577,8 @@
       "region": "hamilton",
       "location": "Hamilton",
       "program_name": "Clinical Extern (Nurse)",
-      "posting_type": "unconfirmed",
-      "unconfirmed_reason": "Job aggregators list an HHS clinical extern posting, but we couldn't find it on HHS's official careers search (Taleo) on Nov 14. Check HHS directly.",
+      "posting_type": "check_employer",
+      "window_text": "We searched HHS's official job board for external applicants (Taleo) on Nov 14 and found no clinical extern posting. Job aggregators have listed one, but aggregators aren't an official source. Check HHS directly.",
       "deadline": null,
       "pay_text": null,
       "source_url": "https://www.hhscareers.ca/",
@@ -591,7 +591,7 @@
         "bcls": null,
         "also_listed": []
       },
-      "short": "Not found on HHS careers site"
+      "short": "None on HHS job board (searched Nov 14)"
     }
   ]
 }

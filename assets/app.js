@@ -107,7 +107,8 @@ function render() {
   const rank = { meets: 0, check: 1, incomplete: 1, not_met: 2 };
   const byFit = arr => arr.sort((a, b) => rank[eligibility(a, state).verdict] - rank[eligibility(b, state).verdict]);
   const live = byFit(list.filter(e => st(e).group === 0));
-  const notOpen = byFit(list.filter(e => [1, 2, 3].includes(st(e).group)));
+  const notOpen = byFit(list.filter(e => [1, 2].includes(st(e).group)));      // not open now, or no live posting linked
+  const unconfirmed = byFit(list.filter(e => st(e).group === 3));             // status unknown: never shown as open or as not open
   const closed = list.filter(e => st(e).group === 4);
 
   // Intro facts come from the full dataset, so they don't move with filters.
@@ -116,7 +117,8 @@ function render() {
   const parts = [nPos && `${nPos} ${nPos === 1 ? 'lists' : 'list'} positions`, nPool && `${nPool} ${nPool === 1 ? 'is a talent pool' : 'are talent pools'}`, nOther && `${nOther} ${nOther === 1 ? "doesn't" : "don't"} say`].filter(Boolean);
   $('#standfirst').innerHTML = `<strong>${nLiveHosp} ${nLiveHosp === 1 ? 'hospital is' : 'hospitals are'} taking applications</strong>${nLiveHosp !== nLive ? ` (${nLive} listings)` : ''}${parts.length ? `: ${esc(parts.join(', '))}` : ''}.${next ? ` Next closing date: ${esc(shortDate(next))}.` : ''}`;
   // dataset_checked = last day ALL listings were checked (never later than the oldest listing's check); each row shows its own date.
-  $('#dateline').textContent = `Last full check of all ${countHospitals(DATA.entries)} hospitals' own career pages: ${shortDate(DATA.dataset_checked)}. Each listing shows the date we last checked it.`;
+  // Units: sections count listings (a hospital can have several, e.g. Michael Garron has 3); the date line names both.
+  $('#dateline').textContent = `Last full check of all ${DATA.entries.length} listings at ${countHospitals(DATA.entries)} hospitals, on their own career pages: ${shortDate(DATA.dataset_checked)}. Each listing shows the date we last checked it.`;
 
   const meets = live.filter(e => eligibility(e, state).verdict === 'meets').length;
   $('#summary').innerHTML = profileSet()
@@ -131,7 +133,8 @@ function render() {
       <div class="rows" ${opts.toggle && !ui.closedOpen ? 'hidden' : ''}>${items.map(row).join('')}</div>
     </section>` : '';
   $('#results').innerHTML = (section('Taking applications', live, { head: true }) +
-    section('Not taking applications now', notOpen, { head: !live.length }) +
+    section('Not open now, or no live posting linked', notOpen, { head: !live.length }) +
+    section('Unconfirmed: check the hospital\'s posting', unconfirmed, { head: !live.length && !notOpen.length }) +
     section('Closed', closed, { toggle: true })) || '<p class="resultline">No hospitals match these filters.</p>';
   syncControls();
 }
