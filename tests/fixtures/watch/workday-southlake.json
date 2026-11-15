@@ -1,0 +1,41 @@
+{
+ "total": 6,
+ "jobPostings": [
+  {
+   "title": "Clinical Extern",
+   "externalPath": "/job/Newmarket-ON/Clinical-Extern_JR-102401",
+   "locationsText": "Newmarket ON",
+   "postedOn": "Posted 30+ Days Ago",
+   "bulletFields": [
+    "JR-102401"
+   ]
+  },
+  {
+   "title": "Discharge Nurse - Medicine & ALC",
+   "externalPath": "/job/Newmarket-ON/Discharge-Nurse---Medicine---ALC_JR-102506-1",
+   "locationsText": "Newmarket ON",
+   "postedOn": "Posted 3 Days Ago",
+   "bulletFields": [
+    "JR-102506"
+   ]
+  },
+  {
+   "title": "Strategy Business Partner",
+   "externalPath": "/job/Newmarket-ON/Strategy-Business-Partner_JR-102579",
+   "locationsText": "Newmarket ON",
+   "postedOn": "Posted 15 Days Ago",
+   "bulletFields": [
+    "JR-102579"
+   ]
+  },
+  {
+   "title": "Respiratory Therapy Educator - Full Time",
+   "externalPath": "/job/Newmarket-ON/Respiratory-Therapy-Educator---Full-Time_JR-102592",
+   "locationsText": "Newmarket ON",
+   "postedOn": "Posted 10 Days Ago",
+   "bulletFields": [
+    "JR-102592"
+   ]
+  }
+ ]
+}

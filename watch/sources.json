@@ -1,0 +1,232 @@
+{
+  "_note": "Watcher step 1. One row per official board. 'entries' = ids in data/hospitals.json that this board backs. 'tracked: false' = watch-only board (discovery of hospitals not yet listed). 'manual' boards can't be read automatically and are listed in every report until a person checks them.",
+  "sources": [
+    {
+      "id": "southlake-workday",
+      "hospital": "Southlake Health",
+      "entries": [
+        "southlake"
+      ],
+      "adapter": "workday",
+      "params": {
+        "host": "southlake.wd10.myworkdayjobs.com",
+        "tenant": "southlake",
+        "site": "Southlake"
+      }
+    },
+    {
+      "id": "shn-workday",
+      "hospital": "Scarborough Health Network",
+      "entries": [
+        "shn"
+      ],
+      "adapter": "workday",
+      "params": {
+        "host": "shn.wd10.myworkdayjobs.com",
+        "tenant": "shn",
+        "site": "SHN_External_Career_Site"
+      }
+    },
+    {
+      "id": "humber-icims",
+      "hospital": "Humber River Health",
+      "entries": [
+        "humber"
+      ],
+      "adapter": "icims",
+      "params": {
+        "host": "careersen-hrrh.icims.com"
+      }
+    },
+    {
+      "id": "mackenzie-icims",
+      "hospital": "Mackenzie Health",
+      "entries": [
+        "mackenzie"
+      ],
+      "adapter": "icims",
+      "params": {
+        "host": "employment-mackenziehealth.icims.com"
+      }
+    },
+    {
+      "id": "thp-oracle",
+      "hospital": "Trillium Health Partners",
+      "entries": [
+        "thp"
+      ],
+      "adapter": "oracle",
+      "params": {
+        "host": "iadyup.fa.ocs.oraclecloud.com",
+        "site": "CX_4001"
+      }
+    },
+    {
+      "id": "uhn-smartrecruiters",
+      "hospital": "University Health Network",
+      "entries": [
+        "uhn"
+      ],
+      "adapter": "smartrecruiters",
+      "params": {
+        "company": "UniversityHealthNetwork"
+      }
+    },
+    {
+      "id": "osler-smartrecruiters",
+      "hospital": "William Osler Health System",
+      "entries": [
+        "osler"
+      ],
+      "adapter": "smartrecruiters",
+      "params": {
+        "company": "WilliamOslerHealthSystem1"
+      }
+    },
+    {
+      "id": "sunnybrook-posting",
+      "hospital": "Sunnybrook Health Sciences Centre",
+      "entries": [
+        "sunnybrook"
+      ],
+      "adapter": "page",
+      "params": {
+        "url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
+        "mode": "posting",
+        "expect": "Clinical Extern"
+      }
+    },
+    {
+      "id": "cheo-page",
+      "hospital": "CHEO",
+      "entries": [
+        "cheo"
+      ],
+      "adapter": "page",
+      "params": {
+        "url": "https://www.cheo.on.ca/en/about-us/careers/nursing-health-human-resources-programs-students-and-clinical-externs/",
+        "expect": "Clinical Extern"
+      }
+    },
+    {
+      "id": "sickkids-page",
+      "hospital": "SickKids",
+      "entries": [
+        "sickkids"
+      ],
+      "adapter": "page",
+      "params": {
+        "url": "https://www.sickkids.ca/en/learning/student-centre/nursing-learners/nursing-clinical-extern-program/",
+        "expect": "Clinical Extern"
+      }
+    },
+    {
+      "id": "uhn-page",
+      "hospital": "University Health Network",
+      "entries": [
+        "uhn"
+      ],
+      "adapter": "page",
+      "params": {
+        "url": "https://www.uhn.ca/healthcareprofessionals/Meet_Professions/Collaborative_Academic_Practice/ClinicalExterns",
+        "expect": "Clinical Extern"
+      }
+    },
+    {
+      "id": "lhsc-page",
+      "hospital": "London Health Sciences Centre",
+      "entries": [
+        "lhsc"
+      ],
+      "adapter": "page",
+      "params": {
+        "url": "https://www.lhsc.on.ca/nursing/recruitment",
+        "expect": "Clinical Extern"
+      }
+    },
+    {
+      "id": "hollandbloorview-appone",
+      "hospital": "Holland Bloorview",
+      "entries": [],
+      "tracked": false,
+      "adapter": "page",
+      "params": {
+        "url": "https://www.appone.com/Branding/ReqTemplate/BrowseAllJobsbyCategory.asp?B_ID=55&ClientID=2706&CountryID=3&FromID=1&JobCode=0&LanguageID=2&Type=REQ&servervar=hollandbloorview.appone.com",
+        "mode": "list",
+        "expect": "Holland Bloorview"
+      }
+    },
+    {
+      "id": "nygh-njoyn",
+      "hospital": "North York General Hospital",
+      "entries": [
+        "nygh"
+      ],
+      "adapter": "manual",
+      "params": {
+        "url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&page=joblisting",
+        "reason": "Njoyn shows a bot challenge to automated visits"
+      }
+    },
+    {
+      "id": "mgh-njoyn",
+      "hospital": "Michael Garron Hospital",
+      "entries": [
+        "mgh",
+        "mgh-help",
+        "mgh-hro"
+      ],
+      "adapter": "manual",
+      "params": {
+        "url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&page=joblisting",
+        "reason": "Njoyn shows a bot challenge to automated visits"
+      }
+    },
+    {
+      "id": "wch-dayforce",
+      "hospital": "Women's College Hospital",
+      "entries": [
+        "wch"
+      ],
+      "adapter": "manual",
+      "params": {
+        "url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL",
+        "reason": "Dayforce loads jobs in the browser through a session-bound API"
+      }
+    },
+    {
+      "id": "hhs-taleo",
+      "hospital": "Hamilton Health Sciences",
+      "entries": [
+        "hhs"
+      ],
+      "adapter": "manual",
+      "params": {
+        "url": "https://hhsc.taleo.net/careersection/2/joblist.ftl",
+        "reason": "Taleo job list renders in the browser"
+      }
+    },
+    {
+      "id": "sinai-dayforce",
+      "hospital": "Sinai Health",
+      "entries": [],
+      "tracked": false,
+      "adapter": "manual",
+      "params": {
+        "url": "https://jobs.dayforcehcm.com/en-CA/sinaihealth/sinaihealthcareers",
+        "reason": "Dayforce loads jobs in the browser through a session-bound API"
+      }
+    },
+    {
+      "id": "unity-infor",
+      "hospital": "Unity Health Toronto",
+      "entries": [],
+      "tracked": false,
+      "adapter": "manual",
+      "params": {
+        "url": "https://css-ezjf9k52wb5ac52e-prd.tam.ca1.inforcloudsuite.com/hcm/CandidateSelfService/controller.servlet?context.dataarea=ezjf9k52wb5ac52e_prd_hcm&context.session.key.HROrganization=1&context.session.key.JobBoard=EXTERNAL",
+        "reason": "Infor job board redirects into a browser session (linked from unityhealth.to \"View Job Postings\")"
+      }
+    }
+  ]
+}
