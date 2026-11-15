@@ -278,7 +278,7 @@ function Receipts({ slide, ctx }) {
           <div className="item" key=${s.id}>
             <div className="pub" data-qa="block">${s.publisher}</div>
             <div className="ttl" data-qa="block">${tidy(s.title).split(' ').map((w, i) => (/\d-\d/.test(w) ? html`<span key=${i} className="nowrap">${w} </span>` : `${w} `))}</div>
-            <div className="meta" data-qa="block"><span>${s.published ? `published ${longDate(s.published)}` : 'publish date not shown'}</span><span>checked ${longDate(s.accessedAt)}</span></div>
+            <div className="meta" data-qa="block"><span>${s.published ? `published ${longDate(s.published)}` : ''}</span><span>checked ${longDate(s.accessedAt)}</span></div>
             <div className="url" data-qa="block">${displayUrl(s.url).split(/(?<=[/.])/).map((part, i) => html`<${Fragment} key=${i}><span className="nowrap">${part}</span><wbr /></${Fragment}>`)}</div>
           </div>`)}
         <div className="total" data-qa="block"><span>claims checked</span><span>${ctx.spec.facts.length}</span></div>
