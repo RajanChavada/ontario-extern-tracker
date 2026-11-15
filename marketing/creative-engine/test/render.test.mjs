@@ -5,7 +5,9 @@ import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { parseSpec } from '../src/spec/schema.js';
-import { renderSpec, launchBrowser } from '../src/render/render.js';
+import { renderSpec, launchBrowser, slideDocument } from '../src/render/render.js';
+import { prepareSpec } from '../src/spec/verify.js';
+import { geometry } from '../src/platforms.js';
 import { base, load, pngSize, TODAY } from './helpers.mjs';
 
 let browser;
@@ -69,4 +71,23 @@ test('validation errors stop the render unless forced', async () => {
   assert.equal(manifest, null);
   const forced = await render(s, { force: true, platforms: ['tiktok'] });
   assert.equal(forced.manifest.publishable, false);
+});
+
+test('receipts never claim a source has no publish date: no date in our data means nothing is said', () => {
+  // Bug (Nov 14): tracker sources carry no `published`, so receipts said "publish date not shown" for Women's College,
+  // whose posting does show "Posted Friday, November 6, 2026". The slide must not make claims about the source we didn't check.
+  const raw = load('explainer-what-is-an-extern');
+  const markup = (mutate) => {
+    const spec = prepareSpec(parseSpec(raw).spec);
+    mutate(spec);
+    const ctx = { spec, platform: geometry('tiktok'), facts: new Map(spec.facts.map((f) => [f.id, f])), sources: new Map(spec.sources.map((s) => [s.id, s])), refDate: TODAY, demo: false, asset: (x) => x };
+    const slide = spec.slides.find((s) => s.layout === 'receipts');
+    assert.ok(slide, 'example has a receipts slide');
+    return slideDocument(slide, ctx);
+  };
+  const without = markup((spec) => spec.sources.forEach((s) => { delete s.published; }));
+  assert.doesNotMatch(without, /publish date not shown/);
+  assert.match(without, /checked /);
+  const withDate = markup(() => {});
+  assert.match(withDate, /published Jun 4, 2026/);
 });
