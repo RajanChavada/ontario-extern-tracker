@@ -40,6 +40,8 @@ const CLINICAL_EMOJI = /[\u{1FA7A}\u{1F489}\u{1F48A}\u{1FA7B}\u{1FA78}\u{1F321}\
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const wordsIn = (s) => String(s).split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
 export const DENSITY = { c: { cover: 12, inner: 40 }, b: { cover: 12, inner: 45 } };
+/** Words allowed on a cover besides its hook (title): a short secondary line such as a deadline callout, plus asides. */
+export const COVER_SECONDARY = 10;
 const B_SERIES = 'clinical extern 101';
 
 /** Words a C/B slide shows, including its generated source line and fixed labels. The cover's limit is about the
@@ -74,15 +76,37 @@ function checkFormat(spec, fmt, err, warn) {
     if (fmt === 'c' && (texts.match(EMOJI) ?? []).length > 1) err('EMOJI_COUNT', where, 'Format C allows at most one emoji per slide.');
     if (CLINICAL_EMOJI.test(texts)) warn('CLINICAL_EMOJI', where, 'An emoji shows a clinical tool. Externs work in unregulated care provider roles; check it doesn\'t imply clinical duties.');
     if (fmt === 'c' && s.title && /^\p{Lu}/u.test(s.title)) warn('VOICE_CASE', where, 'Format C headlines are lowercase.');
-    const n = slideWordCount(s, spec, { cover: s._n === 1 });
-    const max = s._n === 1 ? DENSITY[fmt].cover : DENSITY[fmt].inner;
-    if (n > max) err('DENSITY', where, `${n} words (${s._n === 1 ? 'not counting the source line' : 'including the source line'}); ${s._n === 1 ? 'covers' : 'inner slides'} in format ${fmt.toUpperCase()} allow ${max}.`, 'Cut copy or split the slide.');
+    if (s._n === 1) {
+      const hook = wordsIn(s.title ?? '');
+      const rest = slideWordCount(s, spec, { cover: true }) - hook;
+      if (hook > DENSITY[fmt].cover) err('DENSITY', where, `The hook is ${hook} words; covers in format ${fmt.toUpperCase()} allow ${DENSITY[fmt].cover}.`, 'Cut the hook.');
+      if (rest > COVER_SECONDARY) err('DENSITY', where, `${rest} words besides the hook (secondary line, asides, fine print; the source line isn't counted); covers allow ${COVER_SECONDARY}.`, 'Keep the secondary line to a short callout.');
+    } else {
+      const n = slideWordCount(s, spec);
+      if (n > DENSITY[fmt].inner) err('DENSITY', where, `${n} words (including the source line); inner slides in format ${fmt.toUpperCase()} allow ${DENSITY[fmt].inner}.`, 'Cut copy or split the slide.');
+    }
   }
-  // Time-sensitive posts lead with the deadline: if any slide cites a closing date, the cover cites one too.
-  const deadlineIds = new Set((spec.facts ?? []).filter((f) => f.kind === 'deadline').map((f) => f.id));
-  const citesDeadline = (s) => (s.facts ?? []).some((id) => deadlineIds.has(id));
-  if (slides.some(citesDeadline) && !citesDeadline(slides[0]))
-    err('DEADLINE_NOT_ON_COVER', 'slides[1]', 'This carousel cites a closing date, so the cover must state it (and cite the deadline fact), e.g. "women\'s college extern closes nov 20".');
+  const factById = new Map((spec.facts ?? []).map((f) => [f.id, f]));
+  const cited = (s) => (s.facts ?? []).map((id) => factById.get(id)).filter(Boolean);
+  const shown = (s) => slideTexts(s).filter(([p]) => p !== 'mark.phrase').map(([, t]) => t).join(' ');
+  // Time-sensitive posts show the deadline on the cover: in the hook or a short secondary line, citing the deadline fact.
+  if (slides.some((s) => cited(s).some((f) => f.kind === 'deadline'))) {
+    const onCover = cited(slides[0]).filter((f) => f.kind === 'deadline');
+    if (!onCover.some((f) => textHasDate(shown(slides[0]), f.date)))
+      err('DEADLINE_NOT_ON_COVER', 'slides[1]', 'This carousel cites a closing date, so the cover must show that date (in the hook or a short secondary line) and cite the deadline fact.', 'e.g. hook "not every externship posting means there\'s an open job" + line "ontario example: a talent pool closing nov 30".');
+  }
+  // A talent pool is never presented as a vacancy: slides citing its deadline or pay, and the caption, say "talent pool".
+  const pool = (spec.facts ?? []).filter((f) => f.status === 'talent-pool');
+  if (pool.length) {
+    for (const s of slides)
+      if (cited(s).some((f) => f.status === 'talent-pool' && (f.kind === 'deadline' || f.kind === 'pay')) && !/talent pool/i.test(shown(s)))
+        err('TALENT_POOL_UNLABELLED', `slides[${s._n}] ${s.layout}`, 'This slide cites a talent pool\'s deadline or pay but doesn\'t say "talent pool"; it would read as a vacancy.');
+    const anyPool = slides.some((s) => cited(s).some((f) => f.status === 'talent-pool'));
+    for (const key of ['text', 'instagram'])
+      if (anyPool && spec.caption?.[key] && !/talent pool/i.test(spec.caption[key])) err('TALENT_POOL_UNLABELLED', `caption.${key}`, 'The post cites a talent pool; the caption must say "talent pool".');
+  }
+  // Content brief: the cover hook must be one of the candidates considered (docs/CONTENT.md).
+  if (spec.brief && !spec.brief.hooks.includes(slides[0].title)) err('BRIEF_HOOK_MISMATCH', 'brief.hooks', `The cover hook "${slides[0].title}" isn't among the brief's candidate hooks.`);
   if (fmt === 'b' && slides[0].layout !== 'b_cover') warn('B_ORDER', 'slides[1]', 'Format B carousels open with a b_cover.');
   if (fmt === 'b' && slides.slice(1).some((s) => s.layout === 'b_cover')) err('B_ORDER', 'slides', 'Only the first slide can be a b_cover.');
 }

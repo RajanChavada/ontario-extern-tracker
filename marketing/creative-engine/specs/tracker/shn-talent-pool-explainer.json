@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "shn-talent-pool-explainer",
+  "title": "Not every externship posting is an open job (talent pools; SHN Nov 30 example)",
+  "status": "verified",
+  "format": "c",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "shn"
+    ]
+  },
+  "brief": {
+    "type": "talent_pool",
+    "problem": "Students treat every extern posting as an open job. A talent-pool posting collects candidates for upcoming vacancies; misreading it skews where they put their effort.",
+    "hooks": [
+      "scarborough health's extern talent pool closes nov 30",
+      "not every externship posting means there's an open job",
+      "'talent pool' on an extern posting: what it actually means",
+      "nursing students, read this before applying to a talent pool",
+      "the extern posting word that trips up nursing students",
+      "applying to a talent pool? here's what it is (and isn't)"
+    ],
+    "why": "The v1 hook only works for someone already looking at SHN. This one names a misconception any nursing student can have, anywhere, and slides 2-4 pay it off: the situation, what a talent pool is (in the posting's own words), and what that means for applying. SHN arrives on slide 5 as the real Ontario example; its Nov 30 date stays on the cover as a secondary callout. Rejected: 'trips up' (claims a reaction we have no evidence for); 'read this before applying' (generic); the question form (weaker than a direct statement).",
+    "payoff": "The reader can tell a talent pool from an open position, knows not to treat one as a confirmed opening, and has a real Ontario talent pool with its deadline and requirements.",
+    "evidence": [
+      "tiktok-research-2026-11-14 CONCEPTS #10 ('Talent pool' doesn't mean there's an opening)",
+      "pain_points.md #3 (not knowing what an extern posting means) and #2 (where/when to apply)",
+      "hooks_captions.md: P047 myth-bust caption (626 saves); casing mostly lowercase; caption ending in a question (P006, P020, P024, P042)",
+      "REPORT.md F1 (saveable utility), F2 (real-photo overlays), F5 (Ontario specifics read as insider)"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965524",
+      "title": "not every externship posting means there's an open job",
+      "body": "ontario example: a talent pool closing nov 30",
+      "mark": {
+        "kind": "circle",
+        "phrase": "nov 30"
+      },
+      "facts": [
+        "shn-deadline"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5537938",
+      "title": "you find an extern posting and start your application",
+      "body": "then you notice two words in the job title: talent pool.",
+      "basis": "opinion"
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-3973981",
+      "label": "extern notes 📝",
+      "title": "what a talent pool means",
+      "body": "the hospital is building a pool of candidates for upcoming vacancies. it isn't one specific open position.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "it isn't one specific open position"
+      },
+      "facts": [
+        "shn-vacancy"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5386483",
+      "title": "so what does that mean for you?",
+      "body": "if you qualify, you can still apply. just don't count it as a confirmed opening, and keep checking other postings too.",
+      "basis": "advice"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-2440970",
+      "title": "a real ontario example: scarborough health network",
+      "body": "its clinical extern talent pool closes nov 30. posted pay: $25.379/hr.",
+      "mark": {
+        "kind": "circle",
+        "phrase": "talent pool"
+      },
+      "basis": "facts",
+      "facts": [
+        "shn-vacancy",
+        "shn-deadline",
+        "shn-pay"
+      ]
+    },
+    {
+      "layout": "c_paper",
+      "title": "what SHN's posting asks for",
+      "body": "BScN, year 3 or final year. current BCLS. evidence of excellent academic standing.",
+      "tags": [
+        "BScN",
+        "BCLS",
+        "grades"
+      ],
+      "basis": "facts",
+      "facts": [
+        "shn-eligibility",
+        "shn-bcls",
+        "shn-listed-1"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "looking for extern postings in ontario?",
+      "body": "ontarioexterns.ca checks each hospital's own careers page and labels talent pools separately.",
+      "fine": "Not affiliated with any hospital.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "save this!",
+          "at": {
+            "x": 0.55,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -5
+        }
+      ]
+    }
+  ],
+  "caption": {
+    "text": "Not every externship posting means there’s an open job. Some are talent pools: the hospital builds a candidate pool for upcoming vacancies instead of filling one specific position.\n\nOntario example: Scarborough Health Network’s Clinical Nurse Extern talent pool closes Nov 30, 2026. BScN year 3 or final year, current BCLS, $25.379/hr (as posted). Full requirements are on SHN’s posting.\n\nHave you come across a talent pool posting before?\n\nontarioexterns.ca is our own independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "Not every externship posting means there’s an open job. Some are talent pools: the hospital builds a candidate pool for upcoming vacancies instead of filling one specific position.\n\nOntario example: Scarborough Health Network’s Clinical Nurse Extern talent pool closes Nov 30, 2026. BScN year 3 or final year, current BCLS, $25.379/hr (as posted). Full requirements are on SHN’s posting.\n\nHave you come across a talent pool posting before?\n\nOur own independent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}

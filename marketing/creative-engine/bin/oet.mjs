@@ -90,6 +90,8 @@ export function factualCheck(file, { dataFile, evidenceDirs, today }) {
   const compiled = compileCampaign(campaign, { data, evidence, today });
   const errors = [...compiled.errors];
   const warnings = [...compiled.warnings];
+  if (!campaign.brief && campaign.format !== 'classic')
+    warnings.push({ code: 'BRIEF_MISSING', where: 'brief', message: 'Marketing posts carry a content brief (problem, candidate hooks, why, payoff, evidence). See docs/CONTENT.md.' });
   let spec = null;
   if (!errors.length) {
     const parsed = parseSpec(compiled.spec);
