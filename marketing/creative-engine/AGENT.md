@@ -36,6 +36,7 @@ For anything naming a hospital posting (deadline, pay, eligibility, vacancies), 
 
 ## Formats C and B
 
+Campaigns (`oet`) default to format C and fail with `FORMAT_NOT_RENDERED` if the slides are another format; deadline posts start from `specs/tracker/wch-closes-nov20-c.json`. Set `"format": "b"` for dense reference posts and `"format": "classic"` only on purpose.
 For new carousels, start from `specs/formats/c-what-a-clinical-extern-is.json` (format C, primary) or the B spec,
 and read [docs/FORMATS.md](docs/FORMATS.md). Photos come only from `assets/registry.json`: never add an
 unregistered image, never call a stock model a student, nurse or extern, and never write first-person copy over a photo.

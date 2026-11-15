@@ -1,0 +1,126 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "wch-closes-nov20-c",
+  "title": "Women's College extern closes Nov 20 (format C design reference, not published)",
+  "status": "verified",
+  "format": "c",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "wch"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5537938",
+      "title": "women's college extern closes nov 20",
+      "nudge": 10,
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.516,
+            "y": 0.84
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ],
+      "facts": [
+        "wch-deadline"
+      ]
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-3973981",
+      "label": "extern notes 📝",
+      "title": "who can apply",
+      "body": "BScN students. the posting doesn't name a year. BCLS certification is required.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "BCLS certification is required"
+      },
+      "facts": [
+        "wch-eligibility",
+        "wch-bcls"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5386483",
+      "title": "the pay is $20.60/hr",
+      "body": "up to 7.5 hours a week, as posted.",
+      "mark": {
+        "kind": "circle",
+        "phrase": "$20.60/hr",
+        "in": "title"
+      },
+      "basis": "facts",
+      "facts": [
+        "wch-pay",
+        "wch-listed-1"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-2440970",
+      "title": "it closes friday, nov 20",
+      "body": "don't leave it to the last night.",
+      "mark": {
+        "kind": "circle",
+        "phrase": "nov 20",
+        "in": "title"
+      },
+      "basis": "facts",
+      "facts": [
+        "wch-deadline"
+      ]
+    },
+    {
+      "layout": "c_paper",
+      "title": "before you hit submit",
+      "body": "check you're in a BScN program, have your BCLS details ready, update your resume and screenshot your confirmation.",
+      "tags": [
+        "BScN",
+        "BCLS",
+        "resume"
+      ],
+      "basis": "advice"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "looking for more extern postings?",
+      "body": "ontarioexterns.ca: Ontario extern postings, checked on each hospital's own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "bookmark it!",
+          "at": {
+            "x": 0.55,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -5
+        }
+      ]
+    }
+  ],
+  "caption": {
+    "text": "Women’s College Hospital’s clinical extern posting closes Nov 20, 2026: BScN, BCLS required, $20.60/hr, up to 7.5 hours per week (as posted). Full requirements are on the hospital’s posting.\n\nontarioexterns.ca is our own independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "Women’s College Hospital’s clinical extern posting closes Nov 20, 2026: BScN, BCLS required, $20.60/hr, up to 7.5 hours per week (as posted). Full requirements are on the hospital’s posting.\n\nOur own independent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#ontarionursingstudents",
+      "#clinicalextern",
+      "#nursingstudent",
+      "#ontarionursing",
+      "#nursingextern"
+    ]
+  }
+}

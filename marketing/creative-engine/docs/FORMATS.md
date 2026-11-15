@@ -13,6 +13,27 @@ reference/final-reference.html). The engine reproduces both. Nothing here publis
 The two reference specs carry identical copy, facts, sources and caption. A test compares them with
 `test/fixtures/formats/copy-deck.json`, which is the package's file, byte for byte.
 
+## Campaign default: format C (since 2026-11-14)
+
+`oet check / build / export` (tracker campaigns and every Grokbot export) treat a spec as `"format": "c"` unless it says
+otherwise. If the slides don't render in the requested format, the check fails with `FORMAT_NOT_RENDERED`. It never falls
+back to the flat classic layouts.
+
+- Relatable TikTok posts, including hospital deadline announcements: format C (`c_photo`, `c_notes`, `c_paper`).
+  Example: `specs/tracker/wch-closes-nov20-c.json`.
+- Dense educational or reference carousels: `"format": "b"` with `b_*` layouts.
+- Classic layouts only on purpose: `"format": "classic"`. Published classic specs (`wch-closes-nov20.json`, the
+  `what-is-an-extern` post) keep `"format": "classic"` so they rebuild exactly.
+- Time-sensitive posts lead with the deadline: if any slide cites a closing date, the cover must cite it too
+  (`DEADLINE_NOT_ON_COVER`), e.g. "women's college extern closes nov 20". The cover's 12-word limit counts the hook,
+  not its small generated source line.
+- After rendering, every photo slide must carry its registered photo in the render manifest (`PHOTO_LAYER_MISSING`).
+  The tests also check the rendered PNGs themselves: no photo slide may be a flat background.
+
+Why: the first Women's College post (`oet-2026-11-14-wch-closes-nov20`) was built from a spec copied from the
+pre-format tracker example (classic `hook` / `deadline` / `big_stat` / `checklist` / `cta` on the wine theme). Nothing
+asked for a format, so it rendered flat without any warning.
+
 ## Make a carousel
 
 ```bash

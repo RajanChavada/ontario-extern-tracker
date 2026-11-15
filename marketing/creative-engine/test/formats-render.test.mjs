@@ -15,7 +15,10 @@ import { fitDrawAndCheck } from '../src/render/runtime.js';
 import { geometry } from '../src/platforms.js';
 import { assetPath, loadRegistry } from '../src/assets/registry.js';
 import { checkPackage, exportPackage, fingerprint, loadSchema, schemaErrors } from '../src/handoff/pubkit.js';
-import { photoNotes } from '../bin/oet.mjs';
+import { photoNotes, factualCheck, photoLayerErrors } from '../bin/oet.mjs';
+import { formatOf } from '../src/spec/verify.js';
+import { writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { pngSize } from './helpers.mjs';
 
 const TODAY = '2026-11-14';
@@ -194,4 +197,110 @@ test("a C carousel exports to Grokbot's manifest v1: valid, in order, hashes mat
   assert.deepEqual(m.hashtags, ['#nursingstudent', '#clinicalextern', '#ontario', '#studentnurse']);
   assert.match(m.notes, /Photos: slide 1 pexels-5537938 by Zen Chung/);
   assert.equal(writes.at(-1), 'READY.json');
+});
+
+// ---------------------------------------------------------------- campaigns default to format C (Nov 14 regression)
+// The first Women's College post shipped in flat classic layouts because nothing asked for a format. Campaigns now
+// default to format C, a classic spec must say so, and the rendered PNGs must actually carry the photo layers.
+const TRACKER_FIX = new URL('./fixtures/tracker/', import.meta.url);
+const campaignOpts = { dataFile: fileURLToPath(new URL('hospitals.json', TRACKER_FIX)), evidenceDirs: [fileURLToPath(new URL('evidence/', TRACKER_FIX))], today: TODAY };
+const cCampaign = (over = {}) => ({
+  id: 'wch-c-test', title: 'WCH format C test', status: 'verified', theme: 'board', platforms: ['tiktok'], tracker: { entries: ['wch'] },
+  slides: [
+    { layout: 'c_photo', photo: 'pexels-5537938', title: "women's college extern posting: what to know before it closes" },
+    { layout: 'c_notes', photo: 'pexels-3973981', label: 'extern notes 📝', title: 'certification', body: 'BCLS certification is required.', facts: ['wch-bcls'] },
+    { layout: 'c_photo', photo: 'pexels-5386483', title: 'the pay is $20.60/hr', basis: 'facts', facts: ['wch-pay'] },
+    { layout: 'c_paper', title: 'before you hit submit', body: 'have your BCLS details ready and screenshot your confirmation.', tags: ['BCLS'], basis: 'advice' },
+    { layout: 'c_photo', photo: 'pexels-7439131', title: 'looking for more extern postings?', body: "ontarioexterns.ca: Ontario extern postings, checked on each hospital's own careers page.", fine: 'Not affiliated with any hospital.', basis: 'promo' },
+  ],
+  caption: { text: "Women's College Hospital's extern posting pays $20.60/hr (as posted).", hashtags: ['#nursingstudent'] },
+  ...over,
+});
+const classicCampaign = (over = {}) => ({
+  id: 'wch-classic-test', title: 'WCH classic test', status: 'verified', theme: 'wine', platforms: ['tiktok'], tracker: { entries: ['wch'] },
+  slides: [
+    { layout: 'hook', variant: 'plain', title: 'one extern posting closes nov 20', facts: ['wch-deadline'] },
+    { layout: 'deadline', fact: 'wch-deadline', details: [{ label: 'Pay', fact: 'wch-pay' }] },
+    { layout: 'cta', action: 'save', title: 'save this' },
+  ],
+  caption: { text: "Women's College Hospital's extern posting closes Nov 20 ($20.60/hr as posted).", hashtags: ['#nursingstudent'] },
+  ...over,
+});
+async function campaignFile(obj) {
+  const dir = await mkdtemp(path.join(tmpdir(), 'oet-campaign-'));
+  const f = path.join(dir, 'campaign.json');
+  writeFileSync(f, JSON.stringify(obj));
+  return f;
+}
+/** Share of the most common colour in a rendered PNG (sampled 108x192, 4 bits per channel). Calibrated Nov 14: format C photo
+ *  slides 6-19%, a flat classic slide 45% (its faint texture splits the background colour). Thresholds: photo < 30%, flat > 40%. */
+async function dominantColourShare(file) {
+  const b64 = (await readFile(file)).toString('base64');
+  const page = await browser.newPage();
+  try {
+    await page.setContent(`<img id="i" src="data:image/png;base64,${b64}">`);
+    await page.waitForFunction(() => document.getElementById('i').complete);
+    return await page.evaluate(() => {
+      const img = document.getElementById('i'); const c = document.createElement('canvas'); c.width = 108; c.height = 192;
+      const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(img, 0, 0, 108, 192); // sample pixels, don't blend them
+      const d = x.getImageData(0, 0, 108, 192).data; const n = new Map();
+      for (let i = 0; i < d.length; i += 4) { const k = ((d[i] >> 4) << 8) | ((d[i + 1] >> 4) << 4) | (d[i + 2] >> 4); n.set(k, (n.get(k) ?? 0) + 1); }
+      return Math.max(...n.values()) / (108 * 192);
+    });
+  } finally { await page.close(); }
+}
+
+test('campaigns default to format C; a classic campaign that does not say so is refused, not rendered flat', async () => {
+  const c = factualCheck(await campaignFile(cCampaign()), campaignOpts);
+  assert.deepEqual(c.factual.errors, []);
+  assert.equal(c.spec.format, 'c');
+  assert.equal(formatOf(c.spec), 'c');
+  const silent = factualCheck(await campaignFile(classicCampaign()), campaignOpts);
+  assert.equal(silent.factual.passed, false);
+  assert.deepEqual(silent.factual.errors.map((e) => e.code), ['FORMAT_NOT_RENDERED']);
+  const optedOut = factualCheck(await campaignFile(classicCampaign({ format: 'classic' })), campaignOpts);
+  assert.equal(optedOut.factual.passed, true);
+  // asking for B but writing C slides is refused too
+  const wrong = factualCheck(await campaignFile(cCampaign({ format: 'b' })), campaignOpts);
+  assert.ok(wrong.factual.errors.some((e) => e.code === 'FORMAT_NOT_RENDERED'));
+});
+
+test('time-sensitive campaigns state the deadline on the cover; the cover source line does not count toward its 12 words', async () => {
+  const slides = cCampaign().slides;
+  const late = cCampaign({ slides: [slides[0], { layout: 'c_photo', photo: 'pexels-5386483', title: 'it closes friday, nov 20', basis: 'facts', facts: ['wch-deadline'] }, ...slides.slice(2)] });
+  const r1 = factualCheck(await campaignFile(late), campaignOpts);
+  assert.deepEqual(r1.factual.errors.map((e) => e.code), ['DEADLINE_NOT_ON_COVER']);
+  const lead = cCampaign({ slides: [{ ...slides[0], title: "women's college extern closes nov 20", facts: ['wch-deadline'] }, ...slides.slice(1)] });
+  const r2 = factualCheck(await campaignFile(lead), campaignOpts);
+  assert.deepEqual(r2.factual.errors, []);
+  const long = cCampaign({ slides: [{ ...slides[0], title: "women's college hospital's clinical extern posting closes on friday nov 20 so apply soon", facts: ['wch-deadline'] }, ...slides.slice(1)] });
+  assert.ok(factualCheck(await campaignFile(long), campaignOpts).factual.errors.some((e) => e.code === 'DENSITY'), 'the hook itself is still limited to 12 words');
+});
+
+test('a format C campaign renders its registered photos on the photo slides (checked on the PNGs, not the templates)', { timeout: 180_000 }, async () => {
+  const fc = factualCheck(await campaignFile(cCampaign()), campaignOpts);
+  const outDir = await mkdtemp(path.join(tmpdir(), 'oet-c-campaign-'));
+  const { manifest } = await renderSpec(fc.spec, { outDir, today: TODAY, browser, overlay: false, platforms: ['tiktok'] });
+  const tt = manifest.platforms.tiktok;
+  assert.deepEqual(tt.slides.flatMap((s) => s.qa.errors), []);
+  assert.deepEqual(photoLayerErrors(fc.spec, tt), []);
+  const expectRole = { c_photo: 'photo', c_notes: 'blurred-background' };
+  for (const s of tt.slides) {
+    const want = fc.spec.slides[s.n - 1];
+    const share = await dominantColourShare(path.join(outDir, s.file));
+    if (want.photo) {
+      assert.deepEqual((s.assets ?? []).map((a) => `${a.id}:${a.role}`), [`${want.photo}:${expectRole[want.layout]}`], `slide ${s.n}`);
+      assert.ok(share < 0.3, `slide ${s.n} ${s.layout} looks flat: ${(share * 100).toFixed(0)}% one colour`);
+    } else {
+      assert.equal(s.assets, undefined, `slide ${s.n} (designed slide) has no photo`);
+    }
+  }
+  // control: the same measure flags a flat classic slide, and a manifest without the photo layer is caught
+  const cl = factualCheck(await campaignFile(classicCampaign({ format: 'classic' })), campaignOpts);
+  const clDir = await mkdtemp(path.join(tmpdir(), 'oet-classic-campaign-'));
+  const clRes = await renderSpec(cl.spec, { outDir: clDir, today: TODAY, browser, overlay: false, platforms: ['tiktok'] });
+  const flat = await dominantColourShare(path.join(clDir, clRes.manifest.platforms.tiktok.slides[0].file));
+  assert.ok(flat > 0.4, `classic hook is a flat background (${(flat * 100).toFixed(0)}% one colour)`);
+  const stripped = { slides: tt.slides.map((s) => ({ ...s, assets: undefined })) };
+  assert.deepEqual(photoLayerErrors(fc.spec, stripped).map((e) => e.where), ['slide 1 c_photo', 'slide 2 c_notes', 'slide 3 c_photo', 'slide 5 c_photo']);
 });

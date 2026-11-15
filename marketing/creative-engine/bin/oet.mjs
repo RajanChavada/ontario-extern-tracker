@@ -70,8 +70,21 @@ function parseArgs(argv) {
 const show = (list, mark) => list.map((e) => `  ${mark} ${e.code.padEnd(26)} ${e.where ?? ''}\n${' '.repeat(32)}${e.message}${e.fix ? `\n${' '.repeat(32)}fix: ${e.fix}` : ''}`).join('\n');
 
 /** Factual stage: bridge + engine fact rules. Never opens a browser. */
+export const DEFAULT_CAMPAIGN_FORMAT = 'c';
+
+/** Every photo slide (c_photo, c_notes, b_cover) must have rendered its registered photo. Checks the render manifest. */
+export function photoLayerErrors(spec, platform) {
+  return (platform?.slides ?? []).flatMap((s) => {
+    const slide = spec.slides[s.n - 1];
+    if (!slide?.photo) return [];
+    const ok = (s.assets ?? []).some((a) => a.id === slide.photo);
+    return ok ? [] : [{ code: 'PHOTO_LAYER_MISSING', where: `slide ${s.n} ${s.layout}`, message: `The rendered slide has no photo layer for "${slide.photo}".` }];
+  });
+}
+
 export function factualCheck(file, { dataFile, evidenceDirs, today }) {
   const campaign = JSON.parse(readFileSync(file, 'utf8'));
+  campaign.format ??= DEFAULT_CAMPAIGN_FORMAT; // marketing posts are format C unless the spec says otherwise
   const data = JSON.parse(readFileSync(dataFile, 'utf8'));
   const evidence = loadEvidence(evidenceDirs);
   const compiled = compileCampaign(campaign, { data, evidence, today });
@@ -135,10 +148,12 @@ async function main() {
   const outDir = flags.out ?? path.join(ENGINE, 'out', fc.spec.id);
   const res = await renderSpec(fc.spec, { outDir, today, specPath: path.resolve(target) });
   writeFileSync(path.join(outDir, 'spec.compiled.json'), JSON.stringify(fc.spec, null, 2) + '\n');
+  const layerErrors = Object.values(res.manifest.platforms).flatMap((p) => photoLayerErrors(fc.spec, p));
+  if (layerErrors.length && !json) console.log(`✗ photo layers\n${show(layerErrors, '✗')}`);
   const artifacts = buildArtifacts({ manifest: res.manifest, outDir, factual: fc.factual, provenance: fc.provenance, approvalsDir: APPROVALS, specPath: path.relative(REPO, path.resolve(target)) });
   const validation = { checkedAgainst: today, factual: fc.factual, visual: Object.fromEntries(Object.entries(artifacts).map(([p, a]) => [p, a.validation.visual])) };
   writeFileSync(path.join(outDir, 'validation.json'), JSON.stringify(validation, null, 2) + '\n');
-  let ok = true;
+  let ok = layerErrors.length === 0;
   for (const [p, a] of Object.entries(artifacts)) {
     ok &&= a.validation.passed;
     if (json) continue;
@@ -216,7 +231,7 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
       res = await renderSpec(spec, { outDir, today, specPath: path.resolve(target), platforms: ['tiktok'], browser });
       const qa = res.manifest.platforms.tiktok.slides.flatMap((s) => s.qa.errors.map((e) => ({ ...e, where: `slide ${s.n} ${s.layout}` })));
       log(`${qa.length ? '✗' : '✓'} visual QA       tiktok ${res.manifest.platforms.tiktok.slides.length} slides`);
-      preflight.push(...qa);
+      preflight.push(...qa, ...photoLayerErrors(spec, res.manifest.platforms.tiktok));
       if (!res.manifest.verification.publishable) preflight.push({ code: 'ENGINE_NOT_PUBLISHABLE', message: res.manifest.verification.blockers.join('; ') });
     }
     const toJpeg = async (png) => {

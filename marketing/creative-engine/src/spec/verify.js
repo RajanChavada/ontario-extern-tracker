@@ -42,10 +42,11 @@ const wordsIn = (s) => String(s).split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test
 export const DENSITY = { c: { cover: 12, inner: 40 }, b: { cover: 12, inner: 45 } };
 const B_SERIES = 'clinical extern 101';
 
-/** Words a C/B slide shows, including its generated source line and fixed labels. */
-export function slideWordCount(slide, spec) {
+/** Words a C/B slide shows, including its generated source line and fixed labels. The cover's limit is about the
+ *  hook, so a cover's small source line isn't counted (a deadline cover must cite its date; Rajan, 2026-11-14). */
+export function slideWordCount(slide, spec, { cover = false } = {}) {
   const parts = slideTexts(slide).filter(([p]) => p !== 'mark.phrase').map(([, t]) => t);
-  const line = sourceLine(slide, spec);
+  const line = cover ? null : sourceLine(slide, spec);
   if (line) parts.push(line);
   if (slide.layout === 'b_card' || slide.layout === 'b_cta') parts.push(B_SERIES);
   return parts.reduce((n, t) => n + wordsIn(t), 0);
@@ -73,10 +74,15 @@ function checkFormat(spec, fmt, err, warn) {
     if (fmt === 'c' && (texts.match(EMOJI) ?? []).length > 1) err('EMOJI_COUNT', where, 'Format C allows at most one emoji per slide.');
     if (CLINICAL_EMOJI.test(texts)) warn('CLINICAL_EMOJI', where, 'An emoji shows a clinical tool. Externs work in unregulated care provider roles; check it doesn\'t imply clinical duties.');
     if (fmt === 'c' && s.title && /^\p{Lu}/u.test(s.title)) warn('VOICE_CASE', where, 'Format C headlines are lowercase.');
-    const n = slideWordCount(s, spec);
+    const n = slideWordCount(s, spec, { cover: s._n === 1 });
     const max = s._n === 1 ? DENSITY[fmt].cover : DENSITY[fmt].inner;
-    if (n > max) err('DENSITY', where, `${n} words (including the source line); ${s._n === 1 ? 'covers' : 'inner slides'} in format ${fmt.toUpperCase()} allow ${max}.`, 'Cut copy or split the slide.');
+    if (n > max) err('DENSITY', where, `${n} words (${s._n === 1 ? 'not counting the source line' : 'including the source line'}); ${s._n === 1 ? 'covers' : 'inner slides'} in format ${fmt.toUpperCase()} allow ${max}.`, 'Cut copy or split the slide.');
   }
+  // Time-sensitive posts lead with the deadline: if any slide cites a closing date, the cover cites one too.
+  const deadlineIds = new Set((spec.facts ?? []).filter((f) => f.kind === 'deadline').map((f) => f.id));
+  const citesDeadline = (s) => (s.facts ?? []).some((id) => deadlineIds.has(id));
+  if (slides.some(citesDeadline) && !citesDeadline(slides[0]))
+    err('DEADLINE_NOT_ON_COVER', 'slides[1]', 'This carousel cites a closing date, so the cover must state it (and cite the deadline fact), e.g. "women\'s college extern closes nov 20".');
   if (fmt === 'b' && slides[0].layout !== 'b_cover') warn('B_ORDER', 'slides[1]', 'Format B carousels open with a b_cover.');
   if (fmt === 'b' && slides.slice(1).some((s) => s.layout === 'b_cover')) err('B_ORDER', 'slides', 'Only the first slide can be a b_cover.');
 }
@@ -285,6 +291,10 @@ export function verifySpec(spec, opts) {
   // --- formats C and B, and photo provenance
   const fmt = formatOf(spec);
   if (fmt === 'mixed') err('FORMAT_MIX', 'slides', 'Use one format per carousel: classic layouts, format C (c_*) or format B (b_*).');
+  if (spec.format && fmt !== 'mixed' && fmt !== spec.format) {
+    const got = fmt === 'classic' ? 'classic (flat background) layouts' : `format ${fmt.toUpperCase()} layouts`;
+    err('FORMAT_NOT_RENDERED', 'format', `This post asks for ${spec.format === 'classic' ? 'classic layouts' : `format ${spec.format.toUpperCase()}`}, but its slides are ${got}. Marketing posts default to format C (c_photo / c_notes / c_paper); dense reference posts use format B with "format": "b". To use classic layouts on purpose, set "format": "classic".`);
+  }
   if (fmt === 'c' || fmt === 'b') checkFormat(spec, fmt, err, warn);
   if (spec.slides.some((s) => s.photo)) {
     const img = checkImagery(spec, opts.registry ?? loadRegistry());
