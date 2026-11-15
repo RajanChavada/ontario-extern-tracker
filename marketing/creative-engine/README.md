@@ -15,6 +15,10 @@ artifact per platform, with approval bound to the exact images and caption): [do
 **Grokbot handoff:** `node bin/oet.mjs export <spec> --post-id <id>` writes a manifest-v1 package to
 `~/AgentHandoff/publishing/inbox/<project>/<post_id>/` (READY.json last, atomic). See [docs/GROKBOT-HANDOFF.md](docs/GROKBOT-HANDOFF.md).
 
+**Formats C and B** (approved 2026-11-14): photo-led student-made carousels (C, primary) and saveable guides (B).
+Layouts `c_*` / `b_*`, photo provenance in `assets/registry.json`, opt-in 3:4 platform `tiktok-3x4`.
+See [docs/FORMATS.md](docs/FORMATS.md).
+
 ## Quick start
 
 ```bash

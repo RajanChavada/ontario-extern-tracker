@@ -83,6 +83,82 @@
           },
           "layout": {
             "type": "string"
+          },
+          "assets": {
+            "description": "Provenance of each photo on the slide (formats C and B).",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "photo",
+                    "blurred-background"
+                  ]
+                },
+                "source": {
+                  "type": "string"
+                },
+                "page_url": {
+                  "type": "string"
+                },
+                "photographer": {
+                  "type": "string"
+                },
+                "licence": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "licence_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "checked": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "shoot_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "file_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "role",
+                "source",
+                "page_url",
+                "photographer",
+                "licence",
+                "licence_url",
+                "checked",
+                "file_sha256"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [

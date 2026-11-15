@@ -46,7 +46,32 @@ export const PLATFORMS = {
     captionLimit: 2200,
     maxHashtags: 30,
   },
+  // CANDIDATE, opt-in only (HANDOFF decision 1). TikTok shows a 3:4 photo letterboxed in
+  // the photo viewer; these margins are the reference package's provisional ones and have
+  // not been checked on a real device. Never a default, never exported to Grokbot (its
+  // project requires exactly 1080x1920), and no publish artifact is built for it.
+  'tiktok-3x4': {
+    id: 'tiktok-3x4',
+    label: 'TikTok photo carousel, 3:4 candidate (provisional safe area)',
+    width: 1080,
+    height: 1440,
+    safe: { top: 80, right: 140, bottom: 170, left: 72 },
+    // Provisional: the right rail beside the image, for legacy CTA arrows only.
+    targets: {
+      follow: [1006, 560],
+      comment: [1006, 820],
+      save: [1006, 990],
+      share: [1006, 1150],
+    },
+    maxSlides: 35,
+    captionLimit: 4000,
+    candidate: true,
+    optIn: true,
+  },
 };
+
+// Formats C and B were drawn on the 3:4 candidate's safe box; their sizes scale by --cu.
+const FORMAT_REF_BOX = { width: 868, height: 1190 };
 
 // The reference safe box the type scale was tuned on (TikTok). Every size in
 // the stylesheet is multiplied by --u, so a shorter box gets slightly smaller type.
@@ -62,7 +87,10 @@ export function geometry(platformId) {
     height: p.height - p.safe.top - p.safe.bottom,
   };
   const unit = Math.min(box.width / REF_BOX.width, box.height / REF_BOX.height);
-  return { ...p, box, unit: Math.round(unit * 1000) / 1000 };
+  const cunit = Math.min(box.width / FORMAT_REF_BOX.width, box.height / FORMAT_REF_BOX.height);
+  return { ...p, box, unit: Math.round(unit * 1000) / 1000, cunit: Math.round(cunit * 1000) / 1000 };
 }
 
 export const PLATFORM_IDS = Object.keys(PLATFORMS);
+/** What a spec renders when it doesn't list platforms. Opt-in platforms are never defaults. */
+export const DEFAULT_PLATFORMS = ['tiktok', 'instagram'];

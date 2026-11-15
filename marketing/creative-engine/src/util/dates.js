@@ -39,6 +39,13 @@ export function monthYear(iso) {
   return `${MONTH_NAMES[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
+const FULL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** "June 4, 2026" */
+export function fullDate(iso) {
+  const d = new Date(toUTC(iso));
+  return `${FULL_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 /** Find calendar dates written in free text. Returns ISO strings. */
 export function findDates(text) {
   const out = new Set();

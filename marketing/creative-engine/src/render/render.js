@@ -6,10 +6,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { geometry } from '../platforms.js';
+import { geometry, PLATFORMS } from '../platforms.js';
 import { composeCaption, prepareSpec, verifySpec } from '../spec/verify.js';
 import { Slide } from '../ui/Slide.js';
 import { drawInterfaceGhost, fitDrawAndCheck } from './runtime.js';
+import { assetPath, loadRegistry, provenance, slidePhotos } from '../assets/registry.js';
 
 const ENGINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(import.meta.url);
@@ -17,9 +18,10 @@ const pkg = JSON.parse(await readFile(path.join(ENGINE, 'package.json'), 'utf8')
 const FONT_CSS = [
   '@fontsource-variable/tiktok-sans/standard.css',
   '@fontsource/caveat-brush/index.css',
+  '@fontsource/caveat/700.css',
   'twemoji-colr-font/twemoji.css',
 ].map((p) => pathToFileURL(require.resolve(p)).href);
-const STYLES = path.join(ENGINE, 'src/ui/styles.css');
+const STYLES = [path.join(ENGINE, 'src/ui/styles.css'), path.join(ENGINE, 'src/ui/formats.css')];
 
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 const pad = (n) => String(n).padStart(2, '0');
@@ -34,7 +36,7 @@ export async function launchBrowser() {
   }
 }
 
-function buildContext(spec, platformId, report, specDir) {
+function buildContext(spec, platformId, report, specDir, registry) {
   return {
     spec,
     platform: geometry(platformId),
@@ -48,27 +50,36 @@ function buildContext(spec, platformId, report, specDir) {
     refDate: report.referenceDate,
     demo: spec.status === 'demo',
     asset: (p) => (/^(https?:|data:|file:)/.test(p) ? p : pathToFileURL(path.resolve(specDir, p)).href),
+    // Photos come only from the registry (provenance checked by the verifier).
+    photo(id) {
+      const a = registry().byId.get(id);
+      if (!a) throw new Error(`Unknown asset "${id}" (not in assets/registry.json)`);
+      return { ...a, url: pathToFileURL(assetPath(registry(), a)).href };
+    },
   };
 }
 
 export function slideDocument(slide, ctx) {
   const body = renderToStaticMarkup(createElement(Slide, { slide, ctx }));
   const links = FONT_CSS.map((href) => `<link rel="stylesheet" href="${href}">`).join('\n');
+  const styles = STYLES.map((f) => `<link rel="stylesheet" href="${pathToFileURL(f).href}">`).join('\n');
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">${links}
-<link rel="stylesheet" href="${pathToFileURL(STYLES).href}"></head><body>${body}</body></html>`;
+${styles}</head><body>${body}</body></html>`;
 }
 
 /**
  * Render a parsed spec. Returns { ok, report, manifest }.
  * ok is false when validation or visual QA found errors.
+ * Opt-in platforms (tiktok-3x4) render only when asked for, by the spec or by `platforms`.
  */
-export async function renderSpec(rawSpec, { outDir, today, specPath = null, platforms, overlay = true, browser: shared, force = false }) {
+export async function renderSpec(rawSpec, { outDir, today, specPath = null, platforms, overlay = true, browser: shared, force = false, registry: registryPath }) {
+  const registry = () => loadRegistry(registryPath);
   const spec = prepareSpec(rawSpec);
-  const report = verifySpec(spec, { today });
+  const report = verifySpec(spec, { today, ...(registryPath && { registry: registry() }) });
   if (report.errors.length && !force) return { ok: false, report, manifest: null };
 
   const specDir = specPath ? path.dirname(path.resolve(specPath)) : process.cwd();
-  const targets = (platforms?.length ? platforms : spec.platforms).filter((p) => spec.platforms.includes(p));
+  const targets = (platforms?.length ? platforms : spec.platforms).filter((p) => spec.platforms.includes(p) || PLATFORMS[p]?.optIn);
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
 
@@ -93,7 +104,7 @@ export async function renderSpec(rawSpec, { outDir, today, specPath = null, plat
   let qaErrors = 0;
   try {
     for (const pid of targets) {
-      const ctx = buildContext(spec, pid, report, specDir);
+      const ctx = buildContext(spec, pid, report, specDir, registry);
       const g = ctx.platform;
       const dir = path.join(outDir, pid);
       await mkdir(path.join(dir, '_html'), { recursive: true });
@@ -115,6 +126,7 @@ export async function renderSpec(rawSpec, { outDir, today, specPath = null, plat
           await page.locator('.canvas').screenshot({ path: previewFile, animations: 'disabled' });
         }
         qaErrors += qa.errors.length;
+        const photos = slidePhotos(slide);
         slides.push({
           n: i + 1,
           layout: slide.layout,
@@ -125,6 +137,7 @@ export async function renderSpec(rawSpec, { outDir, today, specPath = null, plat
           autoAdded: Boolean(slide._auto),
           fit: qa.fit,
           qa: { errors: qa.errors, warnings: qa.warnings },
+          ...(photos.length && { assets: photos.map(({ id, role }) => provenance(registry().byId.get(id), role)) }),
         });
       }
       await page.close();
@@ -132,6 +145,7 @@ export async function renderSpec(rawSpec, { outDir, today, specPath = null, plat
       manifest.platforms[pid] = {
         size: [g.width, g.height],
         safeArea: g.safe,
+        ...(g.candidate && { candidate: true }),
         caption: composeCaption(spec, pid),
         contactSheet: path.relative(outDir, sheet),
         slides,

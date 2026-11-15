@@ -19,6 +19,7 @@ export async function fitDrawAndCheck(opts) {
     document.fonts.load('900 100px "TikTok Sans Variable"', allText),
     document.fonts.load('400 100px "TikTok Sans Variable"', allText),
     document.fonts.load('400 60px "Caveat Brush"', allText),
+    document.fonts.load('700 60px "Caveat"', allText),
     document.fonts.load('400 60px "Twemoji"', allText),
   ]);
   await document.fonts.ready;
@@ -27,6 +28,7 @@ export async function fitDrawAndCheck(opts) {
   const loaded = (fam) => [...document.fonts].some((f) => f.family.replace(/"/g, '') === fam && f.status === 'loaded');
   if (!loaded('TikTok Sans Variable')) E('FONT', 'TikTok Sans did not load; the render would use a fallback font.');
   if (document.querySelector('.marker, .row .val') && !loaded('Caveat Brush')) E('FONT', 'Caveat Brush did not load.');
+  if (document.querySelector('.c-hand, .c-tag') && !loaded('Caveat')) E('FONT', 'Caveat did not load.');
 
   const canvas = document.querySelector('.canvas');
   const safe = canvas.querySelector('.safe');
@@ -182,9 +184,24 @@ export async function fitDrawAndCheck(opts) {
     const a1 = ang + Math.PI - 0.5, a2 = ang + Math.PI + 0.5;
     return `M${x1.toFixed(1)} ${y1.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)} M${(x2 + Math.cos(a1) * h).toFixed(1)} ${(y2 + Math.sin(a1) * h).toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)} L${(x2 + Math.cos(a2) * h).toFixed(1)} ${(y2 + Math.sin(a2) * h).toFixed(1)}`;
   };
+  // Format C word-circle: the reference's ellipse (phrase box + 6px wide, + 4px tall, 2px low).
+  const ringEllipse = (el) => {
+    const r = el.getBoundingClientRect();
+    return { cx: (r.left + r.right) / 2 - cR.left, cy: (r.top + r.bottom) / 2 - cR.top + 2, rx: r.width / 2 + 6, ry: r.height / 2 + 4 };
+  };
+  const ring = (el) => {
+    const e = ringEllipse(el);
+    let d = '';
+    for (let i = 0; i <= 64; i++) {
+      const a = -2.2 + ((Math.PI * 2 + 0.5) * i) / 64, k = 1 + (0.045 * i) / 64 + Math.sin(i * 1.7) * 0.007;
+      d += `${i ? 'L' : 'M'}${(e.cx + Math.cos(a) * e.rx * k).toFixed(1)} ${(e.cy + Math.sin(a) * e.ry * k).toFixed(1)}`;
+    }
+    return d;
+  };
   for (const el of safe.querySelectorAll('[data-mark]')) {
     const r = textRect(el);
     if (el.dataset.mark === 'circle') path(circle(r), 9, el);
+    if (el.dataset.mark === 'ring') path(ring(el), 8 / s, el, 'ring');
     if (el.dataset.mark === 'underline') {
       const y = r.bottom - cR.top + 6 * s, x0 = r.left - cR.left - 8 * s, x1 = r.right - cR.left + 12 * s;
       path(`M${x0} ${y + 6 * s} Q${(x0 + x1) / 2} ${y - 8 * s} ${x1} ${y}`, 10, el);
@@ -232,10 +249,12 @@ export async function fitDrawAndCheck(opts) {
     return { r: p[0], g: p[1], b: p[2], a: p[3] ?? 1 };
   };
   const over = (top, under) => ({ r: top.r * top.a + under.r * (1 - top.a), g: top.g * top.a + under.g * (1 - top.a), b: top.b * top.a + under.b * (1 - top.a), a: 1 });
+  // null = the text sits directly on a photo (no solid layer underneath it).
   const bgOf = (el) => {
     const layers = [];
     for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
       if (n.dataset?.qaBg) { layers.push(toRgb(n.dataset.qaBg)); break; }
+      if (n.dataset?.photo) return null; // reached the photo canvas without an opaque layer
       const c = toRgb(getComputedStyle(n).backgroundColor);
       if (c && c.a > 0) { layers.push(c); if (c.a >= 1) break; }
     }
@@ -267,12 +286,21 @@ export async function fitDrawAndCheck(opts) {
       else if (!emojiOnly && size < 30) E('MIN_FONT', `${Math.round(size)}px text is too small to read on a phone (minimum 30px on the 1080px canvas).`, el);
       else if (!emojiOnly && size < 31.5) W('SMALL_FONT', `${Math.round(size)}px text is at the edge of readable.`, el);
       if (!emojiOnly) {
-        const bg = bgOf(el);
-        let fg = toRgb(cs.color);
-        if (fg.a < 1) fg = over(fg, bg);
-        const need = size >= 50 || (size >= 39 && weight >= 700) ? 3 : 4.5;
-        const cr = ratio(fg, bg);
-        if (cr < need) E('CONTRAST', `Contrast ${cr.toFixed(2)}:1 is below ${need}:1 for ${Math.round(size)}px text.`, el);
+        let bg = bgOf(el);
+        let against = 'background';
+        if (!bg) {
+          // On a photo, only outlined text is allowed; its contrast is measured against the outline.
+          const sw = parseFloat(cs.webkitTextStrokeWidth) || 0;
+          if (sw >= 2) { bg = toRgb(cs.webkitTextStrokeColor); against = 'outline'; }
+          else E('TEXT_ON_PHOTO', 'Text sits directly on the photo. Put it on a caption box or give it an outline.', el);
+        }
+        if (bg) {
+          let fg = toRgb(cs.color);
+          if (fg.a < 1) fg = over(fg, bg);
+          const need = size >= 50 || (size >= 39 && weight >= 700) ? 3 : 4.5;
+          const cr = ratio(fg, bg);
+          if (cr < need) E('CONTRAST', `Contrast ${cr.toFixed(2)}:1 ${against === 'outline' ? 'against its outline ' : ''}is below ${need}:1 for ${Math.round(size)}px text.`, el);
+        }
       }
     }
     const range = document.createRange();
@@ -359,11 +387,38 @@ export async function fitDrawAndCheck(opts) {
         if (x > b.r.left - pad && x < b.r.right + pad && y > b.r.top - pad && y < b.r.bottom + pad) hits.add(b.el);
       }
     }
-    for (const el of hits) E('MARK_COLLISION', `A hand-drawn ${m.kind === 'arrow' ? 'arrow' : m.src.dataset.mark} crosses "${snippet(el)}".`, m.src);
+    for (const el of hits) E('MARK_COLLISION', `A hand-drawn ${m.kind === 'arrow' ? 'arrow' : m.kind === 'ring' ? 'circle' : m.src.dataset.mark} crosses "${snippet(el)}".`, m.src);
+  }
+
+  // Word-circles (format C) are also checked word by word, including words in the same line:
+  // the ellipse, sampled 5% outside its drawn size, must not touch any word it doesn't circle.
+  for (const m of marks.filter((x) => x.kind === 'ring')) {
+    const e = ringEllipse(m.src);
+    const words = [];
+    const tw = document.createTreeWalker(safe, NodeFilter.SHOW_TEXT);
+    for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+      if (m.src.contains(n) || !n.textContent.trim()) continue;
+      const fs = parseFloat(getComputedStyle(n.parentElement).fontSize);
+      for (const w of n.textContent.matchAll(/\S+/g)) {
+        const rg = document.createRange();
+        rg.setStart(n, w.index);
+        rg.setEnd(n, w.index + w[0].length);
+        for (const q of rg.getClientRects()) {
+          const inset = Math.max(0, (q.height - fs * 0.86) / 2);
+          words.push({ x0: q.left - cR.left, x1: q.right - cR.left, y0: q.top - cR.top + inset, y1: q.bottom - cR.top - inset, t: w[0] });
+        }
+      }
+    }
+    for (let i = 0; i <= 180; i++) {
+      const a = (i / 180) * Math.PI * 2;
+      const px = e.cx + Math.cos(a) * e.rx * 1.05, py = e.cy + Math.sin(a) * e.ry * 1.05;
+      const hit = words.find((w) => px > w.x0 - 4 && px < w.x1 + 4 && py > w.y0 - 4 && py < w.y1 + 4);
+      if (hit) { E('MARK_COLLISION', `The circle around "${snippet(m.src)}" touches "${hit.t}".`, m.src); break; }
+    }
   }
 
   // Near-miss alignment between unrotated blocks (1.5–10px apart reads as a mistake).
-  const edge = (b) => (b.el.classList.contains('tt') ? b.el.firstElementChild.getClientRects()[0]?.left ?? b.r.left : b.r.left);
+  const edge = (b) => (b.el.classList.contains('tt') || b.el.classList.contains('c-box') ? b.el.firstElementChild.getClientRects()[0]?.left ?? b.r.left : b.r.left);
   const lefts = blocks.filter((b) => !b.el.closest('[data-free]')).map((b) => ({ x: edge(b), el: b.el }));
   for (let i = 0; i < lefts.length; i++)
     for (let j = i + 1; j < lefts.length; j++) {
@@ -373,10 +428,15 @@ export async function fitDrawAndCheck(opts) {
 
   for (const sc of safe.querySelectorAll('[data-ui]')) if (sc.scrollHeight > sc.clientHeight + 1) E('PHONE_OVERFLOW', 'The mock app screen has more content than fits on the phone. Use fewer or shorter items.');
   for (const img of safe.querySelectorAll('img')) if (!img.complete || !img.naturalWidth) E('IMAGE', `Image failed to load: ${img.getAttribute('src')}`);
+  for (const img of canvas.querySelectorAll(':scope > img.photo')) {
+    if (!img.complete || !img.naturalWidth) E('IMAGE', `Photo failed to load: ${img.getAttribute('src')}`);
+    else if (img.naturalWidth < opts.platform.width || img.naturalHeight < opts.platform.height * 0.9) W('PHOTO_RESOLUTION', `Photo is ${img.naturalWidth}x${img.naturalHeight}; it is upscaled to fill ${opts.platform.width}x${opts.platform.height}.`);
+  }
 
   const alt = safe.innerText
     .split('\n')
     .map((l) => l.replace(/\s+/g, ' ').trim())
+    .map((l) => (canvas.classList.contains('fmt') ? l.replace(/[\u2190-\u21FF\p{Extended_Pictographic}\uFE0F\u200D]/gu, '').replace(/\s+/g, ' ').trim() : l))
     .filter(Boolean)
     .map((l) => (/[.!?:…)]$/.test(l) ? l : `${l}.`))
     .join(' ');
@@ -399,7 +459,14 @@ export function drawInterfaceGhost(opts) {
     return d;
   };
   add('safeline', { left: `${box.x}px`, top: `${box.y}px`, width: `${box.width}px`, height: `${box.height}px` });
-  if (id === 'tiktok') {
+  if (id === 'tiktok-3x4') {
+    // Provisional: how the reference package expects TikTok's photo viewer to overlap a 3:4 image.
+    add('zone', { left: 0, top: 0, width: `${width}px`, height: `${box.y}px` });
+    add('zone', { left: `${box.x + box.width}px`, top: `${box.y}px`, width: `${width - box.x - box.width}px`, height: `${box.height}px` });
+    add('zone', { left: 0, top: `${box.y + box.height}px`, width: `${width}px`, height: `${height - box.y - box.height}px` });
+    for (const k of ['follow', 'comment', 'save', 'share']) add('ic', { left: `${targets[k][0]}px`, top: `${targets[k][1]}px` });
+    add('t', { left: '24px', top: '18px', fontSize: '30px', fontWeight: 600 }, '3:4 candidate. Provisional margins: check on a real device.');
+  } else if (id === 'tiktok') {
     add('zone', { left: 0, top: 0, width: `${width}px`, height: '170px' });
     add('t', { left: '0', width: `${width}px`, top: '92px', textAlign: 'center', fontSize: '42px' }, 'Following      For You');
     add('zone', { left: `${width - 150}px`, top: '960px', width: '150px', height: '860px' });

@@ -12,13 +12,15 @@
     "creative": "node bin/creative.mjs",
     "examples": "node bin/creative.mjs render specs/examples/*.json --today 2026-11-13 --out out/examples",
     "test": "node --test test/*.test.mjs",
-    "oet": "node bin/oet.mjs"
+    "oet": "node bin/oet.mjs",
+    "formats": "node bin/creative.mjs render specs/formats/*.json --today 2026-11-14 --platform tiktok-3x4,tiktok,instagram --out out/formats"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "@fontsource-variable/tiktok-sans": "5.3.0",
+    "@fontsource/caveat": "5.3.0",
     "@fontsource/caveat-brush": "5.3.0",
     "htm": "3.1.1",
     "playwright-core": "1.63.0",

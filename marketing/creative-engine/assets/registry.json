@@ -1,0 +1,282 @@
+{
+  "$comment": "Image provenance for the creative engine. Built from Claude's asset-register.json (2026-11-14) in the approved reference package. Every field there is kept; added per asset: source, licence, checked, file, sha256, width, height, composition (assigned by Hermes from the image: hands | object | scene). Files are Pexels downloads at w=2400, resized to 2100px tall (JPEG q84).",
+  "register_version": "2026-11-14",
+  "licence_summary": {
+    "name": "Pexels License",
+    "url": "https://www.pexels.com/license/",
+    "checked": "2026-11-14",
+    "summary": "Free to use and modify, attribution not required. Not allowed: showing identifiable people in a bad light or offensive way, selling unaltered copies, implying endorsement by people or brands shown, redistributing on stock platforms, use in trademarks."
+  },
+  "context_rule": "Stock subjects are never described or captioned as real students, nurses or externs. No first-person copy over stock photos.",
+  "provenance_check": {
+    "date": "2026-11-14",
+    "by": "hermes",
+    "method": "Each page_url loaded (web extract) and names the photographer; licence page wording matches licence_summary. Pexels blocks plain HTTP clients (403), so re-check in a browser."
+  },
+  "assets": [
+    {
+      "id": "pexels-5537938",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/crop-faceless-diverse-students-working-on-assignment-together-in-park-5537938/",
+      "image_url": "https://images.pexels.com/photos/5537938/pexels-photo-5537938.jpeg",
+      "photographer": "Zen Chung",
+      "photographer_profile": "https://www.pexels.com/@zen-chung/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-5537938.jpg",
+      "sha256": "59be193cfb402eabe8cfc701dba74ae561299880cc8534a096b64f37e8461cca",
+      "width": 1400,
+      "height": 2100,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "zen-chung/park-study-session",
+      "quiet_area": "top",
+      "treatment": "c-grade",
+      "composition": "hands",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Laptop screen at the frame edge, content not legible."
+    },
+    {
+      "id": "pexels-3973981",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/person-holding-a-cup-of-coffee-3973981/",
+      "image_url": "https://images.pexels.com/photos/3973981/pexels-photo-3973981.jpeg",
+      "photographer": "Wendy Wei",
+      "photographer_profile": "https://www.pexels.com/@wendywei/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-3973981.jpg",
+      "sha256": "6a95857a1bac0d2b753a307c6a82dadea18476d6ff83571f7fe65ad54c94ba26",
+      "width": 1402,
+      "height": 2100,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "wendywei/coffee-table",
+      "quiet_area": "any (blurred)",
+      "treatment": "blur-16px-78pct",
+      "composition": "hands",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Phone back visible; only ever used blurred so no logo is legible. Do not use unblurred."
+    },
+    {
+      "id": "pexels-5386483",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/hands-writing-in-notebook-5386483/",
+      "image_url": "https://images.pexels.com/photos/5386483/pexels-photo-5386483.jpeg",
+      "photographer": "kaboompics.com",
+      "photographer_profile": "https://www.pexels.com/@karola-g/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-5386483.jpg",
+      "sha256": "322a311743d06998c19e32e56974ee5e95c51736764d063db4ac94d576e31e07",
+      "width": 1400,
+      "height": 2100,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "karola-g/notebook-sticky-notes",
+      "quiet_area": "top",
+      "treatment": "c-grade",
+      "composition": "hands",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": ""
+    },
+    {
+      "id": "pexels-5499136",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/still-life-with-marshmallows-and-knitwear-5499136/",
+      "image_url": "https://images.pexels.com/photos/5499136/pexels-photo-5499136.jpeg",
+      "photographer": "Boris Pavlikovsky",
+      "photographer_profile": "https://www.pexels.com/@boris-pavlikovsky/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-5499136.jpg",
+      "sha256": "35c0e2d7eb75a599cf49e6f51da23c621f3bd89ed23b5aafe914dc4d823e13a3",
+      "width": 1400,
+      "height": 2100,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "boris-pavlikovsky/winter-flatlay",
+      "quiet_area": "bottom",
+      "treatment": "c-grade",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Contains a 'february' calendar card, which suits the matching-rounds slide."
+    },
+    {
+      "id": "pexels-5965524",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/young-women-walking-to-stairs-in-campus-5965524/",
+      "image_url": "https://images.pexels.com/photos/5965524/pexels-photo-5965524.jpeg",
+      "photographer": "Charlotte May",
+      "photographer_profile": "https://www.pexels.com/@charlotte-may/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-5965524.jpg",
+      "sha256": "928f8c1f72d89d7a519292e771ce55f11c46cde5c86c6bd9ecc2e65bc64ee1dd",
+      "width": 1400,
+      "height": 2100,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "charlotte-may/campus-walk",
+      "quiet_area": "top",
+      "treatment": "c-grade",
+      "composition": "scene",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Two people seen from behind. Campus is not identified and must not be named."
+    },
+    {
+      "id": "pexels-7439131",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/white-notebook-on-white-table-7439131/",
+      "image_url": "https://images.pexels.com/photos/7439131/pexels-photo-7439131.jpeg",
+      "photographer": "cottonbro studio",
+      "photographer_profile": "https://www.pexels.com/@cottonbro/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-7439131.jpg",
+      "sha256": "7c2e632b623482f3c5c22bc14ec627a9c4569fdffd30d15ee55a21c283e506f9",
+      "width": 1400,
+      "height": 2100,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "cottonbro/white-desk",
+      "quiet_area": "top",
+      "treatment": "c-grade",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Neutral CTA photo until a real photo of ontarioexterns.ca exists. Laptop corner only, no screen visible."
+    },
+    {
+      "id": "pexels-2440970",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/eyeglassses-on-book-2440970/",
+      "image_url": "https://images.pexels.com/photos/2440970/pexels-photo-2440970.jpeg",
+      "photographer": "Isabella Mendes",
+      "photographer_profile": "https://www.pexels.com/@isabella-mendes-107313/",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-14",
+      "file": "photos/pexels-2440970.jpg",
+      "sha256": "19bfc56fd2af580d419b3cdd9b51d57423bc06d360c7153114c0c585b55845d2",
+      "width": 1680,
+      "height": 2100,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "isabella-mendes/notebook-glasses",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Study-desk cover for B (decision 4). Handwritten notes in the notebook are generic."
+    }
+  ],
+  "rejected": [
+    {
+      "id": "pexels-6097715",
+      "photographer": "Laura James",
+      "reason": "ID badge shows a person's name and 'Registered Nurse, RN'; implies a credential externs do not hold."
+    },
+    {
+      "id": "pexels-5206954",
+      "photographer": "kaboompics.com",
+      "reason": "Stethoscope implies assessment duties; externs work in unregulated care provider roles."
+    },
+    {
+      "id": "pexels-5206924",
+      "photographer": "kaboompics.com",
+      "reason": "Stethoscope (used only in the earlier A prototype)."
+    },
+    {
+      "id": "pexels-5722164",
+      "photographer": "cottonbro studio",
+      "reason": "Stethoscope and clipboard on scrubs (earlier A prototype only)."
+    },
+    {
+      "id": "pexels-5053840",
+      "photographer": "cottonbro studio",
+      "reason": "Phone shows another app's screen that could be mistaken for the tracker (decision 5)."
+    },
+    {
+      "id": "pexels-4386467",
+      "photographer": "kaboompics.com",
+      "reason": "Stethoscope cover on B replaced with a study desk (decision 4)."
+    },
+    {
+      "id": "pexels-4047073",
+      "photographer": "kaboompics.com",
+      "reason": "Pills; implies medication tasks."
+    },
+    {
+      "id": "pexels-5537943",
+      "photographer": "Zen Chung",
+      "reason": "Same shoot as the C1 cover; repeating it suggested one real student's story."
+    },
+    {
+      "id": "pexels-4968704",
+      "photographer": "kaboompics.com",
+      "reason": "Near-identical composition to C3 on the next slide."
+    }
+  ]
+}

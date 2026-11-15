@@ -244,7 +244,7 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
         sources: (spec?.sources ?? []).map((s) => ({ url: s.url, publisher: s.publisher, title: s.title, primary: s.primary, accessed_at: s.accessedAt })),
         blockers: src.blockers, conflicts: [], engagement_claims: [],
       },
-      notes: spec ? `Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.` : undefined,
+      notes: spec ? `Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
       externalCheck: grokbotValidator({ kit, python, today }),
     });
     const report = { ok: r.ok, post_id: postId, dir: r.dir, errors: r.errors, source_checks: src, ready: r.ready ?? null, fingerprint: r.manifest?.content_fingerprint ?? null };
@@ -254,6 +254,14 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
     else { console.log('✗ not exported (nothing written to the inbox)'); for (const e of r.errors) console.log(`    ✗ ${e.code} ${e.where ?? ''} ${e.message}`); }
     return r.ok ? 0 : 1;
   } finally { await browser?.close(); }
+}
+
+/** Photo provenance, as plain text: manifest v1 has no field for it, and its assets[] rejects extra keys. */
+export function photoNotes(platform) {
+  const used = (platform?.slides ?? []).flatMap((s) => (s.assets ?? []).map((a) => ({ n: s.n, ...a })));
+  if (!used.length) return '';
+  const lic = [...new Set(used.map((a) => `${a.licence} (${a.licence_url}, checked ${a.checked})`))].join('; ');
+  return ` Photos: ${used.map((a) => `slide ${a.n} ${a.id} by ${a.photographer} (${a.page_url})${a.role === 'blurred-background' ? ' blurred' : ''}`).join('; ')}. Licence: ${lic}. Stock models are not students, nurses or externs and are never described as such.`;
 }
 
 function usage(msg) { console.error(`${msg}\n\n${HELP}`); return 2; }
