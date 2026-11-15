@@ -1,0 +1,108 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "wch-nov20",
+  "title": "Women's College extern closes Nov 20 (+ SHN talent pool Nov 30)",
+  "status": "verified",
+  "theme": "wine",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "wch",
+      "shn"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "hook",
+      "variant": "plain",
+      "title": "women's college extern posting closes nov 20",
+      "sub": "who can apply, the pay, and what to have ready",
+      "facts": [
+        "wch-deadline"
+      ]
+    },
+    {
+      "layout": "wristbands",
+      "title": "closing this month",
+      "items": [
+        {
+          "fact": "wch-deadline"
+        },
+        {
+          "fact": "shn-deadline"
+        }
+      ],
+      "note": "dates from each hospital's own posting"
+    },
+    {
+      "layout": "deadline",
+      "fact": "wch-deadline",
+      "details": [
+        {
+          "label": "Who can apply",
+          "fact": "wch-eligibility"
+        },
+        {
+          "label": "Pay",
+          "fact": "wch-pay"
+        },
+        {
+          "label": "Certification",
+          "fact": "wch-bcls"
+        },
+        {
+          "label": "Hours",
+          "fact": "wch-listed-1"
+        }
+      ]
+    },
+    {
+      "layout": "deadline",
+      "fact": "shn-deadline",
+      "details": [
+        {
+          "label": "Type",
+          "fact": "shn-vacancy"
+        },
+        {
+          "label": "Who can apply",
+          "fact": "shn-eligibility"
+        },
+        {
+          "label": "Pay",
+          "fact": "shn-pay"
+        }
+      ]
+    },
+    {
+      "layout": "checklist",
+      "title": "before you hit submit",
+      "items": [
+        "check your program and year against the posting",
+        "have your BCLS card ready to upload",
+        "update your resume with your latest placement",
+        "screenshot your submission confirmation"
+      ]
+    },
+    {
+      "layout": "cta",
+      "action": "save",
+      "title": "save this and check the full list",
+      "sub": "every open Ontario extern posting, linked to the hospital's own page: ontarioexterns.ca"
+    }
+  ],
+  "caption": {
+    "text": "Women’s College Hospital’s clinical extern posting closes Nov 20, 2026: BScN, BCLS required, $20.60/hr, up to 7.5 hours per week (as posted). SHN’s clinical nurse extern talent pool closes Nov 30 ($25.379/hr, BScN year three or final year, BCLS required). Full requirements are on each hospital’s posting.\n\nEvery open Ontario extern posting I can check on hospitals’ own career pages: ontarioexterns.ca (independent, not affiliated with any hospital).",
+    "instagram": "Women’s College Hospital’s clinical extern posting closes Nov 20, 2026: BScN, BCLS required, $20.60/hr, up to 7.5 hours per week (as posted). SHN’s clinical nurse extern talent pool closes Nov 30 ($25.379/hr, BScN year three or final year, BCLS required). Full requirements are on each hospital’s posting.\n\nEvery open Ontario extern posting, checked on hospitals’ own career pages. Link in bio (ontarioexterns.ca). Independent, not affiliated with any hospital.",
+    "hashtags": [
+      "#OntarioNursingStudents",
+      "#ClinicalExtern",
+      "#NursingStudent",
+      "#OntarioNursing",
+      "#NursingExtern"
+    ]
+  }
+}

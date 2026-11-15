@@ -1,0 +1,179 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "comparison-same-title-fine-print",
+  "title": "Same job title, different fine print (two real postings)",
+  "status": "verified",
+  "theme": "board",
+  "slides": [
+    {
+      "layout": "hook",
+      "variant": "versus",
+      "versus": {
+        "left": "clinical extern",
+        "right": "clinical extern",
+        "op": "≠"
+      },
+      "title": "same job title. very different fine print.",
+      "sub": "two real Ontario postings, side by side 👀"
+    },
+    {
+      "layout": "versus",
+      "title": "is there actually a job?",
+      "a": {
+        "fact": "halton-positions"
+      },
+      "b": {
+        "fact": "mackenzie-talent-pool"
+      },
+      "note": "read the post category line first"
+    },
+    {
+      "layout": "versus",
+      "title": "pay",
+      "a": {
+        "fact": "halton-pay"
+      },
+      "b": {
+        "fact": "mackenzie-pay"
+      }
+    },
+    {
+      "layout": "versus",
+      "title": "who can apply",
+      "a": {
+        "fact": "halton-eligibility"
+      },
+      "b": {
+        "fact": "mackenzie-eligibility"
+      }
+    },
+    {
+      "layout": "checklist",
+      "title": "check these before you hit apply",
+      "items": [
+        "is it a real vacancy or a talent pool?",
+        "is your program year on the list?",
+        "when does it close, and at what time?",
+        "how long is the contract?"
+      ],
+      "note": "screenshot this 📸"
+    },
+    {
+      "layout": "cta",
+      "action": "follow",
+      "title": "follow so the fine print never gets you",
+      "sub": "we track extern postings across Ontario hospitals"
+    }
+  ],
+  "facts": [
+    {
+      "id": "halton-positions",
+      "kind": "vacancy",
+      "claim": "Halton Healthcare's Clinical Extern - Nursing posting (REF3367F), posted April 2, 2026, listed 50 positions. Its internal application deadline was April 9, 2026, and the posting has since expired.",
+      "value": "50 positions",
+      "org": "Halton Healthcare",
+      "status": "closed",
+      "asOf": "2026-04-02",
+      "quote": "50 Positions",
+      "sources": [
+        "halton-posting"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "mackenzie-talent-pool",
+      "kind": "vacancy",
+      "claim": "Mackenzie Health's Clinical Extern (Nursing) posting 2026-18701 says it is not for an existing vacancy and that the hospital is sourcing candidates for potential future opportunities.",
+      "value": "talent pool",
+      "org": "Mackenzie Health",
+      "status": "talent-pool",
+      "quote": "This posting is not for an existing vacancy. We are sourcing candidates for potential future opportunities.",
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
+    },
+    {
+      "id": "halton-pay",
+      "kind": "pay",
+      "claim": "Halton Healthcare's posting listed a salary of $23.45 to $28.79 per hour.",
+      "value": "$23.45–$28.79/hr",
+      "org": "Halton Healthcare",
+      "status": "closed",
+      "asOf": "2026-04-02",
+      "quote": "Salary:  $23.45 to $28.79 per hour",
+      "sources": [
+        "halton-posting"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "mackenzie-pay",
+      "kind": "pay",
+      "claim": "Mackenzie Health's posting lists both the minimum and maximum rate as CAD $22.00 per hour.",
+      "value": "$22.00/hr",
+      "org": "Mackenzie Health",
+      "status": "talent-pool",
+      "quote": "CAD $22.00/Hr.",
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
+    },
+    {
+      "id": "halton-eligibility",
+      "kind": "eligibility",
+      "claim": "Halton Healthcare required a BScN program in 2nd, 3rd or 4th year of study, or a Practical Nursing program in final year of study, and also accepted final year of an accelerated BScN.",
+      "value": "BScN year 2, 3 or 4, or final-year PN",
+      "org": "Halton Healthcare",
+      "status": "closed",
+      "asOf": "2026-04-02",
+      "quote": "Baccalaureate Nursing Program (BScN) in 2nd, 3rd or 4th year of study or Practical Nursing Program in final year of study",
+      "sources": [
+        "halton-posting"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "mackenzie-eligibility",
+      "kind": "eligibility",
+      "claim": "Mackenzie Health requires enrolment in an RN program and entering 2nd, 3rd or 4th year, or an RPN program and entering final year.",
+      "value": "RN entering year 2, 3 or 4, or RPN entering final year",
+      "org": "Mackenzie Health",
+      "status": "talent-pool",
+      "quote": "Enrolled in a Registered Nursing Program (RN) and entering the 2nd , 3rd or 4th year of the Program or Enrolled in a Registered Practical Nursing Program (RPN) and entering the final year of the Program.",
+      "sources": [
+        "mackenzie-posting"
+      ],
+      "verifiedAt": "2026-11-11"
+    }
+  ],
+  "sources": [
+    {
+      "id": "halton-posting",
+      "publisher": "Halton Healthcare",
+      "title": "Clinical Extern - Nursing (REF3367F), careers site",
+      "url": "https://jobs.smartrecruiters.com/haltonhealthcare1/3743990012431576",
+      "published": "2026-04-02",
+      "accessedAt": "2026-11-13",
+      "primary": true
+    },
+    {
+      "id": "mackenzie-posting",
+      "publisher": "Mackenzie Health",
+      "title": "Clinical Extern (Nursing), competition 2026-18701, careers site",
+      "url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
+      "accessedAt": "2026-11-11",
+      "primary": true
+    }
+  ],
+  "caption": {
+    "text": "same title, very different fine print ✍️ one was a closed posting with 50 positions, the other is a talent pool, not a current vacancy. always read the post category line before you write a cover letter. both postings are on the receipts slide.",
+    "hashtags": [
+      "#nursingstudent",
+      "#studentnurse",
+      "#ontarionursing",
+      "#externship"
+    ]
+  }
+}

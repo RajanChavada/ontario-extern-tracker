@@ -1,0 +1,165 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "demo-roundup-closing-soon",
+  "title": "Deadline roundup (DEMO: invented hospitals and dates)",
+  "status": "demo",
+  "theme": "wine",
+  "demo": {
+    "referenceDate": "2026-11-13",
+    "reason": "Shows the deadline roundup layouts. Every organisation, date and rate here is invented. Replace with verified postings before publishing."
+  },
+  "slides": [
+    {
+      "layout": "hook",
+      "variant": "count",
+      "count": {
+        "of": "deadlines",
+        "label": "extern postings closing soon"
+      },
+      "title": "don’t let these close on you"
+    },
+    {
+      "layout": "wristbands",
+      "title": "closing soonest first",
+      "items": [
+        {
+          "fact": "kestrel-deadline"
+        },
+        {
+          "fact": "juniper-deadline"
+        },
+        {
+          "fact": "orchard-deadline"
+        },
+        {
+          "fact": "larkspur-deadline"
+        }
+      ]
+    },
+    {
+      "layout": "deadline",
+      "fact": "kestrel-deadline",
+      "details": [
+        {
+          "label": "Who can apply",
+          "fact": "kestrel-eligibility"
+        },
+        {
+          "label": "Pay",
+          "fact": "kestrel-pay"
+        }
+      ],
+      "note": "it closes in the morning, not at midnight!!"
+    },
+    {
+      "layout": "checklist",
+      "title": "apply tonight, not tomorrow",
+      "items": [
+        "update your resume with your latest placement",
+        "have your BLS card ready to upload",
+        "check your program year matches the posting",
+        "submit, then screenshot the confirmation"
+      ]
+    },
+    {
+      "layout": "cta",
+      "action": "save",
+      "title": "save this and set a reminder",
+      "sub": "new extern deadlines drop here first"
+    }
+  ],
+  "facts": [
+    {
+      "id": "kestrel-deadline",
+      "kind": "deadline",
+      "claim": "Kestrel Bay Hospital's Clinical Extern (Nursing) posting closes November 16, 2026 at 10:00 AM.",
+      "org": "Kestrel Bay Hospital",
+      "role": "Clinical Extern (Nursing)",
+      "date": "2026-11-16",
+      "time": "10:00 AM",
+      "status": "open",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "juniper-deadline",
+      "kind": "deadline",
+      "claim": "Juniper Valley Health's Student Extern (Physiotherapy) posting closes November 19, 2026.",
+      "org": "Juniper Valley Health",
+      "role": "Student Extern (Physiotherapy)",
+      "date": "2026-11-19",
+      "status": "open",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "orchard-deadline",
+      "kind": "deadline",
+      "claim": "Orchard Point General's Clinical Extern (RPN students) posting closes November 20, 2026.",
+      "org": "Orchard Point General",
+      "role": "Clinical Extern (RPN students)",
+      "date": "2026-11-20",
+      "status": "open",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "larkspur-deadline",
+      "kind": "deadline",
+      "claim": "Larkspur Health Centre's Clinical Extern (Nursing) posting closes November 27, 2026.",
+      "org": "Larkspur Health Centre",
+      "role": "Clinical Extern (Nursing)",
+      "date": "2026-11-27",
+      "status": "open",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "kestrel-eligibility",
+      "kind": "eligibility",
+      "claim": "Kestrel Bay Hospital asks for BScN students entering year 3 or 4.",
+      "value": "BScN, entering year 3 or 4",
+      "org": "Kestrel Bay Hospital",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    },
+    {
+      "id": "kestrel-pay",
+      "kind": "pay",
+      "claim": "Kestrel Bay Hospital lists $21.50 per hour.",
+      "value": "$21.50/hr",
+      "org": "Kestrel Bay Hospital",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sample",
+      "publisher": "Sample data",
+      "title": "Invented postings used to demonstrate layouts",
+      "url": "https://example.com/sample-postings",
+      "accessedAt": "2026-11-13",
+      "primary": false
+    }
+  ],
+  "caption": {
+    "text": "DEMO POST: sample data, these hospitals are not real. extern deadline roundup format: soonest first, colour-coded by how soon they close.",
+    "hashtags": [
+      "#nursingstudent",
+      "#externship"
+    ]
+  }
+}

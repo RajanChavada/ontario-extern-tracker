@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "demo-product-and-community",
+  "title": "Product demo + community check-in (DEMO: placeholder app UI)",
+  "status": "demo",
+  "theme": "caribbean",
+  "demo": {
+    "referenceDate": "2026-11-13",
+    "reason": "The phone screens are illustrative mocks, not real tracker screenshots, and the hospitals are invented. Swap in screen.image with real screenshots before publishing."
+  },
+  "slides": [
+    {
+      "layout": "hook",
+      "variant": "reply",
+      "reply": {
+        "user": "@rpn.era",
+        "comment": "how do you keep track of every posting??"
+      },
+      "title": "how to stop missing extern deadlines",
+      "sub": "the setup takes less time than your coffee order ☕"
+    },
+    {
+      "layout": "phone",
+      "title": "pick your hospitals once",
+      "screen": {
+        "mock": {
+          "header": "My hospitals",
+          "items": [
+            {
+              "title": "Kestrel Bay Hospital",
+              "meta": "Clinical Extern (Nursing)",
+              "tag": "closes Mon"
+            },
+            {
+              "title": "Juniper Valley Health",
+              "meta": "Student Extern (Physio)",
+              "tag": "closes Thu"
+            },
+            {
+              "title": "Orchard Point General",
+              "meta": "Clinical Extern (RPN)",
+              "tag": "closes Fri"
+            }
+          ]
+        }
+      },
+      "callouts": [
+        "only the ones you can commute to",
+        "red means it closes first"
+      ]
+    },
+    {
+      "layout": "phone",
+      "title": "get a heads-up before it closes",
+      "screen": {
+        "mock": {
+          "header": "Reminders",
+          "items": [
+            {
+              "title": "Kestrel Bay closes Monday",
+              "meta": "10:00 AM, not midnight",
+              "tag": "soon"
+            },
+            {
+              "title": "Juniper Valley closes Thursday",
+              "meta": "Student Extern (Physio)"
+            }
+          ]
+        }
+      },
+      "callouts": [
+        "no more finding out the day after"
+      ],
+      "facts": [
+        "kestrel-deadline"
+      ]
+    },
+    {
+      "layout": "badge",
+      "title": "community check-in",
+      "name": "the february crew",
+      "role": "applying in the next matching round",
+      "body": "drop your school + program below so we know which hospitals to watch 👇",
+      "emoji": "🩺"
+    },
+    {
+      "layout": "cta",
+      "action": "comment",
+      "title": "comment your school",
+      "sub": "we’ll start with the hospitals you ask for"
+    }
+  ],
+  "facts": [
+    {
+      "id": "kestrel-deadline",
+      "kind": "deadline",
+      "claim": "Kestrel Bay Hospital's Clinical Extern (Nursing) posting closes November 16, 2026 at 10:00 AM.",
+      "org": "Kestrel Bay Hospital",
+      "role": "Clinical Extern (Nursing)",
+      "date": "2026-11-16",
+      "time": "10:00 AM",
+      "status": "open",
+      "sources": [
+        "sample"
+      ],
+      "verifiedAt": "2026-11-13"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sample",
+      "publisher": "Sample data",
+      "title": "Illustrative app screens and invented hospitals",
+      "url": "https://example.com/sample-postings",
+      "accessedAt": "2026-11-13",
+      "primary": false
+    }
+  ],
+  "caption": {
+    "text": "DEMO POST: placeholder screens and invented hospitals. how the tracker keeps your extern deadlines in one place. comment your school + program 👇",
+    "hashtags": [
+      "#nursingstudent",
+      "#studentnurse",
+      "#externship"
+    ]
+  }
+}

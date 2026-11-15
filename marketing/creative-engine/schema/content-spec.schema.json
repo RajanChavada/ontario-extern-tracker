@@ -1,0 +1,1297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "demo"
+      ]
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "ceil",
+        "board",
+        "wine",
+        "caribbean"
+      ]
+    },
+    "platforms": {
+      "default": [
+        "tiktok",
+        "instagram"
+      ],
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "tiktok",
+          "instagram"
+        ]
+      }
+    },
+    "demo": {
+      "type": "object",
+      "properties": {
+        "referenceDate": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "referenceDate",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "brand": {
+      "default": {
+        "name": "Ontario Extern Tracker"
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "handle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "slides": {
+      "minItems": 2,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "hook"
+              },
+              "variant": {
+                "default": "plain",
+                "type": "string",
+                "enum": [
+                  "reply",
+                  "count",
+                  "versus",
+                  "plain"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "sub": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              },
+              "reply": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30
+                  },
+                  "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 90
+                  }
+                },
+                "required": [
+                  "user",
+                  "comment"
+                ],
+                "additionalProperties": false
+              },
+              "count": {
+                "type": "object",
+                "properties": {
+                  "of": {
+                    "type": "string",
+                    "enum": [
+                      "deadlines"
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                },
+                "required": [
+                  "of",
+                  "label"
+                ],
+                "additionalProperties": false
+              },
+              "versus": {
+                "type": "object",
+                "properties": {
+                  "left": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 24
+                  },
+                  "right": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 24
+                  },
+                  "op": {
+                    "default": "vs",
+                    "type": "string",
+                    "enum": [
+                      "vs",
+                      "≠",
+                      "="
+                    ]
+                  }
+                },
+                "required": [
+                  "left",
+                  "right"
+                ],
+                "additionalProperties": false
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "text_stack"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "lines": {
+                "minItems": 1,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 150
+                }
+              },
+              "emoji": {
+                "type": "string",
+                "maxLength": 8
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "lines"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "big_stat"
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "context": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "value",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "board"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "rows": {
+                "minItems": 1,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 30
+                    },
+                    "value": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "mark": {
+                      "default": "none",
+                      "type": "string",
+                      "enum": [
+                        "circle",
+                        "underline",
+                        "none"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "rows"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "checklist"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "items": {
+                "minItems": 2,
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 90
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "wristbands"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "items": {
+                "minItems": 1,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fact": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9-]*$"
+                    }
+                  },
+                  "required": [
+                    "fact"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "deadline"
+              },
+              "fact": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "details": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 24
+                    },
+                    "fact": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9-]*$"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "fact"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "fact"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "versus"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "a": {
+                "type": "object",
+                "properties": {
+                  "fact": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]*$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                },
+                "required": [
+                  "fact"
+                ],
+                "additionalProperties": false
+              },
+              "b": {
+                "type": "object",
+                "properties": {
+                  "fact": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]*$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                },
+                "required": [
+                  "fact"
+                ],
+                "additionalProperties": false
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "a",
+              "b"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "phone"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "screen": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      }
+                    },
+                    "required": [
+                      "image"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mock": {
+                        "type": "object",
+                        "properties": {
+                          "header": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40
+                          },
+                          "items": {
+                            "minItems": 1,
+                            "maxItems": 4,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 40
+                                },
+                                "meta": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 50
+                                },
+                                "tag": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 14
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "meta"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "header",
+                          "items"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "mock"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "callouts": {
+                "default": [],
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 48
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "screen"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "badge"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "role": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "emoji": {
+                "type": "string",
+                "maxLength": 8
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "receipts"
+              },
+              "title": {
+                "default": "receipts",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "const": "cta"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "sub": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "save",
+                  "follow",
+                  "comment",
+                  "share"
+                ]
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]*$"
+                }
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "facts",
+                  "advice",
+                  "opinion",
+                  "promo"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "ceil",
+                  "board",
+                  "wine",
+                  "caribbean"
+                ]
+              }
+            },
+            "required": [
+              "layout",
+              "title",
+              "action"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "facts": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "deadline",
+              "pay",
+              "eligibility",
+              "vacancy",
+              "program",
+              "stat",
+              "product",
+              "other"
+            ]
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "org": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "time": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed",
+              "talent-pool"
+            ]
+          },
+          "asOf": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "sources": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]*$"
+            }
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "claim",
+          "sources",
+          "verifiedAt"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sources": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "publisher": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "published": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "accessedAt": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "primary": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "publisher",
+          "title",
+          "url",
+          "accessedAt",
+          "primary"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "caption": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "hashtags": {
+          "default": [],
+          "maxItems": 30,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[\\p{L}\\p{N}_]+$"
+          }
+        },
+        "tiktok": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "instagram": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "status",
+    "theme",
+    "slides",
+    "caption"
+  ],
+  "additionalProperties": false
+}

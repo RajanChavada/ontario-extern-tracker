@@ -1,0 +1,257 @@
+/* Shift Report — the visual system.
+ *
+ * One type family (TikTok Sans, variable weight + width) carries everything typeset;
+ * Caveat Brush is the dry-erase marker. Every size is `N * var(--s)` where --s is the
+ * platform unit times the auto-fit factor, so layouts adapt to the safe box and shrink
+ * together when copy runs long. Spacing follows 12/20/32/48/72/112.
+ */
+
+:root {
+  --sans: 'TikTok Sans Variable', 'Twemoji', sans-serif;
+  --hand: 'Caveat Brush', 'Twemoji', cursive;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #777; }
+body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; font-synthesis: none; }
+
+.canvas { --fit: 1; --s: calc(var(--u) * var(--fit)); position: relative; overflow: hidden; background: var(--surface); color: var(--ink); font-family: var(--sans); font-optical-sizing: auto; }
+.bg { position: absolute; inset: 0; pointer-events: none; }
+.marks { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 5; }
+
+/* Surfaces ------------------------------------------------------------- */
+.tex-twill .bg {
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 3px, transparent 3px 8px),
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.035) 0 2px, transparent 2px 10px);
+}
+.tex-board .bg, .boardpanel {
+  background:
+    radial-gradient(ellipse 46% 9% at 24% 17%, rgba(110, 122, 150, 0.1), transparent 70%),
+    radial-gradient(ellipse 40% 7% at 74% 63%, rgba(110, 122, 150, 0.08), transparent 70%),
+    radial-gradient(ellipse 30% 5% at 34% 87%, rgba(60, 90, 180, 0.07), transparent 70%),
+    linear-gradient(180deg, #F7F8F6, #EDF0ED);
+}
+.tex-board .bg { box-shadow: inset 0 0 0 26px #C3C9CF, inset 0 0 0 31px #9EA6AE, inset 0 0 0 33px #E4E7EA; }
+
+/* Safe box ------------------------------------------------------------- */
+.safe { position: absolute; display: flex; flex-direction: column; z-index: 2; }
+.safe > * { flex-shrink: 0; }
+.main { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: calc(48px * var(--s)); }
+.main.top { justify-content: flex-start; }
+.main > * { flex-shrink: 0; }
+
+/* Type ----------------------------------------------------------------- */
+[data-fitw] { max-width: 100%; }
+.hero {
+  margin: 0; font-weight: 900; font-stretch: 150%; font-size: calc(150px * var(--s));
+  line-height: 0.9; letter-spacing: -0.025em; text-wrap: balance; overflow-wrap: normal;
+}
+.h2 {
+  margin: 0; font-weight: 850; font-stretch: 125%; font-size: calc(102px * var(--s));
+  line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance;
+}
+.lede { margin: 0; font-weight: 600; font-size: calc(58px * var(--s)); line-height: 1.2; text-wrap: pretty; }
+.small { font-weight: 500; font-size: calc(36px * var(--s)); line-height: 1.25; }
+.marker {
+  margin: 0; padding-left: 0.12em; font-family: var(--hand); font-size: calc(78px * var(--s)); line-height: 1.02;
+  color: var(--marker); text-wrap: balance; letter-spacing: 0.005em;
+}
+.tilt-l { transform: rotate(-3deg); transform-origin: left center; }
+.tilt-r { transform: rotate(2.5deg); transform-origin: left center; }
+
+/* TikTok caption boxes: one rounded box per wrapped line, like the app's text tool. */
+.tt { margin: 0; font-weight: 650; font-size: calc(58px * var(--s)); line-height: 1.36; text-wrap: pretty; }
+.tt > span {
+  background: var(--box-bg); color: var(--box-ink); padding: 0.1em 0.34em 0.16em; border-radius: 0.24em;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.tt.accent > span { background: var(--accent); color: var(--accent-ink); }
+.tt.big { font-size: calc(76px * var(--s)); font-weight: 750; }
+.hand-op { width: calc(170px * var(--s)); height: calc(128px * var(--s)); margin-left: calc(40px * var(--s)); overflow: visible; }
+.hand-op path { fill: none; stroke: var(--marker); stroke-width: 11; stroke-linecap: round; }
+.hand-op .slash { stroke: var(--stroke); stroke-width: 12; }
+.nowrap { white-space: nowrap; }
+.stack { display: flex; flex-direction: column; align-items: flex-start; gap: calc(20px * var(--s)); }
+
+/* Brand + citation ------------------------------------------------------ */
+.brand { display: flex; align-items: baseline; gap: calc(14px * var(--s)); font-weight: 800; font-stretch: 112%; font-size: max(32px, calc(36px * var(--s))); letter-spacing: -0.01em; }
+.brand.right { align-self: flex-end; }
+.brand .handle { font-weight: 500; font-stretch: 100%; }
+.cite { margin-top: calc(32px * var(--s)); text-wrap: pretty; font-weight: 500; font-size: max(32px, calc(32px * var(--s))); line-height: 1.25; max-width: 92%; }
+.stamp {
+  align-self: flex-start; margin-bottom: calc(32px * var(--s)); padding: 0.18em 0.5em 0.22em; transform: rotate(-2deg);
+  background: #FFFFFF; color: #C4241D; border: calc(5px * var(--s)) solid #C4241D; border-radius: 0.3em;
+  font-weight: 800; font-size: max(32px, calc(36px * var(--s))); letter-spacing: 0.01em;
+}
+
+/* Hook ------------------------------------------------------------------ */
+.reply {
+  position: relative; align-self: flex-start; max-width: 88%; transform: rotate(-2deg); transform-origin: left top;
+  background: #FFFFFF; color: #000; border-radius: calc(30px * var(--s)); padding: calc(24px * var(--s)) calc(34px * var(--s)) calc(28px * var(--s));
+  box-shadow: 0 calc(10px * var(--s)) calc(30px * var(--s)) rgba(0, 0, 0, 0.18);
+}
+.reply::after {
+  content: ''; position: absolute; left: calc(44px * var(--s)); bottom: calc(-22px * var(--s));
+  border: calc(14px * var(--s)) solid transparent; border-top: calc(14px * var(--s)) solid #FFF; border-left-width: calc(4px * var(--s));
+}
+.reply .who { display: flex; align-items: center; gap: calc(14px * var(--s)); font-weight: 500; font-size: max(32px, calc(36px * var(--s))); color: #4A4A4A; }
+.reply .avatar { width: calc(60px * var(--s)); height: calc(60px * var(--s)); border-radius: 50%; background: var(--accent); flex: none; display: grid; place-items: center; font-size: max(32px, calc(34px * var(--s))); font-weight: 800; color: #000; }
+.reply .comment { margin-top: calc(8px * var(--s)); font-weight: 750; font-size: calc(54px * var(--s)); line-height: 1.15; }
+.swipe { align-self: flex-end; margin-right: calc(150px * var(--s)); }
+.count-row { display: flex; align-items: flex-end; gap: calc(34px * var(--s)); }
+.count-row .count-label { flex: 1 1 0; min-width: 0; padding-bottom: calc(40px * var(--s)); }
+.count-num {
+  margin: 0; font-weight: 900; font-stretch: 150%; font-size: calc(420px * var(--s)); line-height: 0.8; flex: none;
+  letter-spacing: -0.05em; color: var(--accent);
+}
+.theme-ceil .count-num, .theme-caribbean .count-num, .theme-board .count-num { color: var(--ink); }
+.count-label { margin: 0; font-weight: 800; font-stretch: 125%; font-size: calc(72px * var(--s)); line-height: 1; }
+.vs-op { font-family: var(--hand); font-size: calc(170px * var(--s)); line-height: 0.7; color: var(--marker); margin-left: calc(40px * var(--s)); }
+
+/* Sticky notes (versus) -------------------------------------------------- */
+.note {
+  position: relative; width: 92%; padding: calc(50px * var(--s)) calc(50px * var(--s)) calc(44px * var(--s));
+  background: var(--note-bg, #FFF09A); color: #000; border-radius: calc(4px * var(--s)) calc(4px * var(--s)) calc(28px * var(--s)) calc(4px * var(--s));
+  box-shadow: 0 calc(14px * var(--s)) calc(22px * var(--s)) rgba(0, 0, 0, 0.14);
+}
+.note::before {
+  content: ''; position: absolute; top: calc(-22px * var(--s)); left: 50%; width: calc(170px * var(--s)); height: calc(46px * var(--s));
+  transform: translateX(-50%) rotate(-3deg); background: rgba(255, 255, 255, 0.55); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+.note.a { --note-bg: #FFF09A; transform: rotate(-1.6deg); margin-left: calc(10px * var(--s)); }
+.note.b { --note-bg: #FFC7DB; transform: rotate(1.4deg); align-self: flex-end; margin-right: calc(24px * var(--s)); }
+.note .who { font-weight: 700; font-size: calc(48px * var(--s)); }
+.note .val { margin-top: calc(10px * var(--s)); font-weight: 900; font-stretch: 112%; font-size: calc(124px * var(--s)); line-height: 0.98; letter-spacing: -0.02em; text-wrap: balance; }
+.note .val.short { white-space: nowrap; }
+.note .val.long { font-size: calc(74px * var(--s)); font-stretch: 100%; line-height: 1.08; font-weight: 800; letter-spacing: -0.01em; }
+.note .ctx { margin-top: calc(16px * var(--s)); font-weight: 500; font-size: max(32px, calc(40px * var(--s))); }
+.vs-mark { align-self: center; font-family: var(--hand); font-size: calc(120px * var(--s)); line-height: 0.8; color: var(--marker); margin: calc(-8px * var(--s)) 0; }
+
+/* Wristbands ------------------------------------------------------------- */
+.bands { display: flex; flex-direction: column; gap: calc(30px * var(--s)); }
+.band {
+  position: relative; display: flex; align-items: stretch; gap: calc(16px * var(--s)); width: 100%;
+  min-height: calc(176px * var(--s)); padding: calc(18px * var(--s)) calc(70px * var(--s)) calc(18px * var(--s)) calc(76px * var(--s));
+  background: var(--band); color: #000; border-radius: calc(36px * var(--s));
+  box-shadow: inset 0 calc(-8px * var(--s)) 0 rgba(0, 0, 0, 0.12), 0 calc(12px * var(--s)) calc(20px * var(--s)) rgba(0, 0, 0, 0.22);
+}
+.band:nth-child(3n + 1) { transform: rotate(-1.2deg); }
+.band:nth-child(3n + 2) { transform: rotate(0.8deg); }
+.band:nth-child(3n) { transform: rotate(-0.4deg); }
+.band.red { --band: #E2382E; }
+.band.yellow { --band: #F7D433; }
+.band.white { --band: #FFFFFF; }
+.band .snap {
+  position: absolute; left: calc(22px * var(--s)); top: 50%; width: calc(34px * var(--s)); height: calc(34px * var(--s)); transform: translateY(-50%);
+  border-radius: 50%; background: rgba(0, 0, 0, 0.18); box-shadow: inset 0 calc(3px * var(--s)) 0 rgba(0, 0, 0, 0.25);
+}
+.band .holes { position: absolute; right: calc(20px * var(--s)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: calc(12px * var(--s)); }
+.band .holes i { display: block; width: calc(16px * var(--s)); height: calc(16px * var(--s)); border-radius: 50%; background: rgba(0, 0, 0, 0.22); }
+.band .label {
+  flex: 1 1 auto; min-width: 0; background: #FFFFFF; border-radius: calc(12px * var(--s)); padding: calc(14px * var(--s)) calc(22px * var(--s));
+  display: flex; flex-direction: column; justify-content: center; box-shadow: 0 0 0 calc(2px * var(--s)) rgba(0, 0, 0, 0.08);
+}
+.band.white .label { box-shadow: 0 0 0 calc(3px * var(--s)) #000; }
+.band .org { font-weight: 750; font-stretch: 75%; font-size: calc(56px * var(--s)); line-height: 1; text-transform: uppercase; letter-spacing: 0.01em; }
+.band .role { margin-top: calc(6px * var(--s)); font-weight: 600; font-stretch: 85%; font-size: max(32px, calc(37px * var(--s))); line-height: 1.1; }
+.band .when { flex: none; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; padding-left: calc(8px * var(--s)); }
+.band .when .k { font-weight: 700; font-stretch: 85%; font-size: max(32px, calc(33px * var(--s))); }
+.band .when .d { font-weight: 900; font-stretch: 80%; font-size: calc(66px * var(--s)); line-height: 0.95; text-transform: uppercase; white-space: nowrap; }
+.band .when .t { font-weight: 700; font-stretch: 85%; font-size: max(32px, calc(33px * var(--s))); }
+.legend { display: flex; flex-wrap: wrap; gap: calc(14px * var(--s)) calc(30px * var(--s)); font-weight: 600; font-size: max(32px, calc(34px * var(--s))); }
+.legend span { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); }
+.legend i { width: calc(40px * var(--s)); height: calc(20px * var(--s)); border-radius: calc(10px * var(--s)); background: var(--band); box-shadow: 0 0 0 calc(2px * var(--s)) rgba(0, 0, 0, 0.35); }
+
+/* Deadline detail -------------------------------------------------------- */
+.closes-k { font-weight: 700; font-size: calc(44px * var(--s)); margin-bottom: calc(8px * var(--s)); }
+.closes { margin: 0; font-weight: 900; font-stretch: 140%; font-size: calc(150px * var(--s)); line-height: 0.86; letter-spacing: -0.03em; color: var(--accent); text-wrap: balance; }
+.theme-ceil .closes, .theme-caribbean .closes, .theme-board .closes { color: var(--ink); }
+
+/* Whiteboard rows --------------------------------------------------------- */
+.boardpanel {
+  padding: calc(44px * var(--s)) calc(44px * var(--s)) calc(36px * var(--s)); border-radius: calc(18px * var(--s));
+  box-shadow: 0 0 0 calc(12px * var(--s)) #C3C9CF, 0 0 0 calc(16px * var(--s)) #9EA6AE, 0 calc(26px * var(--s)) calc(40px * var(--s)) rgba(0, 0, 0, 0.25);
+  margin: calc(16px * var(--s)); color: #000; --marker: #1B3BB8;
+}
+.tex-board .boardpanel { background: none; box-shadow: none; padding: 0; margin: 0; }
+.rows { display: flex; flex-direction: column; gap: calc(34px * var(--s)); }
+.row { display: flex; flex-direction: column; gap: calc(2px * var(--s)); }
+.row .lbl { font-weight: 600; font-size: max(32px, calc(38px * var(--s))); color: #34465C; }
+.row .val { align-self: flex-start; font-family: var(--hand); font-size: calc(88px * var(--s)); line-height: 1.05; color: var(--marker); padding: 0 calc(6px * var(--s)); }
+.row .val[data-mark="circle"] { margin: calc(28px * var(--s)) 0 calc(16px * var(--s)) calc(36px * var(--s)); }
+.row .val[data-mark="underline"] { margin-bottom: calc(14px * var(--s)); }
+.row .rule { height: calc(3px * var(--s)); background: #8C98A6; margin-top: calc(4px * var(--s)); }
+.panel-title { margin: 0 0 calc(40px * var(--s)); font-weight: 850; font-stretch: 120%; font-size: calc(84px * var(--s)); line-height: 0.98; letter-spacing: -0.02em; color: #000; text-wrap: balance; }
+
+/* Checklist ----------------------------------------------------------------- */
+.checks { display: flex; flex-direction: column; gap: calc(34px * var(--s)); }
+.check { display: flex; gap: calc(26px * var(--s)); align-items: flex-start; }
+.check svg { flex: none; width: calc(72px * var(--s)); height: calc(72px * var(--s)); margin-top: calc(-4px * var(--s)); }
+.check .txt { font-weight: 650; font-size: calc(58px * var(--s)); line-height: 1.16; text-wrap: pretty; }
+
+/* Big stat -------------------------------------------------------------------- */
+.stat { margin: 0; align-self: flex-start; font-weight: 900; font-stretch: 150%; font-size: calc(300px * var(--s)); line-height: 0.85; letter-spacing: -0.04em; padding: 0; margin: calc(30px * var(--s)) 0 calc(24px * var(--s)); }
+.emoji-sticker { font-size: calc(170px * var(--s)); line-height: 1; transform: rotate(8deg); align-self: flex-end; margin-right: calc(30px * var(--s)); margin-bottom: calc(-40px * var(--s)); }
+
+/* Phone ----------------------------------------------------------------------- */
+.main > .phone-row { display: flex; gap: calc(34px * var(--s)); align-items: center; }
+.phone {
+  flex: none; height: calc(940px * var(--s)); aspect-ratio: 9 / 18; border-radius: calc(64px * var(--s)); padding: calc(16px * var(--s));
+  background: #121212; box-shadow: 0 calc(30px * var(--s)) calc(50px * var(--s)) rgba(0, 0, 0, 0.3), inset 0 0 0 calc(3px * var(--s)) #3A3A3A;
+}
+.screen { position: relative; width: 100%; height: 100%; border-radius: calc(50px * var(--s)); overflow: hidden; background: #FFFFFF; color: #000; container-type: size; }
+.screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.screen .island { position: absolute; top: 4cqw; left: 50%; transform: translateX(-50%); width: 28cqw; height: 8cqw; border-radius: 99px; background: #121212; }
+.mock { padding: 18cqw 5cqw 5cqw; display: flex; flex-direction: column; gap: 3.4cqw; }
+.mock .head { font-weight: 850; font-stretch: 115%; font-size: 10.5cqw; line-height: 1.05; padding: 0 1.5cqw 1cqw; }
+.mock .item { border-radius: 4.5cqw; padding: 3.6cqw 4cqw; background: #F1F3F6; display: flex; flex-direction: column; gap: 1cqw; }
+.mock .item b { font-weight: 750; font-size: 8.6cqw; line-height: 1.1; }
+.mock .item span { font-weight: 500; font-size: 7.9cqw; line-height: 1.15; color: #3F4752; }
+.mock .tag { align-self: flex-start; margin-top: 1.4cqw; padding: 0.06em 0.45em; border-radius: 99px; font-weight: 700; font-style: normal; font-size: 7.6cqw; background: #E2382E; color: #000; }
+.mock .tag.yellow { background: #F7D433; }
+.mock .tag.white { background: #FFFFFF; box-shadow: 0 0 0 2px #000; }
+.callouts { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: calc(70px * var(--s)); }
+.callouts .marker { font-size: calc(58px * var(--s)); }
+
+/* Badge ----------------------------------------------------------------------- */
+.badge-wrap { display: flex; flex-direction: column; align-items: flex-start; padding-left: calc(30px * var(--s)); }
+.reel { position: relative; width: calc(130px * var(--s)); height: calc(130px * var(--s)); border-radius: 50%; background: var(--accent); margin-left: calc(150px * var(--s)); box-shadow: inset 0 0 0 calc(10px * var(--s)) rgba(0, 0, 0, 0.12), 0 calc(10px * var(--s)) calc(16px * var(--s)) rgba(0, 0, 0, 0.2); display: grid; place-items: center; font-size: calc(64px * var(--s)); }
+.cord { width: calc(8px * var(--s)); height: calc(70px * var(--s)); background: #2B2B2B; margin-left: calc(211px * var(--s)); }
+.badge {
+  width: calc(560px * var(--s)); background: var(--paper); color: var(--paper-ink); border-radius: calc(30px * var(--s)); overflow: hidden;
+  transform: rotate(-3deg); transform-origin: 38% top; box-shadow: 0 calc(24px * var(--s)) calc(40px * var(--s)) rgba(0, 0, 0, 0.25);
+}
+.badge .strip { background: #000; color: #FFF; padding: calc(18px * var(--s)) calc(28px * var(--s)); font-weight: 800; font-stretch: 112%; font-size: max(32px, calc(34px * var(--s))); }
+.badge .slot { width: calc(110px * var(--s)); height: calc(22px * var(--s)); border-radius: 99px; background: var(--surface); margin: calc(18px * var(--s)) auto 0; }
+.badge .bodyrow { display: flex; gap: calc(26px * var(--s)); padding: calc(26px * var(--s)) calc(30px * var(--s)) calc(34px * var(--s)); align-items: center; }
+.badge .photo { flex: none; width: calc(150px * var(--s)); height: calc(180px * var(--s)); border-radius: calc(16px * var(--s)); background: var(--surface); display: grid; place-items: center; font-size: calc(96px * var(--s)); }
+.badge .name { font-weight: 900; font-stretch: 112%; font-size: calc(62px * var(--s)); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.badge .role { margin-top: calc(10px * var(--s)); font-weight: 600; font-size: max(32px, calc(36px * var(--s))); line-height: 1.15; }
+
+/* Receipt --------------------------------------------------------------------- */
+.receipt {
+  position: relative; width: 94%; background: #FFFFFF; color: #000; transform: rotate(1deg);
+  padding: calc(56px * var(--s)) calc(48px * var(--s)) calc(60px * var(--s)); filter: drop-shadow(0 calc(16px * var(--s)) calc(22px * var(--s)) rgba(0, 0, 0, 0.22));
+  --zz: calc(22px * var(--s));
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zz) * 2) var(--zz) repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--zz) * 2) var(--zz) repeat-x,
+    linear-gradient(#000 0 0) center / 100% calc(100% - var(--zz) * 2 + 2px) no-repeat;
+}
+.receipt .rtitle { margin: 0 0 calc(12px * var(--s)); font-weight: 900; font-stretch: 130%; font-size: calc(100px * var(--s)); line-height: 0.95; letter-spacing: -0.02em; }
+.receipt .rsub { font-weight: 600; font-stretch: 90%; font-size: max(32px, calc(38px * var(--s))); }
+.receipt .item { border-top: calc(4px * var(--s)) dashed #8A8A8A; margin-top: calc(26px * var(--s)); padding-top: calc(22px * var(--s)); }
+.receipt .pub { font-weight: 800; font-stretch: 90%; font-size: calc(48px * var(--s)); line-height: 1.1; }
+.receipt .ttl { font-weight: 500; font-stretch: 90%; font-size: max(32px, calc(38px * var(--s))); line-height: 1.2; margin-top: calc(4px * var(--s)); }
+.receipt .meta { display: flex; justify-content: space-between; gap: calc(20px * var(--s)); font-weight: 600; font-stretch: 85%; font-size: max(32px, calc(35px * var(--s))); margin-top: calc(10px * var(--s)); }
+.receipt .url { font-weight: 500; font-stretch: 85%; font-size: max(32px, calc(35px * var(--s))); color: #333; margin-top: calc(6px * var(--s)); overflow-wrap: anywhere; }
+.receipt .total { border-top: calc(5px * var(--s)) solid #000; margin-top: calc(30px * var(--s)); padding-top: calc(18px * var(--s)); display: flex; justify-content: space-between; font-weight: 850; font-stretch: 90%; font-size: calc(46px * var(--s)); }
+
+/* CTA ------------------------------------------------------------------------- */
+.cta-title { max-width: 92%; }
+
+/* Overlay preview (TikTok / Instagram interface ghosts) ------------------------ */
+.ghost { position: absolute; inset: 0; z-index: 20; pointer-events: none; font-family: var(--sans); color: #FFF; }
+.ghost .safeline { position: absolute; border: 4px dashed rgba(255, 40, 80, 0.9); }
+.ghost .zone { position: absolute; background: rgba(0, 0, 0, 0.32); }
+.ghost .t { position: absolute; font-weight: 700; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); }
+.ghost .ic { position: absolute; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: rgba(255, 255, 255, 0.92); }

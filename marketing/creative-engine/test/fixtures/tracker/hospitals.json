@@ -1,0 +1,66 @@
+{
+  "dataset_checked": "2026-11-11",
+  "stale_after_days": 7,
+  "note": "Test fixture: wch and shn copied from data/hospitals.json as of 2026-11-14 (origin/main).",
+  "entries": [
+    {
+      "id": "wch",
+      "hospital": "Women's College Hospital",
+      "region": "gta",
+      "location": "Toronto",
+      "program_name": "Clinical Extern - Professional Practice",
+      "posting_type": "open_unspecified",
+      "posted_text": "Posted Nov 6, 2026",
+      "deadline": "2026-11-20",
+      "pay_text": "$20.60/hr",
+      "source_url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-11",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "anyYear": true,
+            "note": "year not specified on the posting"
+          }
+        },
+        "bcls": true,
+        "also_listed": [
+          "Up to 7.5 hours per week (as posted)"
+        ]
+      },
+      "short": "Vacancy count not stated"
+    },
+    {
+      "id": "shn",
+      "hospital": "Scarborough Health Network",
+      "region": "gta",
+      "location": "Scarborough",
+      "program_name": "Clinical Nurse Extern (talent pool)",
+      "posting_type": "open_talent_pool",
+      "pool_note": "The posting says it builds a candidate pool for upcoming vacancies and is not a specific vacant position.",
+      "deadline": "2026-11-30",
+      "pay_text": "$25.379/hr",
+      "source_url": "https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-_JR105532",
+      "source_kind": "posting",
+      "source_ok": true,
+      "last_verified": "2026-11-11",
+      "eligibility": {
+        "listed": true,
+        "programs": {
+          "BSCN": {
+            "minYear": 3,
+            "maxYear": 4,
+            "finalYearOk": true
+          }
+        },
+        "bcls": true,
+        "also_listed": [
+          "Evidence of excellent academic standing"
+        ]
+      },
+      "short": "Not a current vacancy"
+    }
+  ]
+}
