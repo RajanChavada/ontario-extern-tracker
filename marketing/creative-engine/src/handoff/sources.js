@@ -22,6 +22,38 @@ export function normalizeForQuote(s) {
 }
 
 /**
+ * Dayforce career sites (jobs.dayforcehcm.com) send the posting only as Next.js page data: the visible job text is
+ * an HTML string inside <script id="__NEXT_DATA__" type="application/json">, which normalizeForQuote (rightly) drops
+ * with every other script. This reads that one JSON block, and only when its jobPostingId is the job id in the URL,
+ * so another job's data can never confirm a quote. It returns:
+ *  - the job description, normalized like any page;
+ *  - the "Posted … | Expires …" line the browser builds from the two timestamps, rebuilt in Toronto time in the
+ *    site's own wording, so a date quote still has to match exactly.
+ * Any other host, or a missing / mismatched job id, returns '' (no extra text: the quote check stays as strict as before).
+ */
+export function dayforcePageText(url, html) {
+  let u;
+  try { u = new URL(url); } catch { return ''; }
+  if (u.hostname !== 'jobs.dayforcehcm.com') return '';
+  const jobId = u.pathname.match(/\/jobs\/(\d+)\/?$/)?.[1];
+  const m = String(html).match(/<script id="__NEXT_DATA__" type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
+  if (!jobId || !m) return '';
+  let job;
+  try { job = JSON.parse(m[1])?.props?.pageProps?.jobData; } catch { return ''; }
+  if (!job || String(job.jobPostingId) !== jobId) return '';
+  const when = (iso) => {
+    const d = new Date(iso);
+    if (Number.isNaN(+d)) return null;
+    const date = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(d);
+    const time = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', hour: 'numeric', minute: '2-digit', hour12: true }).format(d);
+    return `${date} at ${time}`;
+  };
+  const posted = when(job.postingStartTimestampUTC), expires = when(job.postingExpiryTimestampUTC);
+  const header = posted && expires ? `Posted ${posted} | Expires ${expires}` : posted ? `Posted ${posted}` : '';
+  return normalizeForQuote(`${header}\n${job.jobTitle ?? ''}\n${job.jobPostingContent?.jobDescription ?? ''}`);
+}
+
+/**
  * Returns { results, blockers, warnings }.
  *  evidence: index from loadEvidence(); online: fetch the live page too; fetchImpl for tests.
  */
@@ -46,11 +78,15 @@ export async function checkSourceQuotes(spec, { evidence, online = true, fetchIm
         if (!live.has(key)) {
           try {
             const res = await fetchImpl(s.url, { redirect: 'follow', signal: AbortSignal.timeout(timeoutMs), headers: { 'user-agent': 'Mozilla/5.0 (oet source check)' } });
-            live.set(key, { status: res.status, text: res.ok ? normalizeForQuote(await res.text()) : null });
+            const html = res.ok ? await res.text() : null;
+            live.set(key, { status: res.status, text: html === null ? null : normalizeForQuote(html), pageData: html === null ? '' : dayforcePageText(s.url, html) });
           } catch (e) { live.set(key, { status: null, error: e.cause?.code ?? e.name, text: null }); }
         }
         const page = live.get(key);
-        r.online = { status: page.status, error: page.error ?? null, found: page.text ? page.text.includes(q) : null };
+        const inHtml = page.text ? page.text.includes(q) : null;
+        const inData = !inHtml && page.pageData ? page.pageData.includes(q) : false;
+        r.online = { status: page.status, error: page.error ?? null, found: inHtml || inData ? true : inHtml, via: inHtml ? 'html' : inData ? 'page-data' : null };
+        if (inData) warnings.push(`${f.id}: confirmed in the live page's own job data (Dayforce __NEXT_DATA__ for this job id), not in static HTML`);
       }
       results.push(r);
       if (r.online?.status >= 400) blockers.push(`${s.url} returned HTTP ${r.online.status}`);
