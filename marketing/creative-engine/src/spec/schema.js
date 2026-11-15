@@ -287,6 +287,9 @@ export const SpecSchema = z.strictObject({
   slides: z.array(SlideSchema).min(2).max(20),
   facts: z.array(FactSchema).default([]),
   sources: z.array(SourceSchema).default([]),
+  // Who speaks (docs/CONTENT.md, decision 9): 'brand' (default, third/second person) or 'student' (first person, the
+  // real student in the voice profile; experience claims must be in the profile's true_statements).
+  voice: z.enum(['brand', 'student']).optional(),
   // Content brief (docs/CONTENT.md): the reasoning behind the post, kept with it. Not rendered or exported.
   brief: z.strictObject({
     type: z.enum(['listing', 'deadline', 'talent_pool', 'checklist', 'explainer', 'relatable']),

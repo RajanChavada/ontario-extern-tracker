@@ -36,7 +36,14 @@ Write 3–8 candidate hooks in `brief.hooks` and pick the one that best fits all
 Record the choice in `brief.why`, the payoff in `brief.payoff`, and the research IDs in `brief.evidence`. `oet check` warns when a marketing post has no brief (BRIEF_MISSING) and fails if the cover isn't one of the candidate hooks (BRIEF_HOOK_MISMATCH).
 
 ## Honesty (validator-enforced where it can be checked)
-- **The account is a directory, not a student.** No first-person success stories ("how I got my externship") unless the post presents an attributed quote with written permission (FIRST_PERSON_CLAIM, STOCK_FIRST_PERSON).
+- **Voice (decision 9, 2026-11-15).** Posts are either `"voice": "brand"` (the default: second and third person, no first person; FIRST_PERSON_CLAIM, STOCK_FIRST_PERSON) or `"voice": "student"`. In the student voice, the "i" is the real student in the voice profile: Rajan, who runs the tracker and consented on 2026-11-15. The profile lives at `workspace/voice/voice-profile.json`, outside the repo; override it with `OET_VOICE_PROFILE`.
+  - **Profile required.** A student-voice post needs the profile with signed consent (VOICE_PROFILE_MISSING, VOICE_CONSENT).
+  - **Claims.** First person is fine. Experience claims ("when i applied…", "i'm in third year", "my placement", "i got…") must appear word for word in the profile's `true_statements` (VOICE_UNSUPPORTED_CLAIM). Never fill those in on the student's behalf. Program, year and experience are blank until he adds them.
+  - **The link to the tracker.** Wherever ontarioexterns.ca appears, say the link plainly: "the list i help run" or "i run" (VOICE_LINK_UNDISCLOSED).
+  - **Photos.** No "i", "me" or "my" over stock photos that show people. Use object or scene photos, or his own photos (STOCK_FIRST_PERSON).
+  - **Tone.** Brochure phrasing ("our independent tracker", "have you come across") and semicolons get a warning (VOICE_BROCHURE).
+  - **Sign-off.** The voice approves every post. While the voice is also the publishing approver (`approval.same_person_as_publisher`), his Grokbot approval of the exact fingerprint is that sign-off. If the voice is ever someone else, `oet export` refuses student-voice posts (VOICE_SIGNOFF_REQUIRED) until a sign-off step is built.
+  - **Examples.** Hook bank and examples: `workspace/creative-reference/oet-hermes-package-2026-11-15/voice-examples.md`. Hooks marked "only if her profile says…" need the matching true statements.
 - No invented rejections, outcomes, comments, engagement or testimonials. Never promise that a tactic gets a callback or a job (OUTCOME_CLAIM).
 - No hook the slides can't pay off. No "spots filling fast" or other invented scarcity.
 - **Every number and date** is a cited fact (UNSUPPORTED_SPECIFIC).
@@ -44,5 +51,5 @@ Record the choice in `brief.why`, the payoff in `brief.payoff`, and the research
 - **A talent pool is never a vacancy.** Any slide citing a talent pool's deadline or pay says "talent pool", and so does the caption (TALENT_POOL_UNLABELLED).
 - **Captions:** state the facts plainly. One question to the viewer is fine (hooks_captions.md: caption patterns). Keep the tracker disclaimer line.
 
-## Reference post
+## Reference post (brand voice)
 `specs/tracker/shn-talent-pool-explainer.json` (talent_pool type, 7 slides).
