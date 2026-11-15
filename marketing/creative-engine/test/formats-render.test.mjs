@@ -265,6 +265,18 @@ test('campaigns default to format C; a classic campaign that does not say so is 
   assert.ok(wrong.factual.errors.some((e) => e.code === 'FORMAT_NOT_RENDERED'));
 });
 
+test('time-sensitive campaigns state the deadline on the cover; the cover source line does not count toward its 12 words', async () => {
+  const slides = cCampaign().slides;
+  const late = cCampaign({ slides: [slides[0], { layout: 'c_photo', photo: 'pexels-5386483', title: 'it closes friday, nov 20', basis: 'facts', facts: ['wch-deadline'] }, ...slides.slice(2)] });
+  const r1 = factualCheck(await campaignFile(late), campaignOpts);
+  assert.deepEqual(r1.factual.errors.map((e) => e.code), ['DEADLINE_NOT_ON_COVER']);
+  const lead = cCampaign({ slides: [{ ...slides[0], title: "women's college extern closes nov 20", facts: ['wch-deadline'] }, ...slides.slice(1)] });
+  const r2 = factualCheck(await campaignFile(lead), campaignOpts);
+  assert.deepEqual(r2.factual.errors, []);
+  const long = cCampaign({ slides: [{ ...slides[0], title: "women's college hospital's clinical extern posting closes on friday nov 20 so apply soon", facts: ['wch-deadline'] }, ...slides.slice(1)] });
+  assert.ok(factualCheck(await campaignFile(long), campaignOpts).factual.errors.some((e) => e.code === 'DENSITY'), 'the hook itself is still limited to 12 words');
+});
+
 test('a format C campaign renders its registered photos on the photo slides (checked on the PNGs, not the templates)', { timeout: 180_000 }, async () => {
   const fc = factualCheck(await campaignFile(cCampaign()), campaignOpts);
   const outDir = await mkdtemp(path.join(tmpdir(), 'oet-c-campaign-'));

@@ -22,7 +22,11 @@ back to the flat classic layouts.
 - Relatable TikTok posts, including hospital deadline announcements: format C (`c_photo`, `c_notes`, `c_paper`).
   Example: `specs/tracker/wch-closes-nov20-c.json`.
 - Dense educational or reference carousels: `"format": "b"` with `b_*` layouts.
-- Classic layouts only on purpose: `"format": "classic"`.
+- Classic layouts only on purpose: `"format": "classic"`. Published classic specs (`wch-closes-nov20.json`, the
+  `what-is-an-extern` post) keep `"format": "classic"` so they rebuild exactly.
+- Time-sensitive posts lead with the deadline: if any slide cites a closing date, the cover must cite it too
+  (`DEADLINE_NOT_ON_COVER`), e.g. "women's college extern closes nov 20". The cover's 12-word limit counts the hook,
+  not its small generated source line.
 - After rendering, every photo slide must carry its registered photo in the render manifest (`PHOTO_LAYER_MISSING`).
   The tests also check the rendered PNGs themselves: no photo slide may be a flat background.
 

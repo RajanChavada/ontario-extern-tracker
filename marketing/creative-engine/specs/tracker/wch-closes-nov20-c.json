@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/content-spec.schema.json",
   "id": "wch-closes-nov20-c",
-  "title": "Women's College extern closes Nov 20 (format C revision, not published)",
+  "title": "Women's College extern closes Nov 20 (format C design reference, not published)",
   "status": "verified",
   "format": "c",
   "theme": "board",
@@ -18,7 +18,7 @@
     {
       "layout": "c_photo",
       "photo": "pexels-5537938",
-      "title": "women's college extern posting: what to know before it closes",
+      "title": "women's college extern closes nov 20",
       "nudge": 10,
       "asides": [
         {
@@ -30,6 +30,9 @@
           "size": 66,
           "rotate": -6
         }
+      ],
+      "facts": [
+        "wch-deadline"
       ]
     },
     {
