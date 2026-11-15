@@ -6,7 +6,9 @@ import { readFileSync } from 'node:fs';
 import { parseWorkday, parseIcims, parseOracle, parseSmartRecruiters, pageExcerpt, isNursingExtern, diff, renderReport, checkSource, idIn, complete } from '../scripts/watch.mjs';
 
 const fx = f => readFileSync(new URL(`./fixtures/watch/${f}`, import.meta.url), 'utf8');
-const data = JSON.parse(readFileSync(new URL('../data/hospitals.json', import.meta.url), 'utf8'));
+// Frozen copy of data/hospitals.json as of 2026-11-12 (what these tests were written against), so later data
+// fixes (e.g. Southlake closed on 2026-11-14) don't change what the watcher logic is tested on.
+const data = JSON.parse(fx('hospitals-2026-11-12.json'));
 const { sources } = JSON.parse(readFileSync(new URL('../watch/sources.json', import.meta.url), 'utf8'));
 const S = id => sources.find(s => s.id === id);
 const TODAY = '2026-11-12', NOW = '2026-11-12T15:00:00Z';
@@ -99,6 +101,15 @@ test('an "ok" but empty board where we list open postings is treated as not chec
   assert.equal(items.notChecked.length, 1);
   assert.match(items.notChecked[0].reason, /no extern postings/);
   assert.equal(items.goneFromBoard.length, 0);
+});
+
+test('a board for a hospital we now list as closed may be empty: checked, no differences, not flagged', () => {
+  const closed = structuredClone(data);
+  Object.assign(closed.entries.find((e) => e.id === 'southlake'), { posting_type: 'closed', deadline: null, positions_listed: null });
+  const { items } = diff({ sources: [S('southlake-workday')], results: { 'southlake-workday': { status: 'ok', postings: [] } }, prev: null, data: closed, today: TODAY, now: NOW });
+  assert.equal(items.notChecked.length, 0);
+  assert.equal(items.goneFromBoard.length, 0);
+  assert.equal(items.unchanged.length, 1);
 });
 
 test('manual boards are always listed as not checked, with our entries\' verification dates', () => {
