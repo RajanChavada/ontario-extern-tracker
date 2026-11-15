@@ -287,6 +287,15 @@ export const SpecSchema = z.strictObject({
   slides: z.array(SlideSchema).min(2).max(20),
   facts: z.array(FactSchema).default([]),
   sources: z.array(SourceSchema).default([]),
+  // Content brief (docs/CONTENT.md): the reasoning behind the post, kept with it. Not rendered or exported.
+  brief: z.strictObject({
+    type: z.enum(['listing', 'deadline', 'talent_pool', 'checklist', 'explainer', 'relatable']),
+    problem: text(240), // the nursing-student problem this post solves
+    hooks: z.array(text(90)).min(3).max(8), // candidate cover hooks considered; the cover title must be one of them
+    why: text(800), // why this hook won, and which slides deliver on it
+    payoff: text(240), // what the reader has after the last slide
+    evidence: z.array(text(200)).min(1), // research references, e.g. "tiktok-research-2026-11-14 CONCEPTS #10"
+  }).optional(),
   caption: z.strictObject({
     text: text(2000),
     hashtags: z.array(z.string().regex(/^#[\p{L}\p{N}_]+$/u, 'hashtags look like #nursingstudent')).max(30).default([]),

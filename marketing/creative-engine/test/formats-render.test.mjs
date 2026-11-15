@@ -277,6 +277,58 @@ test('time-sensitive campaigns state the deadline on the cover; the cover source
   assert.ok(factualCheck(await campaignFile(long), campaignOpts).factual.errors.some((e) => e.code === 'DENSITY'), 'the hook itself is still limited to 12 words');
 });
 
+// ---------------------------------------------------------------- hook-first content rules (docs/CONTENT.md, Rajan 2026-11-14)
+const poolCampaign = (over = {}) => ({
+  id: 'shn-pool-test', title: 'SHN talent pool test', status: 'verified', theme: 'board', platforms: ['tiktok'], tracker: { entries: ['shn'] },
+  brief: {
+    type: 'talent_pool', problem: 'Students read every posting as an open job.', why: 'Broad misconception first; SHN as the example.', payoff: 'Knows what a talent pool is.',
+    hooks: ["not every externship posting means there's an open job", 'what a talent pool means', 'talent pools, explained'], evidence: ['tiktok-research-2026-11-14 CONCEPTS #10'],
+  },
+  slides: [
+    { layout: 'c_photo', photo: 'pexels-5965524', title: "not every externship posting means there's an open job", body: 'ontario example: a talent pool closing nov 30', facts: ['shn-deadline'] },
+    { layout: 'c_notes', photo: 'pexels-3973981', label: 'extern notes 📝', title: 'what a talent pool means', body: "the hospital is building a pool of candidates for upcoming vacancies. it isn't one specific open position.", facts: ['shn-vacancy'] },
+    { layout: 'c_photo', photo: 'pexels-2440970', title: 'a real ontario example', body: 'its talent pool closes nov 30. posted pay: $25.379/hr.', basis: 'facts', facts: ['shn-vacancy', 'shn-deadline', 'shn-pay'] },
+    { layout: 'c_photo', photo: 'pexels-7439131', title: 'looking for extern postings in ontario?', body: "ontarioexterns.ca checks each hospital's own careers page.", fine: 'Not affiliated with any hospital.', basis: 'promo' },
+  ],
+  caption: { text: 'Not every externship posting is an open job. SHN’s talent pool closes Nov 30, 2026 ($25.379/hr as posted).', hashtags: ['#nursingstudent'] },
+  ...over,
+});
+const withSlide = (i, patch) => { const c = poolCampaign(); c.slides[i] = { ...c.slides[i], ...patch }; return c; };
+const codes = async (c) => factualCheck(await campaignFile(c), campaignOpts).factual.errors.map((e) => e.code);
+
+test('hook-first deadline cover: the date may sit in a short secondary line, but it must be visible and cited', async () => {
+  const ok = factualCheck(await campaignFile(poolCampaign()), campaignOpts);
+  assert.deepEqual(ok.factual.errors, []);
+  assert.ok(!ok.factual.warnings.some((w) => w.code === 'BRIEF_MISSING'));
+  // cited but not shown: the date has to be readable on the cover, not just referenced
+  assert.deepEqual(await codes(withSlide(0, { body: 'a real ontario talent pool example inside' })), ['DEADLINE_NOT_ON_COVER']);
+  // shown is not enough without citing (the date would be unsupported)
+  assert.ok((await codes(withSlide(0, { facts: undefined }))).includes('UNSUPPORTED_SPECIFIC'));
+  // the secondary line stays a short callout; the hook keeps its own 12-word limit
+  assert.deepEqual(await codes(withSlide(0, { body: 'ontario example from a real posting: scarborough health network talent pool closing nov 30' })), ['DENSITY']);
+});
+
+test('a talent pool is labelled wherever its deadline or pay appears, and in the caption', async () => {
+  assert.deepEqual(await codes(withSlide(2, { body: 'it closes nov 30. posted pay: $25.379/hr.' })), ['TALENT_POOL_UNLABELLED']);
+  const cap = poolCampaign({ caption: { text: 'SHN’s extern posting closes Nov 30, 2026 ($25.379/hr as posted).', hashtags: ['#nursingstudent'] } });
+  assert.deepEqual(await codes(cap), ['TALENT_POOL_UNLABELLED']);
+  // eligibility alone doesn't need the label (it reads as requirements, not as a vacancy)
+  const elig = poolCampaign();
+  elig.slides.splice(3, 0, { layout: 'c_paper', title: "what SHN's posting asks for", body: 'BScN, year 3 or final year. current BCLS.', tags: ['BScN', 'BCLS'], basis: 'facts', facts: ['shn-eligibility', 'shn-bcls'] });
+  assert.deepEqual(await codes(elig), []);
+});
+
+test('the content brief: the cover hook must be one of the candidates; marketing posts without a brief get a warning', async () => {
+  const c = poolCampaign(); c.brief = { ...c.brief, hooks: ['a', 'b', 'c'] };
+  assert.deepEqual(await codes(c), ['BRIEF_HOOK_MISMATCH']);
+  const none = poolCampaign({ brief: undefined });
+  const r = factualCheck(await campaignFile(none), campaignOpts);
+  assert.deepEqual(r.factual.errors, []);
+  assert.ok(r.factual.warnings.some((w) => w.code === 'BRIEF_MISSING'));
+  const classic = factualCheck(await campaignFile(classicCampaign({ format: 'classic' })), campaignOpts);
+  assert.ok(!classic.factual.warnings.some((w) => w.code === 'BRIEF_MISSING'), 'historical classic specs are not nagged');
+});
+
 test('a format C campaign renders its registered photos on the photo slides (checked on the PNGs, not the templates)', { timeout: 180_000 }, async () => {
   const fc = factualCheck(await campaignFile(cCampaign()), campaignOpts);
   const outDir = await mkdtemp(path.join(tmpdir(), 'oet-c-campaign-'));

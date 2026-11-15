@@ -1762,6 +1762,65 @@
         "additionalProperties": false
       }
     },
+    "brief": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "listing",
+            "deadline",
+            "talent_pool",
+            "checklist",
+            "explainer",
+            "relatable"
+          ]
+        },
+        "problem": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "hooks": {
+          "minItems": 3,
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 90
+          }
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "payoff": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "evidence": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      },
+      "required": [
+        "type",
+        "problem",
+        "hooks",
+        "why",
+        "payoff",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
     "caption": {
       "type": "object",
       "properties": {

@@ -24,9 +24,10 @@ back to the flat classic layouts.
 - Dense educational or reference carousels: `"format": "b"` with `b_*` layouts.
 - Classic layouts only on purpose: `"format": "classic"`. Published classic specs (`wch-closes-nov20.json`, the
   `what-is-an-extern` post) keep `"format": "classic"` so they rebuild exactly.
-- Time-sensitive posts lead with the deadline: if any slide cites a closing date, the cover must cite it too
-  (`DEADLINE_NOT_ON_COVER`), e.g. "women's college extern closes nov 20". The cover's 12-word limit counts the hook,
-  not its small generated source line.
+- Time-sensitive posts show the deadline on the cover (`DEADLINE_NOT_ON_COVER`): the date must be visible in the hook or
+  in a short secondary line (`body`), and the cover must cite the deadline fact. Covers allow a 12-word hook plus 10
+  words of secondary text and asides; the generated source line isn't counted.
+- What to write (hooks, structure, briefs, honesty): docs/CONTENT.md.
 - After rendering, every photo slide must carry its registered photo in the render manifest (`PHOTO_LAYER_MISSING`).
   The tests also check the rendered PNGs themselves: no photo slide may be a flat background.
 
