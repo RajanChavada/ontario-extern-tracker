@@ -1,0 +1,192 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "what-is-an-extern",
+  "title": "What is an extern? (Ontario Health facts)",
+  "status": "verified",
+  "theme": "ceil",
+  "platforms": [
+    "tiktok"
+  ],
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "slides": [
+    {
+      "layout": "hook",
+      "variant": "plain",
+      "title": "what’s an extern, actually?",
+      "sub": "the student hospital job nobody explains properly, with receipts"
+    },
+    {
+      "layout": "text_stack",
+      "title": "it’s a real, paid hospital job",
+      "lines": [
+        "you work in an Ontario hospital while you’re still a student",
+        "paid, hands-on experience with a real unit team"
+      ],
+      "facts": [
+        "paid-hospital-work"
+      ]
+    },
+    {
+      "layout": "board",
+      "title": "your role on the unit",
+      "rows": [
+        {
+          "label": "Your role today",
+          "value": "unregulated care provider",
+          "mark": "underline"
+        },
+        {
+          "label": "Supervised by",
+          "value": "regulated health professionals"
+        }
+      ],
+      "note": "not a nurse yet, still part of the team",
+      "facts": [
+        "ucp-role"
+      ]
+    },
+    {
+      "layout": "big_stat",
+      "value": "4.5M+",
+      "label": "hours of coverage from externs every year",
+      "context": "thousands of students take part, per Ontario Health",
+      "facts": [
+        "coverage-hours"
+      ]
+    },
+    {
+      "layout": "board",
+      "title": "two matching rounds a year",
+      "rows": [
+        {
+          "label": "Round one",
+          "value": "October",
+          "mark": "circle"
+        },
+        {
+          "label": "Round two",
+          "value": "February",
+          "mark": "circle"
+        }
+      ],
+      "note": "put both in your calendar",
+      "facts": [
+        "matching-rounds"
+      ]
+    },
+    {
+      "layout": "text_stack",
+      "title": "not just nursing students",
+      "lines": [
+        "more allied health students are joining",
+        "think physio, OT and respiratory therapy"
+      ],
+      "emoji": "🙌",
+      "facts": [
+        "allied-health"
+      ]
+    },
+    {
+      "layout": "text_stack",
+      "title": "and it can lead to a job",
+      "lines": [
+        "Ontario Health says hospitals are hiring externs into permanent roles",
+        "no promises for anyone, but it’s a real foot in the door"
+      ],
+      "facts": [
+        "permanent-hires"
+      ]
+    },
+    {
+      "layout": "cta",
+      "action": "save",
+      "title": "save this for the next matching round",
+      "sub": "follow for extern deadlines across Ontario"
+    }
+  ],
+  "facts": [
+    {
+      "id": "paid-hospital-work",
+      "kind": "program",
+      "claim": "The Enhanced Extern Program helps Ontario hospitals offer clinical learners employment as externs, giving students paid, hands-on work in hospitals.",
+      "quote": "By offering paid, hands-on work in hospitals, students get to step into the heart of health care",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    },
+    {
+      "id": "ucp-role",
+      "kind": "program",
+      "claim": "Externs work in unregulated care provider roles, under the supervision of regulated health care professionals.",
+      "quote": "These externs, working under the supervision of regulated health care professionals, contribute in unregulated care provider roles",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    },
+    {
+      "id": "coverage-hours",
+      "kind": "stat",
+      "claim": "Thousands of students take part in the extern program, which provides over 4.5 million hours of coverage annually.",
+      "value": "4.5M+",
+      "quote": "sees thousands of students participating in the extern program and provides over 4.5 million hours of coverage annually",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    },
+    {
+      "id": "matching-rounds",
+      "kind": "program",
+      "claim": "Each year, students are matched with hospitals twice: once in October and again in February.",
+      "quote": "Each year, students are matched with hospitals twice – once in October and again in February",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    },
+    {
+      "id": "allied-health",
+      "kind": "program",
+      "claim": "The program is gradually including more allied health students, such as those in physiotherapy, occupational therapy and respiratory therapy.",
+      "quote": "the gradual inclusion of more allied health students – like those in physiotherapy, occupational therapy, and respiratory therapy",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    },
+    {
+      "id": "permanent-hires",
+      "kind": "program",
+      "claim": "According to Ontario Health, hospitals are hiring externs for permanent positions.",
+      "quote": "Hospitals are hiring externs for permanent positions, strengthening their teams for the long term.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-14"
+    }
+  ],
+  "sources": [
+    {
+      "id": "ontario-health-extern",
+      "publisher": "Ontario Health",
+      "title": "Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program",
+      "url": "https://www.ontariohealth.ca/news/enhanced-extern-program",
+      "accessedAt": "2026-11-14",
+      "primary": true
+    }
+  ],
+  "caption": {
+    "text": "externing, explained: paid hospital work while you’re still a student, two matching rounds a year, and it’s not just for nursing. Every claim comes from Ontario Health’s Enhanced Extern Program page (checked Nov 14, 2026). Save this and follow for Ontario extern deadlines.",
+    "hashtags": [
+      "#nursingstudent",
+      "#studentnurse",
+      "#ontarionursing",
+      "#externship"
+    ]
+  }
+}

@@ -12,6 +12,9 @@ Agents: read [AGENT.md](AGENT.md) first.
 See [docs/TRACKER-BRIDGE.md](docs/TRACKER-BRIDGE.md). Output for a future supervised publisher (one
 artifact per platform, with approval bound to the exact images and caption): [docs/PUBLISH-CONTRACT.md](docs/PUBLISH-CONTRACT.md).
 
+**Grokbot handoff:** `node bin/oet.mjs export <spec> --post-id <id>` writes a manifest-v1 package to
+`~/AgentHandoff/publishing/inbox/<project>/<post_id>/` (READY.json last, atomic). See [docs/GROKBOT-HANDOFF.md](docs/GROKBOT-HANDOFF.md).
+
 ## Quick start
 
 ```bash

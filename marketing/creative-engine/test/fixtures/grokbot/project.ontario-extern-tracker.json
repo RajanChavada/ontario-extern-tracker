@@ -1,0 +1,58 @@
+{
+  "project": "ontario-extern-tracker",
+  "display_name": "Ontario Extern Tracker",
+  "site": "https://ontarioexterns.ca",
+  "generator": {
+    "agent": "hermes",
+    "expected_name": "@oet/creative-engine"
+  },
+  "handoff": {
+    "producer_host": "Rajan's Mac",
+    "producer_inbox": "~/AgentHandoff/publishing/inbox/ontario-extern-tracker/<post_id>/",
+    "transfer": "CopyToBox (approved local-tool action, one pull per post folder)",
+    "consumer_inbox": "inbox/ontario-extern-tracker/<post_id>/",
+    "ready_marker": "READY.json"
+  },
+  "destinations": [
+    {
+      "platform": "tiktok",
+      "profile": "tiktok",
+      "account": "@ontarioextern",
+      "format": "photo_carousel",
+      "default_visibility": "only_you",
+      "allowed_visibilities": [
+        "only_you",
+        "everyone"
+      ],
+      "public_requires_explicit_approval": true,
+      "overrides": {
+        "recommended_size": [
+          1080,
+          1920
+        ],
+        "require_exact_size": true
+      }
+    }
+  ],
+  "hashtag_rules": {
+    "min": 1,
+    "max": 5,
+    "must_appear_in_caption": true,
+    "case": "lower",
+    "forbidden": [
+      "#fyp",
+      "#foryou",
+      "#viral"
+    ],
+    "_forbidden_note": "project choice: avoid generic bait tags; editable"
+  },
+  "content_rules": {
+    "require_primary_source": true,
+    "reject_unlinked_engagement": true,
+    "never_public_without_explicit_approval": true
+  },
+  "state_dir": "state/ontario-extern-tracker",
+  "approvers": [
+    "Rajan"
+  ]
+}
