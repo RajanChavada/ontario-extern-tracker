@@ -192,7 +192,7 @@ export function grokbotValidator({ kit, python, today }) {
     let r; try { r = JSON.parse(out); } catch { return { ok: false, detail: `validate.py output unreadable: ${out.slice(0, 200)}` }; }
     const failed = r.checks.filter((c) => !c.ok);
     const ok = r.verdict === 'APPROVAL_REQUIRED' && failed.every((c) => c.category === 'approval');
-    return { ok, verdict: r.verdict, checks: r.checks, detail: ok ? 'APPROVAL_REQUIRED (content checks all pass; approval is Grokbot/Rajan only)' : `${r.verdict}: ${failed.map((c) => `${c.check} (${c.detail})`).join('; ')}` };
+    return { ok, verdict: r.verdict, checks: r.checks, detail: ok ? 'APPROVAL_REQUIRED (content checks all pass; approval is by the owner, via Grokbot)' : `${r.verdict}: ${failed.map((c) => `${c.check} (${c.detail})`).join('; ')}` };
   };
 }
 
@@ -276,13 +276,13 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
         sources: (spec?.sources ?? []).map((s) => ({ url: s.url, publisher: s.publisher, title: s.title, primary: s.primary, accessed_at: s.accessedAt })),
         blockers: src.blockers, conflicts: [], engagement_claims: [],
       },
-      notes: spec ? `Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
+      notes: spec ? `Style: format ${(spec.format ?? 'c').toUpperCase()} (${[...new Set(spec.slides.filter((s) => !s._auto).map((s) => s.layout))].join(', ')}); voice: ${spec.voice === 'student' ? 'first person (account owner)' : 'neutral (second/third person)'}${spec.brief ? `; brief type: ${spec.brief.type}` : ''}. Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
       externalCheck: grokbotValidator({ kit, python, today }),
     });
     const report = { ok: r.ok, post_id: postId, dir: r.dir, errors: r.errors, source_checks: src, ready: r.ready ?? null, fingerprint: r.manifest?.content_fingerprint ?? null };
     if (res) writeFileSync(path.join(outDir, 'handoff-report.json'), JSON.stringify(report, null, 2) + '\n');
     if (json) console.log(JSON.stringify(report, null, 2));
-    else if (r.ok) console.log(`✓ exported        ${r.dir}\n  post_id ${postId}  assets ${r.ready.asset_count}  fingerprint ${r.manifest.content_fingerprint}\n  READY.json written last; Grokbot validate.py: APPROVAL_REQUIRED (approval is Rajan's, via Grokbot)`);
+    else if (r.ok) console.log(`✓ exported        ${r.dir}\n  post_id ${postId}  assets ${r.ready.asset_count}  fingerprint ${r.manifest.content_fingerprint}\n  READY.json written last; Grokbot validate.py: APPROVAL_REQUIRED (approval is by the owner, via Grokbot)`);
     else { console.log('✗ not exported (nothing written to the inbox)'); for (const e of r.errors) console.log(`    ✗ ${e.code} ${e.where ?? ''} ${e.message}`); }
     return r.ok ? 0 : 1;
   } finally { await browser?.close(); }

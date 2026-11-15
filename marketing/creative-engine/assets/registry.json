@@ -230,6 +230,36 @@
         "legible_logo": false
       },
       "notes": "Study-desk cover for B (decision 4). Handwritten notes in the notebook are generic."
+    },
+    {
+      "id": "pexels-8386687",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/sticky-notes-scattered-on-white-desk-8386687/",
+      "image_url": "https://images.pexels.com/photos/8386687/pexels-photo-8386687.jpeg",
+      "photographer": "Tara Winstead",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-15",
+      "file": "photos/pexels-8386687.jpg",
+      "sha256": "0310a0e241a39b68c57b6cd9863a84205e6b8f42962133c74a6997f21a5724fd",
+      "width": 3600,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "tara-winstead/blue-sticky-notes",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Blank blue sticky notes, spiral notepad and lined paper on a white desk; no text, people or marks. Added 2026-11-15 for the application-checklist B cover (Growth Ops brief: not the SHN image family). Page read via web extract (names the photographer); licence page checked the same day."
     }
   ],
   "rejected": [

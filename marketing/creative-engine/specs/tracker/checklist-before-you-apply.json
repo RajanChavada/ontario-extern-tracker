@@ -1,0 +1,107 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "checklist-before-you-apply",
+  "title": "Save this before you apply to externships (application checklist, format B)",
+  "status": "verified",
+  "format": "b",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "wch"
+    ]
+  },
+  "brief": {
+    "type": "checklist",
+    "problem": "Students apply with the same documents everywhere and miss that each posting asks for different things (certification type, year/standing, references), then run out of time before closing dates.",
+    "hooks": [
+      "save this before you apply to externships",
+      "nursing students, read this before applying",
+      "the extern application checklist nobody hands you",
+      "before you hit submit on your next extern application",
+      "not every extern posting asks for the same thing"
+    ],
+    "why": "Saveable utility is the strongest save driver in the research (F1: P032, P022, P060), and 'save this' names the action. It travels beyond Ontario: the checklist is general, and the Ontario postings come in only as verified examples on slides 2-3. Rejected: 'nobody hands you' overclaims; 'not every extern posting asks for the same thing' is accurate but a weaker cover than a save prompt.",
+    "payoff": "A five-point pre-apply checklist: which certification the posting names (with a verified Ontario example), year and academic-standing lines, references, three interview stories, and every closing date in a calendar.",
+    "evidence": [
+      "tiktok-research-2026-11-14 REPORT F1 (saves), CONCEPTS #4 (notes/checklist) and #8 (packing-list checklists)",
+      "pain_points.md #5 (underprepared) and #8 (credentials)",
+      "hooks_captions.md: explicit save CTA (P013, P008); caption ending in a question",
+      "Growth Ops brief 2026-11-15, concept 2"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "b_cover",
+      "photo": "pexels-8386687",
+      "title": "save this before you apply to externships",
+      "sticker": "extern application checklist"
+    },
+    {
+      "layout": "b_card",
+      "chip": "certs",
+      "icon": "clipboard",
+      "title": "check which certification it asks for",
+      "body": "Women’s College’s posting asks for BCLS. check whether yours says BCLS, BLS or CPR, and get the right one done first.",
+      "facts": [
+        "wch-bcls"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "who",
+      "icon": "handshake",
+      "title": "read the year and standing lines",
+      "body": "some postings only take certain years of study, and some ask for proof of your grades. check both before you start writing.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_card",
+      "chip": "references",
+      "icon": "briefcase",
+      "title": "line up references early",
+      "body": "if a posting asks for references, ask a clinical instructor now, not the night it closes.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_card",
+      "chip": "interview",
+      "icon": "hospital",
+      "title": "prep three short stories",
+      "body": "working on a team, speaking up for someone, and a mistake you learned from. general prep, not any hospital’s official list.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_card",
+      "chip": "dates",
+      "icon": "calendar",
+      "title": "put every closing date in your calendar",
+      "body": "closing dates differ by posting, and some postings don’t list one. add each date the day you find it.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_cta",
+      "title": "looking for postings?",
+      "site": "ontarioexterns.ca",
+      "body": "lists Ontario extern postings with each one’s listed requirements and closing date, checked against each hospital’s own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "footer": "save this for application season",
+      "basis": "promo"
+    }
+  ],
+  "caption": {
+    "text": "save this before you apply to externships 📌\n\nrequirements differ by posting. one Ontario example: Women’s College’s extern posting asks for BCLS. others may name a different certification, only take certain years, or ask for proof of grades. always check the posting itself.\n\nwhat would you add to this list?\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "save this before you apply to externships 📌\n\nrequirements differ by posting. one Ontario example: Women’s College’s extern posting asks for BCLS. others may name a different certification, only take certain years, or ask for proof of grades. always check the posting itself.\n\nwhat would you add to this list?\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}
