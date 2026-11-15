@@ -1,0 +1,119 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "shn-talent-pool-nov30",
+  "title": "SHN extern talent pool closes Nov 30 (format C)",
+  "status": "verified",
+  "format": "c",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "shn"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965524",
+      "title": "scarborough health's extern talent pool closes nov 30",
+      "facts": [
+        "shn-deadline"
+      ],
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.52,
+            "y": 0.84
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-3973981",
+      "label": "extern notes 📝",
+      "title": "wait, what's a talent pool?",
+      "body": "the posting says it builds a candidate pool for upcoming vacancies. it isn't a specific open job.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "it isn't a specific open job"
+      },
+      "facts": [
+        "shn-vacancy"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5386483",
+      "title": "who can apply",
+      "body": "BScN students in year 3 or final year, with current BCLS and evidence of excellent academic standing.",
+      "basis": "facts",
+      "facts": [
+        "shn-eligibility",
+        "shn-bcls",
+        "shn-listed-1"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-2440970",
+      "title": "the posted pay is $25.379/hr",
+      "mark": {
+        "kind": "circle",
+        "phrase": "$25.379/hr",
+        "in": "title"
+      },
+      "basis": "facts",
+      "facts": [
+        "shn-pay"
+      ]
+    },
+    {
+      "layout": "c_paper",
+      "title": "before you apply",
+      "body": "check your year and program, make sure your BCLS is current, have proof of your academic standing ready and screenshot your confirmation.",
+      "tags": [
+        "BScN",
+        "BCLS",
+        "grades"
+      ],
+      "basis": "advice"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "looking for more extern postings?",
+      "body": "ontarioexterns.ca: Ontario extern postings, checked on each hospital's own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "bookmark it!",
+          "at": {
+            "x": 0.55,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -5
+        }
+      ]
+    }
+  ],
+  "caption": {
+    "text": "Scarborough Health Network’s Clinical Nurse Extern posting is a talent pool: it builds a candidate pool for upcoming vacancies and is not a specific vacant position. It closes Nov 30, 2026. BScN year 3 or final year, current BCLS, $25.379/hr (as posted). Full requirements are on SHN’s posting.\n\nontarioexterns.ca is our own independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "Scarborough Health Network’s Clinical Nurse Extern posting is a talent pool: it builds a candidate pool for upcoming vacancies and is not a specific vacant position. It closes Nov 30, 2026. BScN year 3 or final year, current BCLS, $25.379/hr (as posted). Full requirements are on SHN’s posting.\n\nOur own independent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#ontarionursingstudents",
+      "#clinicalextern",
+      "#nursingstudent",
+      "#ontarionursing",
+      "#nursingextern"
+    ]
+  }
+}
