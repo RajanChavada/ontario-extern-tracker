@@ -31,6 +31,17 @@ export function formatOf(spec) {
 
 // Brand voice (R7): the account is not a student and never speaks as one.
 const FIRST_PERSON_CLAIM = /\b(?:I|we)\s+(?:just\s+)?(?:got|landed|matched|was hired|were hired|got hired|got accepted|got in)\b|\bI['’]m\s+(?:an?\s+)?(?:extern|nursing student|student nurse|nurse|RPN|RN)\b|\bmy\s+(?:extern(?:ship)?|first|offer|interview|placement|preceptor|unit|shift|hospital)\b/i;
+// Student voice (decision 9): first person is allowed, but experience claims must match the voice profile.
+const STUDENT_CLAIM = /\bi\s+(?:applied|interviewed|worked|externed|was offered|was rejected|heard back|didn['’]t hear back|got|landed|matched)\b|\bwhen\s+i\s+(?:applied|worked|interviewed|externed)\b|\bi['’]?m\s+in\s+(?:my\s+)?\w+\s+year\b|\bi['’]?m\s+(?:an?\s+)?(?:extern|nursing student|student nurse|nurse|RPN|RN)\b|\bmy\s+(?:extern(?:ship)?|first|offer|interview|placement|preceptor|unit|shift|hospital|program|school|year|applications?)\b/i;
+const VOICE_LINK = /\b(?:i|we)\s+(?:help\s+)?run\b/i;
+const BROCHURE = /\bour\s+(?:own\s+)?independent\s+tracker\b|\bhave you come across\b/i;
+const norm = (s) => String(s).toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim();
+/** Experience claims left in text after removing the profile's confirmed true statements. */
+export function unsupportedVoiceClaim(text, profile) {
+  let t = norm(text);
+  for (const st of profile?.true_statements ?? []) if (norm(st)) t = t.split(norm(st)).join(' · ');
+  return STUDENT_CLAIM.test(t) || FIRST_PERSON_CLAIM.test(t);
+}
 // Context rule: no first-person copy over stock photos (it reads as the pictured person speaking).
 const FIRST_PERSON = /\bI\b|\bI['’](?:m|ve|d|ll)\b|\b(?:[Mm]e|[Mm]y|[Mm]ine|[Ww]e|[Oo]urs?|[Uu]s)\b/;
 const PERSON_LABEL = /\b(?:students?|nurses?|externs?|RNs?|RPNs?|nursing)\b/i;
@@ -211,6 +222,8 @@ export function verifySpec(spec, opts) {
   const warn = (code, where, message) => warnings.push({ code, where, message });
 
   const demo = spec.status === 'demo';
+  const student = spec.voice === 'student';
+  if (student && !opts.voiceProfile) err('VOICE_PROFILE_MISSING', 'voice', 'Student-voice posts need the voice profile (consent, program, year, true statements).');
   if (demo && !spec.demo) err('DEMO_BLOCK', 'demo', 'Demo specs need demo.referenceDate and demo.reason.', 'Add "demo": {"referenceDate": "YYYY-MM-DD", "reason": "…"}');
   if (!demo && spec.demo) err('DEMO_BLOCK', 'demo', 'Verified specs must not carry a demo block.', 'Remove "demo", or set status to "demo".');
   const refDate = demo && spec.demo ? spec.demo.referenceDate : today;
@@ -303,7 +316,10 @@ export function verifySpec(spec, opts) {
       if (HIRING_PATTERN.test(text) && !resolved.some((f) => (f.kind === 'vacancy' || f.kind === 'deadline') && f.status !== 'closed' && f.status !== 'talent-pool'))
         err('HIRING_CLAIM', loc, `"${text}" says someone is hiring, but the slide cites no open vacancy or deadline.`);
       if (demo) { const real = findRealOrg(text); if (real && ids.some((id) => SENSITIVE.has(facts.get(id)?.kind))) err('DEMO_REAL_ORG', loc, `Demo slide mentions a real hospital ("${real}") next to sample postings.`); }
-      if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', loc, `"${text}" speaks as a student. The account isn't one and can't claim an experience.`, 'Say what the source says, in the second or third person.');
+      if (student) {
+        if (unsupportedVoiceClaim(text, opts.voiceProfile)) err('VOICE_UNSUPPORTED_CLAIM', loc, `"${text}" claims a personal experience that isn't in the voice profile's true_statements.`, 'Use a confirmed true statement word for word, or say it without the personal claim.');
+        else if (slide.photo && (opts.registry ?? loadRegistry()).byId.get(slide.photo)?.contains_people && FIRST_PERSON.test(text)) err('STOCK_FIRST_PERSON', loc, `"${text}" is first person over a stock photo of a person; it reads as the pictured person speaking. Use an object or scene photo.`);
+      } else if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', loc, `"${text}" speaks as a student. The account isn't one and can't claim an experience.`, 'Say what the source says, in the second or third person.');
       else if (slide.photo && FIRST_PERSON.test(text)) err('STOCK_FIRST_PERSON', loc, `"${text}" is first person over a stock photo; it reads as the pictured person speaking.`);
     }
     if (slide.photo && slide.alt && PERSON_LABEL.test(slide.alt)) {
@@ -341,7 +357,15 @@ export function verifySpec(spec, opts) {
     const bad = unsupportedSpecifics(text, spec.facts);
     if (bad.length) err('UNSUPPORTED_SPECIFIC', `caption.${key}`, `"${bad.join('", "')}" is not backed by any fact in the spec.`);
     if (promisesOutcome(text)) err('OUTCOME_CLAIM', `caption.${key}`, 'Caption promises an application outcome.');
-    if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', `caption.${key}`, 'Caption speaks as a student. The account isn\'t one.');
+    if (student) {
+      if (unsupportedVoiceClaim(text, opts.voiceProfile)) err('VOICE_UNSUPPORTED_CLAIM', `caption.${key}`, 'Caption claims a personal experience that isn\'t in the voice profile\'s true_statements.');
+      if (/ontarioexterns\.ca/i.test(text) && !VOICE_LINK.test(text)) err('VOICE_LINK_UNDISCLOSED', `caption.${key}`, 'In the student voice, mentioning ontarioexterns.ca needs the plain link to it ("i help run it").');
+      if (BROCHURE.test(text) || text.includes(';')) warn('VOICE_BROCHURE', `caption.${key}`, 'Brochure phrasing or a semicolon in a first-person caption.');
+    } else if (FIRST_PERSON_CLAIM.test(text)) err('FIRST_PERSON_CLAIM', `caption.${key}`, 'Caption speaks as a student. The account isn\'t one.');
+  }
+  if (student) for (const s of spec.slides) {
+    const shown = slideTexts(s).filter(([p]) => p !== 'mark.phrase').map(([, t]) => t).join(' ');
+    if (/ontarioexterns\.ca/i.test(shown) && !VOICE_LINK.test(shown)) err('VOICE_LINK_UNDISCLOSED', `slides[${s._n}] ${s.layout}`, 'In the student voice, a slide that mentions ontarioexterns.ca also says the link plainly ("i help run it").');
   }
   if (spec.slides.length > 10) warn('LONG_CAROUSEL', 'slides', `${spec.slides.length} slides. Swipe-through drops off after about 8–10.`);
 

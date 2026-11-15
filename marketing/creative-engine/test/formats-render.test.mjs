@@ -329,6 +329,49 @@ test('the content brief: the cover hook must be one of the candidates; marketing
   assert.ok(!classic.factual.warnings.some((w) => w.code === 'BRIEF_MISSING'), 'historical classic specs are not nagged');
 });
 
+// ---------------------------------------------------------------- student voice (decision 9, 2026-11-15)
+const profileFile = async (over = {}) => {
+  const base = { voice_id: 't', consent: { signed: true, date: '2026-11-15' }, true_statements: [], approval: { approves_each_post: true, same_person_as_publisher: true }, ...over };
+  const dir = await mkdtemp(path.join(tmpdir(), 'oet-voice-'));
+  const f = path.join(dir, 'voice-profile.json'); writeFileSync(f, JSON.stringify(base)); return f;
+};
+const studentCampaign = (patch = {}) => {
+  const c = poolCampaign({ voice: 'student' });
+  c.slides[3] = { ...c.slides[3], body: "i help run ontarioexterns.ca: it checks each hospital's own careers page." };
+  c.caption = { text: 'so "talent pool" doesn’t mean there’s a job open rn. SHN’s talent pool closes Nov 30, 2026 ($25.379/hr as posted). i help run ontarioexterns.ca', hashtags: ['#nursingstudent'] };
+  return Object.assign(c, patch);
+};
+const voiceCodes = async (c, voiceProfileFile) => factualCheck(await campaignFile(c), { ...campaignOpts, voiceProfileFile }).factual.errors.map((e) => e.code);
+
+test('student voice: needs a signed profile; first person is fine, experience claims must be confirmed true statements', async () => {
+  const ok = await profileFile();
+  assert.deepEqual(await voiceCodes(studentCampaign(), ok), []);
+  assert.deepEqual(await voiceCodes(studentCampaign(), '/nonexistent/voice-profile.json'), ['VOICE_PROFILE_MISSING']);
+  assert.deepEqual(await voiceCodes(studentCampaign(), await profileFile({ consent: { signed: false } })), ['VOICE_CONSENT']);
+  const claim = studentCampaign(); claim.slides[1] = { ...claim.slides[1], body: 'when i applied last year i heard nothing back for weeks.' };
+  assert.deepEqual(await voiceCodes(claim, ok), ['VOICE_UNSUPPORTED_CLAIM']);
+  assert.deepEqual(await voiceCodes(claim, await profileFile({ true_statements: ['when i applied last year i heard nothing back for weeks'] })), []);
+  const year = studentCampaign(); year.slides[1] = { ...year.slides[1], body: "i'm in third year and i still didn't know this." };
+  assert.deepEqual(await voiceCodes(year, ok), ['VOICE_UNSUPPORTED_CLAIM']);
+  // the brand voice is unchanged: no first-person claims at all
+  const brand = poolCampaign(); brand.slides[1] = { ...brand.slides[1], body: 'i landed my first externship after this.' };
+  assert.ok((await codes(brand)).includes('FIRST_PERSON_CLAIM'));
+});
+
+test('student voice: the link to the tracker is said plainly, and "i" never sits on a stock photo of a person', async () => {
+  const ok = await profileFile();
+  const hidden = studentCampaign(); hidden.slides[3] = { ...hidden.slides[3], body: "ontarioexterns.ca checks each hospital's own careers page." };
+  assert.deepEqual(await voiceCodes(hidden, ok), ['VOICE_LINK_UNDISCLOSED']);
+  const cap = studentCampaign({ caption: { text: 'SHN’s talent pool closes Nov 30, 2026 ($25.379/hr as posted). check ontarioexterns.ca', hashtags: ['#nursingstudent'] } });
+  assert.deepEqual(await voiceCodes(cap, ok), ['VOICE_LINK_UNDISCLOSED']);
+  // pexels-5965524 shows people (from behind): first person on it reads as them speaking
+  const onPerson = studentCampaign(); onPerson.slides[0] = { ...onPerson.slides[0], title: 'i wish someone told me this about externship postings' };
+  onPerson.brief = { ...onPerson.brief, hooks: [...onPerson.brief.hooks, 'i wish someone told me this about externship postings'] };
+  assert.deepEqual(await voiceCodes(onPerson, ok), ['STOCK_FIRST_PERSON']);
+  // the CTA's "i help run" sits on pexels-7439131 (no people) and passes
+  assert.equal(loadRegistry().byId.get('pexels-7439131').contains_people, false);
+});
+
 test('a format C campaign renders its registered photos on the photo slides (checked on the PNGs, not the templates)', { timeout: 180_000 }, async () => {
   const fc = factualCheck(await campaignFile(cCampaign()), campaignOpts);
   const outDir = await mkdtemp(path.join(tmpdir(), 'oet-c-campaign-'));

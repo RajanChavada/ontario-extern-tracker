@@ -1762,6 +1762,13 @@
         "additionalProperties": false
       }
     },
+    "voice": {
+      "type": "string",
+      "enum": [
+        "brand",
+        "student"
+      ]
+    },
     "brief": {
       "type": "object",
       "properties": {

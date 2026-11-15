@@ -72,10 +72,10 @@ ${styles}</head><body>${body}</body></html>`;
  * ok is false when validation or visual QA found errors.
  * Opt-in platforms (tiktok-3x4) render only when asked for, by the spec or by `platforms`.
  */
-export async function renderSpec(rawSpec, { outDir, today, specPath = null, platforms, overlay = true, browser: shared, force = false, registry: registryPath }) {
+export async function renderSpec(rawSpec, { outDir, today, specPath = null, platforms, overlay = true, browser: shared, force = false, registry: registryPath, voiceProfile = null }) {
   const registry = () => loadRegistry(registryPath);
   const spec = prepareSpec(rawSpec);
-  const report = verifySpec(spec, { today, ...(registryPath && { registry: registry() }) });
+  const report = verifySpec(spec, { today, voiceProfile, ...(registryPath && { registry: registry() }) });
   if (report.errors.length && !force) return { ok: false, report, manifest: null };
 
   const specDir = specPath ? path.dirname(path.resolve(specPath)) : process.cwd();

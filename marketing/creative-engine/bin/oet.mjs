@@ -24,6 +24,16 @@ const REPO = path.resolve(ENGINE, '../..');
 const DEFAULT_DATA = path.join(REPO, 'data/hospitals.json');
 const DEFAULT_EVIDENCE = path.resolve(REPO, '../../research/raw/manual'); // workspace/research/raw/manual
 const APPROVALS = path.join(ENGINE, 'approvals');
+const DEFAULT_VOICE = path.resolve(REPO, '../../voice/voice-profile.json'); // workspace/voice (personal details; not in the repo)
+
+/** The voice profile for student-voice posts, or null. Errors when it's missing or consent isn't signed. */
+export function loadVoiceProfile(file = process.env.OET_VOICE_PROFILE ?? DEFAULT_VOICE) {
+  if (!existsSync(file)) return { profile: null, errors: [{ code: 'VOICE_PROFILE_MISSING', where: 'voice', message: `No voice profile at ${file}.` }] };
+  const profile = JSON.parse(readFileSync(file, 'utf8'));
+  const errors = [];
+  if (profile.consent?.signed !== true) errors.push({ code: 'VOICE_CONSENT', where: 'voice', message: 'The voice profile has no signed consent.' });
+  return { profile: errors.length ? null : profile, errors };
+}
 
 const HELP = `oet — tracker-backed carousels for Ontario Extern Tracker
 
@@ -82,13 +92,14 @@ export function photoLayerErrors(spec, platform) {
   });
 }
 
-export function factualCheck(file, { dataFile, evidenceDirs, today }) {
+export function factualCheck(file, { dataFile, evidenceDirs, today, voiceProfileFile }) {
   const campaign = JSON.parse(readFileSync(file, 'utf8'));
+  const voice = campaign.voice === 'student' ? loadVoiceProfile(voiceProfileFile) : { profile: null, errors: [] };
   campaign.format ??= DEFAULT_CAMPAIGN_FORMAT; // marketing posts are format C unless the spec says otherwise
   const data = JSON.parse(readFileSync(dataFile, 'utf8'));
   const evidence = loadEvidence(evidenceDirs);
   const compiled = compileCampaign(campaign, { data, evidence, today });
-  const errors = [...compiled.errors];
+  const errors = [...compiled.errors, ...voice.errors];
   const warnings = [...compiled.warnings];
   if (!campaign.brief && campaign.format !== 'classic')
     warnings.push({ code: 'BRIEF_MISSING', where: 'brief', message: 'Marketing posts carry a content brief (problem, candidate hooks, why, payoff, evidence). See docs/CONTENT.md.' });
@@ -98,12 +109,12 @@ export function factualCheck(file, { dataFile, evidenceDirs, today }) {
     if (!parsed.spec) errors.push(...parsed.errors);
     else {
       spec = parsed.spec;
-      const r = verifySpec(prepareSpec(spec), { today });
-      errors.push(...r.errors);
+      const r = verifySpec(prepareSpec(spec), { today, voiceProfile: voice.profile });
+      errors.push(...r.errors.filter((e) => !(e.code === 'VOICE_PROFILE_MISSING' && voice.errors.length)));
       warnings.push(...r.warnings);
     }
   }
-  return { spec, provenance: compiled.provenance, factual: { passed: errors.length === 0, errors, warnings }, captures: evidence.size };
+  return { voiceProfile: voice.profile, spec, provenance: compiled.provenance, factual: { passed: errors.length === 0, errors, warnings }, captures: evidence.size };
 }
 
 async function main() {
@@ -148,7 +159,7 @@ async function main() {
   // Visual stage: the engine renders and runs layout QA in Chromium.
   const { renderSpec } = await import('../src/render/render.js');
   const outDir = flags.out ?? path.join(ENGINE, 'out', fc.spec.id);
-  const res = await renderSpec(fc.spec, { outDir, today, specPath: path.resolve(target) });
+  const res = await renderSpec(fc.spec, { outDir, today, specPath: path.resolve(target), voiceProfile: fc.voiceProfile });
   writeFileSync(path.join(outDir, 'spec.compiled.json'), JSON.stringify(fc.spec, null, 2) + '\n');
   const layerErrors = Object.values(res.manifest.platforms).flatMap((p) => photoLayerErrors(fc.spec, p));
   if (layerErrors.length && !json) console.log(`✗ photo layers\n${show(layerErrors, '✗')}`);
@@ -213,6 +224,10 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
   if (!fc.factual.passed) preflight.push(...fc.factual.errors);
   const spec = fc.spec;
   if (spec && spec.status !== 'verified') preflight.push({ code: 'NOT_VERIFIED', message: 'demo specs are never exported' });
+  // The voice approves every post in their voice before it's published. Only automatic when the voice is the
+  // publishing approver (Grokbot approval of the exact fingerprint is then the sign-off); otherwise refuse.
+  if (spec?.voice === 'student' && fc.voiceProfile && fc.voiceProfile.approval?.same_person_as_publisher !== true && !postId.startsWith('oet-dryrun-'))
+    preflight.push({ code: 'VOICE_SIGNOFF_REQUIRED', message: 'The voice is not the publishing approver; their sign-off step is not built yet, so student-voice posts are not exported.' });
   if (spec && !spec.platforms.includes('tiktok')) preflight.push({ code: 'PLATFORM', message: 'spec does not target tiktok' });
 
   // 2. sources: every quote on its primary page (saved capture + live page)
@@ -230,7 +245,7 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
     if (spec && !preflight.length) {
       const { renderSpec, launchBrowser } = await import('../src/render/render.js');
       browser = await launchBrowser();
-      res = await renderSpec(spec, { outDir, today, specPath: path.resolve(target), platforms: ['tiktok'], browser });
+      res = await renderSpec(spec, { outDir, today, specPath: path.resolve(target), platforms: ['tiktok'], browser, voiceProfile: fc.voiceProfile });
       const qa = res.manifest.platforms.tiktok.slides.flatMap((s) => s.qa.errors.map((e) => ({ ...e, where: `slide ${s.n} ${s.layout}` })));
       log(`${qa.length ? '✗' : '✓'} visual QA       tiktok ${res.manifest.platforms.tiktok.slides.length} slides`);
       preflight.push(...qa, ...photoLayerErrors(spec, res.manifest.platforms.tiktok));
