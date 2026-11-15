@@ -9,14 +9,13 @@
       "region": "gta",
       "location": "Newmarket",
       "program_name": "Clinical Extern",
-      "posting_type": "open_vacancies",
-      "positions_listed": 40,
-      "deadline": "2026-11-30",
+      "posting_type": "closed",
+      "deadline": null,
       "pay_text": "$21.80/hr",
       "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -32,7 +31,9 @@
         "also_listed": [
           "Recent acute care experience (preferred)"
         ]
-      }
+      },
+      "window_text": "Southlake's posting page now says the page doesn't exist, and the posting is no longer on Southlake's job board (checked Nov 14, 2026). It had listed an end date of Nov 30 and 40 positions.",
+      "short": "Posting removed before its Nov 30 end date"
     },
     {
       "id": "shn",
@@ -47,7 +48,7 @@
       "source_url": "https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-_JR105532",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -77,7 +78,7 @@
       "source_url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -112,7 +113,7 @@
       "source_url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -140,14 +141,13 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Clinical Extern - Professional Practice",
-      "posting_type": "open_unspecified",
-      "posted_text": "Posted Oct 16, 2026",
-      "deadline": "2026-11-16",
+      "posting_type": "closed",
+      "deadline": null,
       "pay_text": "$23.87/hr",
       "source_url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-12",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -167,7 +167,8 @@
         "bcls": true,
         "also_listed": []
       },
-      "short": "Vacancy count not stated"
+      "short": "Posting removed before its Nov 16 closing date",
+      "window_text": "The hospital's posting page says the job is no longer available (checked Nov 12, 2026). It had listed a Nov 16 closing date."
     },
     {
       "id": "wch",
@@ -182,7 +183,7 @@
       "source_url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -204,8 +205,8 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Clinical & Research Extern (Hybrid)",
-      "posting_type": "open_vacancies",
-      "positions_listed": 1,
+      "posting_type": "unconfirmed",
+      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J0926-0530&BRID=362474&lang=1",
@@ -236,7 +237,7 @@
           "Hybrid role: clinical and research duties (as posted)"
         ]
       },
-      "short": "No closing date shown"
+      "short": "Job site blocks our automated checks"
     },
     {
       "hospital": "Michael Garron Hospital",
@@ -244,8 +245,8 @@
       "location": "Toronto",
       "id": "mgh-help",
       "program_name": "HELP Externs (Hospital Elder Life Program)",
-      "posting_type": "open_vacancies",
-      "positions_listed": 4,
+      "posting_type": "unconfirmed",
+      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1072&BRID=366266&lang=1",
@@ -271,7 +272,7 @@
           "Basic Life Support (BLS) required"
         ]
       },
-      "short": "No closing date shown"
+      "short": "Job site blocks our automated checks"
     },
     {
       "hospital": "Michael Garron Hospital",
@@ -279,8 +280,8 @@
       "location": "Toronto",
       "id": "mgh-hro",
       "program_name": "Student Clinical Extern, HRO Team (no direct patient care)",
-      "posting_type": "open_vacancies",
-      "positions_listed": 2,
+      "posting_type": "unconfirmed",
+      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1085&BRID=366273&lang=1",
@@ -306,7 +307,7 @@
           "Weekday day shifts, minimum two 8-hour shifts per 2-week pay period (as posted)"
         ]
       },
-      "short": "No closing date shown"
+      "short": "Job site blocks our automated checks"
     },
     {
       "id": "humber",
@@ -315,13 +316,13 @@
       "location": "Toronto",
       "program_name": "Student Nurse Extern (one posting per unit)",
       "posting_type": "open_vacancies",
-      "posted_text": "10 postings live on Nov 11, posted Jun 4 to Oct 22, 2026; no closing dates shown",
+      "posted_text": "10 postings live on Nov 14, posted Jun 4 to Oct 22, 2026; no closing dates shown",
       "deadline": null,
       "pay_text": "$17.60/hr ($17.95/hr on 10 East & West)",
       "source_url": "https://careersen-hrrh.icims.com/jobs/search?ss=1&searchKeyword=extern",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -405,7 +406,7 @@
       "source_url": "https://iadyup.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_4001/job/6976/",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -440,7 +441,7 @@
       "source_url": "https://www.lhsc.on.ca/nursing/recruitment",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -472,7 +473,7 @@
       "source_url": "https://www.cheo.on.ca/en/about-us/careers/nursing-health-human-resources-programs-students-and-clinical-externs/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -505,7 +506,7 @@
       "source_url": "https://www.sickkids.ca/en/learning/student-centre/nursing-learners/nursing-clinical-extern-program/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -532,7 +533,7 @@
       "source_url": "https://www.uhn.ca/healthcareprofessionals/Meet_Professions/Collaborative_Academic_Practice/ClinicalExterns",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -561,7 +562,7 @@
       "source_url": "https://jobs.smartrecruiters.com/WilliamOslerHealthSystem1/744000151923218-clinical-extern-medicine-and-surgery",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": false,
         "programs": {},
@@ -576,21 +577,21 @@
       "region": "hamilton",
       "location": "Hamilton",
       "program_name": "Clinical Extern (Nurse)",
-      "posting_type": "unconfirmed",
-      "unconfirmed_reason": "Job aggregators list an HHS clinical extern posting, but we couldn't find it on HHS's official careers search on Nov 9. Check HHS directly.",
+      "posting_type": "check_employer",
+      "window_text": "We searched HHS's official job board for external applicants (Taleo) on Nov 14 and found no clinical extern posting. Job aggregators have listed one, but aggregators aren't an official source. Check HHS directly.",
       "deadline": null,
       "pay_text": null,
       "source_url": "https://www.hhscareers.ca/",
       "source_kind": "careers_home",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-14",
       "eligibility": {
         "listed": false,
         "programs": {},
         "bcls": null,
         "also_listed": []
       },
-      "short": "Not found on HHS careers site"
+      "short": "None on HHS job board (searched Nov 14)"
     }
   ]
 }

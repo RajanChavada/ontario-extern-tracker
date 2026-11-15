@@ -1,16 +1,20 @@
 // Run with: node --test tests/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   ontarioToday, daysBetween, isIsoDate, status, deadlineInfo, eligibility,
-  icsForDeadline, validateData, sortEntries, foldIcsLine, googleCalendarUrl, countHospitals } from '../assets/logic.js';
+  icsForDeadline, validateData, sortEntries, foldIcsLine, googleCalendarUrl, countHospitals, staleOpenEntries, openSummary, shownDeadline } from '../assets/logic.js';
 import { execFileSync } from 'node:child_process';
 
 const data = JSON.parse(readFileSync(new URL('../data/hospitals.json', import.meta.url)));
 const byId = Object.fromEntries(data.entries.map(e => [e.id, e]));
+// Southlake's entry as verified on Nov 11, 2026 (open, 40 positions, end date Nov 30). The posting was removed on Nov 14;
+// the generic status/calendar/eligibility tests keep using this frozen copy as their 'open with a closing date' example.
+const SOUTHLAKE_NOV11 = {"id": "southlake", "hospital": "Southlake Health", "region": "gta", "location": "Newmarket", "program_name": "Clinical Extern", "posting_type": "open_vacancies", "positions_listed": 40, "deadline": "2026-11-30", "pay_text": "$21.80/hr", "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401", "source_kind": "posting", "source_ok": true, "last_verified": "2026-11-11", "eligibility": {"listed": true, "programs": {"BSCN": {"minYear": 2, "maxYear": 4}, "PN": {"finalYearOnly": true}}, "bcls": null, "also_listed": ["Recent acute care experience (preferred)"]}};
+const fx = { ...byId, southlake: SOUTHLAKE_NOV11 };
 const fresh = (e, verified) => ({ ...e, last_verified: verified });
 
 // ---------- Ontario dates (hand-computed reference values) ----------
@@ -44,7 +48,7 @@ test('isIsoDate rejects impossible dates', () => {
 
 // ---------- Deadline display ----------
 test('deadlineInfo: boundaries, and no invented closing time', () => {
-  const s = byId.southlake;
+  const s = fx.southlake;
   assert.equal(deadlineInfo(s, '2026-11-09').daysAway, 21);
   assert.equal(deadlineInfo(s, '2026-11-09').when, 'in 21 days');
   assert.equal(deadlineInfo(s, '2026-11-29').when, 'tomorrow');
@@ -57,25 +61,25 @@ test('deadlineInfo: boundaries, and no invented closing time', () => {
 // ---------- Status ----------
 test('status on the verification day keeps vacancy, pool and window distinct', () => {
   const t = '2026-11-09';
-  assert.equal(status(byId.southlake, t).key, 'open_vacancies');
-  assert.match(status(byId.southlake, t).detail, /40 positions listed/);
+  assert.equal(status(fx.southlake, t).key, 'open_vacancies');
+  assert.match(status(fx.southlake, t).detail, /40 positions listed/);
   assert.equal(status(byId.shn, t).key, 'open_talent_pool');
   assert.equal(status(byId.mackenzie, t).key, 'open_talent_pool');
   assert.equal(status(byId.sunnybrook, t).key, 'open_unspecified');
   assert.equal(status(byId.cheo, t).key, 'typical_window');
   assert.match(status(byId.cheo, t).detail, /not a guaranteed opening/);
   assert.equal(status(byId.thp, t).key, 'open_unspecified'); // live posting since Nov 10 data update
-  assert.equal(status(byId.mgh, t).key, 'open_vacancies');
-  assert.match(status(byId.mgh, t).detail, /^1 position listed/); // singular
-  assert.match(status(byId.southlake, t).detail, /^40 positions listed/);
+  assert.equal(status(byId.mgh, t).key, 'unconfirmed'); // Njoyn blocks automated checks; not re-checked by hand since Nov 11
+  assert.match(status({ ...byId.mgh, posting_type: 'open_vacancies', positions_listed: 1 }, t).detail, /^1 position listed/); // singular
+  assert.match(status(fx.southlake, t).detail, /^40 positions listed/);
   assert.equal(status(byId.lhsc, t).key, 'check_employer');
   assert.equal(status(byId.uhn, t).key, 'closed');
   assert.equal(status(byId.osler, t).key, 'closed');
-  assert.equal(status(byId.hhs, t).key, 'unconfirmed');
+  assert.equal(status(byId.hhs, t).key, 'check_employer'); // official board searched Nov 14: no extern posting (not a blocked check)
 });
 
 test('status: deadline day is still open; the day after is closed', () => {
-  const s = fresh(byId.southlake, '2026-11-28');
+  const s = fresh(fx.southlake, '2026-11-28');
   assert.equal(status(s, '2026-11-30').key, 'open_vacancies');
   assert.equal(status(s, '2026-12-01').key, 'closed');
 });
@@ -84,9 +88,9 @@ test('status: deadline day is still open; the day after is closed', () => {
 const plusDays = (iso, n) => { const [y, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };
 
 test('status: 7 days after verification is still current; 8 days is unconfirmed', () => {
-  const v = byId.southlake.last_verified;
-  assert.equal(status(byId.southlake, plusDays(v, 7)).key, 'open_vacancies');
-  const st = status(byId.southlake, plusDays(v, 8));
+  const v = fx.southlake.last_verified;
+  assert.equal(status(fx.southlake, plusDays(v, 7)).key, 'open_vacancies');
+  const st = status(fx.southlake, plusDays(v, 8));
   assert.equal(st.key, 'unconfirmed');
   assert.match(st.detail, /8 days/);
 });
@@ -97,31 +101,36 @@ test('status: every entry is unconfirmed once stale, so no stale "Open" can show
 
 test('status: open needs an https posting link that was reachable', () => {
   const t = '2026-11-09';
-  assert.equal(status({ ...byId.southlake, source_url: '' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_url: 'http://x.example' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_ok: false }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, source_kind: 'program_page' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, last_verified: 'yesterday' }, t).key, 'unconfirmed');
-  assert.equal(status({ ...byId.southlake, posting_type: 'made_up' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_url: '' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_url: 'http://x.example' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_ok: false }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, source_kind: 'program_page' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, last_verified: 'yesterday' }, t).key, 'unconfirmed');
+  assert.equal(status({ ...fx.southlake, posting_type: 'made_up' }, t).key, 'unconfirmed');
 });
 
 test('sortEntries: open first (positions, then unstated, then talent pools), nearest deadline first; closed last', () => {
   const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
-  assert.equal(ids[0], 'southlake');                                    // positions listed + closing date
-  assert.deepEqual(ids.slice(1, 5).sort(), ['humber', 'mgh', 'mgh-help', 'mgh-hro']); // vacancies stated, no date
-  assert.deepEqual(ids.slice(5, 11), ['nygh', 'wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  assert.deepEqual(ids.slice(0, 1), ['humber']);                                 // vacancies stated, no date
+  assert.deepEqual(ids.slice(1, 6), ['wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
+  for (const id of ['mgh', 'mgh-help', 'mgh-hro']) {                              // Unconfirmed: after every open listing, before closed
+    assert.ok(ids.indexOf(id) > ids.indexOf('lhsc'), id);
+    assert.ok(ids.indexOf(id) < ids.indexOf('southlake'), id);
+  }
+  assert.ok(ids.indexOf('southlake') > ids.indexOf('hhs'));                       // removed before its end date (Nov 14)
+  assert.ok(ids.indexOf('nygh') > ids.indexOf('hhs'));                            // removed before its closing date (Nov 12)
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
-  assert.deepEqual(ids.slice(-2).sort(), ['osler', 'uhn']);
+  assert.deepEqual(ids.slice(-4).sort(), ['nygh', 'osler', 'southlake', 'uhn']);  // closed entries last
 });
 
 // ---------- Eligibility (wording: "Meets listed criteria", never "eligible") ----------
 const P = (program, year, extra = {}) => ({ program, year, finalYear: false, bcls: '', ...extra });
 
 test('Southlake: BScN years 2–4, or final-year PN; BCLS not listed', () => {
-  const s = byId.southlake;
+  const s = fx.southlake;
   assert.equal(eligibility(s, P('BSCN', 2)).verdict, 'meets');
   assert.equal(eligibility(s, P('BSCN', 4)).verdict, 'meets');
   assert.equal(eligibility(s, P('BSCN', 1)).verdict, 'not_met');
@@ -175,9 +184,10 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(new Set(byId.humber.postings.map(q => q.url)).size, 10);          // ten distinct job ids
   assert.equal(eligibility(byId['mgh-help'], P('BSCN', 2)).verdict, 'check');    // "entering" wording
   assert.equal(eligibility(byId['mgh-hro'], P('BSCN', 1)).verdict, 'not_met');
-  assert.match(status(byId['mgh-help'], '2026-11-11').detail, /^4 positions listed/);
-  assert.equal(status(byId.nygh, '2026-11-16').key, 'open_unspecified');         // closing day still open
-  assert.equal(status(byId.nygh, '2026-11-17').key, 'closed');
+  assert.equal(status(byId['mgh-help'], '2026-11-11').key, 'unconfirmed');
+  assert.match(status(byId['mgh-help'], '2026-11-11').detail, /^Last seen open on Nov 11\./);
+  assert.equal(status(byId.nygh, '2026-11-12').key, 'closed');                   // hospital removed the posting early
+  assert.equal(byId.nygh.deadline, null);                                         // so no calendar file or countdown is offered
 });
 
 test('postings list: 2+ distinct postings, https, same official host', () => {
@@ -197,8 +207,8 @@ test('postings list: 2+ distinct postings, https, same official host', () => {
 test('a certification the posting does not mention is flagged, never treated as not required', () => {
   const txt = r => r.items.map(i => i.text).join(' | ');
   for (const id of ['thp', 'southlake', 'mgh-hro']) {
-    assert.match(txt(eligibility(byId[id], P('BSCN', 3, { bcls: 'no' }))), /isn't mentioned on the posting/, id);
-    assert.match(txt(eligibility(byId[id], null)), /isn't mentioned on the posting/, id);
+    assert.match(txt(eligibility(fx[id], P('BSCN', 3, { bcls: 'no' }))), /isn't mentioned on the posting/, id);
+    assert.match(txt(eligibility(fx[id], null)), /isn't mentioned on the posting/, id);
   }
   for (const id of ['shn', 'nygh', 'humber', 'mgh-help']) // BCLS required, or CPR/BLS listed
     assert.doesNotMatch(txt(eligibility(byId[id], P('BSCN', 3))), /isn't mentioned/, id);
@@ -216,14 +226,14 @@ test('CHEO and LHSC per-program years', () => {
 test('Unconfirmed criteria always return check, and an incomplete profile asks for input', () => {
   assert.equal(eligibility(byId.hhs, P('BSCN', 3)).verdict, 'check');
   assert.equal(eligibility(byId.osler, P('BSCN', 3)).verdict, 'check');
-  assert.equal(eligibility(byId.southlake, P('', null)).verdict, 'incomplete');
-  assert.equal(eligibility(byId.southlake, P('BSCN', null)).verdict, 'incomplete');
+  assert.equal(eligibility(fx.southlake, P('', null)).verdict, 'incomplete');
+  assert.equal(eligibility(fx.southlake, P('BSCN', null)).verdict, 'incomplete');
   assert.equal(eligibility(byId.sickkids, P('BSCN', 3)).verdict, 'check'); // "halfway through" can't be mapped to a year
 });
 
 // ---------- Calendar export ----------
 test('ics: all-day event on the closing date, no invented time, CRLF line endings', () => {
-  const ics = icsForDeadline(byId.southlake, new Date('2026-11-09T12:00:00Z'));
+  const ics = icsForDeadline(fx.southlake, new Date('2026-11-09T12:00:00Z'));
   assert.match(ics, /DTSTART;VALUE=DATE:20261130\r\n/);
   assert.match(ics, /DTEND;VALUE=DATE:20261201\r\n/);
   assert.doesNotMatch(ics, /DTSTART:\d{8}T/);
@@ -231,7 +241,7 @@ test('ics: all-day event on the closing date, no invented time, CRLF line ending
   assert.match(ics, /TRIGGER:-P3D/);
   assert.ok(ics.split('\r\n').every(l => !l.includes('\n')));
   assert.equal(icsForDeadline(byId.mackenzie), null);
-  const ye = icsForDeadline({ ...byId.southlake, deadline: '2026-12-31' });
+  const ye = icsForDeadline({ ...fx.southlake, deadline: '2026-12-31' });
   assert.match(ye, /DTEND;VALUE=DATE:20270101/);
 });
 
@@ -244,7 +254,7 @@ test('data file passes validation', () => {
 
 test('validation catches the mistakes the rules forbid', () => {
   const bad = { entries: [
-    { ...byId.southlake, id: 'a', source_kind: 'program_page' },
+    { ...fx.southlake, id: 'a', source_kind: 'program_page' },
     { ...byId.cheo, id: 'b', positions_listed: 10 },
     { ...byId.shn, id: 'c', deadline: '2026-11-31' },
   ] };
@@ -268,12 +278,12 @@ test('ics: every physical line is at most 75 octets, and unfolding restores the 
 });
 
 test('ics: generated files are reproducible (DTSTAMP from the verification date)', () => {
-  assert.equal(icsForDeadline(byId.southlake), icsForDeadline(byId.southlake));
-  assert.match(icsForDeadline(byId.southlake), new RegExp(`DTSTAMP:${byId.southlake.last_verified.replace(/-/g, '')}T120000Z`));
+  assert.equal(icsForDeadline(fx.southlake), icsForDeadline(fx.southlake));
+  assert.match(icsForDeadline(fx.southlake), new RegExp(`DTSTAMP:${fx.southlake.last_verified.replace(/-/g, '')}T120000Z`));
 });
 
 test('Google Calendar link: an all-day event with an exclusive end date and no time', () => {
-  const u = new URL(googleCalendarUrl(byId.southlake));
+  const u = new URL(googleCalendarUrl(fx.southlake));
   assert.equal(u.hostname, 'calendar.google.com');
   assert.equal(u.searchParams.get('dates'), '20261130/20261201');
   assert.doesNotMatch(u.searchParams.get('dates'), /T/);
@@ -292,7 +302,7 @@ test('static cal/*.ics files match the data (run scripts/build-ics.mjs after any
 
 // Builds in tests must not inherit Cloudflare's build variables (CF_PAGES, UMAMI_WEBSITE_ID, ...),
 // otherwise the suite behaves differently on Cloudflare than locally.
-const BUILD_VARS = ['CF_PAGES', 'CF_PAGES_BRANCH', 'CF_PAGES_URL', 'CF_PAGES_COMMIT_SHA', 'UMAMI_WEBSITE_ID', 'GSC_VERIFICATION', 'ET_TODAY'];
+const BUILD_VARS = ['CF_PAGES', 'CF_PAGES_BRANCH', 'CF_PAGES_URL', 'CF_PAGES_COMMIT_SHA', 'UMAMI_WEBSITE_ID', 'GSC_VERIFICATION', 'ET_TODAY', 'ET_DATA'];
 const cleanEnv = (extra = {}) => { const e = { ...process.env }; for (const k of BUILD_VARS) delete e[k]; return { ...e, ...extra }; };
 
 test('production build: allow-listed files only, no internal note, canonical + sitemap use final URLs', () => {
@@ -346,4 +356,137 @@ test('production build fails on stale data (blocks the deploy)', () => {
   catch (e) { failed = true; assert.match(String(e.stderr), /BUILD FAILED: data last checked/); }
   assert.ok(failed, 'build should fail');
   rmSync(out, { recursive: true, force: true });
+});
+
+test('data: postings removed before their closing date are closed, with no date, countdown or calendar file', () => {
+  for (const [id, checked] of [['nygh', '2026-11-12'], ['southlake', '2026-11-14']]) {
+    assert.equal(status(byId[id], '2026-11-14').key, 'closed', id);
+    assert.equal(byId[id].deadline, null, id);
+    assert.equal(byId[id].last_verified, checked, id);
+  }
+  assert.equal(byId.southlake.positions_listed, undefined);   // no vacancy count shown for a removed posting
+});
+
+test('release gate: only entries SHOWN as open on a check older than 2 days block a deploy', () => {
+  const base = { source_url: 'https://example.org/job/1', source_kind: 'posting', source_ok: true, hospital: 'H', program_name: 'P', region: 'gta' };
+  const d = { dataset_checked: '2026-11-11', entries: [
+    { ...base, id: 'open-3d', posting_type: 'open_vacancies', positions_listed: 2, last_verified: '2026-11-11' },
+    { ...base, id: 'open-2d', posting_type: 'open_unspecified', last_verified: '2026-11-12' },
+    { ...base, id: 'pool-3d', posting_type: 'open_talent_pool', last_verified: '2026-11-11' },
+    { ...base, id: 'closed-3d', posting_type: 'closed', last_verified: '2026-11-11' },
+    { ...base, id: 'unconf-3d', posting_type: 'unconfirmed', unconfirmed_reason: 'Board blocks automated checks.', last_verified: '2026-11-11' },
+    { ...base, id: 'open-past-deadline', posting_type: 'open_unspecified', deadline: '2026-11-12', last_verified: '2026-11-11' },
+  ] };
+  assert.deepEqual(staleOpenEntries(d, '2026-11-14').map(e => e.id), ['open-3d', 'pool-3d']);
+  // after 7 days the entry already shows Unconfirmed, so it no longer counts as open (the 7-day backstop in build-dist covers it)
+  assert.deepEqual(staleOpenEntries(d, '2026-11-19').map(e => e.id), ['open-2d']);
+});
+
+test('dataset_checked (the page date line) may not claim a later check than the oldest entry', () => {
+  const e = (id, v) => ({ id, hospital: 'H', program_name: 'P', region: 'gta', posting_type: 'closed', source_url: 'https://example.org/', last_verified: v });
+  assert.deepEqual(validateData({ dataset_checked: '2026-11-11', entries: [e('a', '2026-11-11'), e('b', '2026-11-14')] }), []);
+  assert.match(validateData({ dataset_checked: '2026-11-14', entries: [e('a', '2026-11-11'), e('b', '2026-11-14')] }).join(), /later than the oldest entry check \(2026-11-11\)/);
+});
+
+// ---------- Conservative release (Nov 14): CAPTCHA-blocked postings stay Unconfirmed, corrections still ship ----------
+const blockedBase = { hospital: 'Blocked Hospital', program_name: 'Clinical Extern', region: 'gta', location: 'Toronto',
+  source_url: 'https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=1&Page=JobDetails&Jobid=J1', source_kind: 'posting', source_ok: true,
+  deadline: '2026-11-20', pay_text: '$20.60/hr', eligibility: { listed: false, programs: {}, bcls: null, also_listed: [] } };
+const scenario = (blocked) => ({ dataset_checked: '2026-11-09', entries: [
+  { ...blockedBase, id: 'blocked', last_verified: '2026-11-09', ...blocked },
+  // the correction being shipped: a posting removed early, checked today
+  { ...blockedBase, id: 'fixed', hospital: 'Fixed Hospital', source_url: 'https://example.wd10.myworkdayjobs.com/job/1', posting_type: 'closed', deadline: null, last_verified: '2026-11-14' },
+  { ...blockedBase, id: 'fresh', hospital: 'Fresh Hospital', source_url: 'https://example.icims.com/jobs/2/job', posting_type: 'open_unspecified', deadline: null, last_verified: '2026-11-13' },
+] });
+const UNCONF = { posting_type: 'unconfirmed', unconfirmed_reason: 'Last seen open on Nov 9. The job site blocks automated checks.' };
+function prodBuild(d, today) {
+  const root = new URL('../', import.meta.url).pathname;
+  const dir = mkdtempSync(join(tmpdir(), 'et-gate-'));
+  writeFileSync(join(dir, 'hospitals.json'), JSON.stringify(d));
+  try {
+    execFileSync(process.execPath, [root + 'scripts/build-dist.mjs', '--out', join(dir, 'dist')], { stdio: 'pipe', env: cleanEnv({ CF_PAGES: '1', CF_PAGES_BRANCH: 'main', ET_TODAY: today, ET_DATA: join(dir, 'hospitals.json') }) });
+    return { ok: true, published: JSON.parse(readFileSync(join(dir, 'dist/data/hospitals.json'))) };
+  } catch (e) { return { ok: false, err: String(e.stderr) }; }
+  finally { rmSync(dir, { recursive: true, force: true }); }
+}
+
+test('a stale, CAPTCHA-blocked posting marked Unconfirmed does not block deploying a correction to another posting', () => {
+  const r = prodBuild(scenario(UNCONF), '2026-11-14');
+  assert.ok(r.ok, r.err);
+  const pub = Object.fromEntries(r.published.entries.map(e => [e.id, e]));
+  assert.equal(pub.fixed.posting_type, 'closed');          // the correction is what gets published
+  assert.equal(pub.blocked.last_verified, '2026-11-09');    // its real check date is preserved, not advanced
+  assert.equal(r.published.dataset_checked, '2026-11-09');  // and the full-check date isn't moved to hide it
+});
+
+test('a stale blocked posting can never be counted as confirmed open, and its closing date is not shown', () => {
+  const d = scenario(UNCONF);
+  const blocked = d.entries[0];
+  assert.equal(status(blocked, '2026-11-14').key, 'unconfirmed');
+  assert.equal(status({ ...blocked, last_verified: '2026-11-14' }, '2026-11-14').key, 'unconfirmed'); // a fresh date alone never reopens it
+  assert.equal(shownDeadline(blocked, '2026-11-14'), null);
+  const sum = openSummary(d.entries, '2026-11-14');
+  assert.deepEqual({ hospitals: sum.hospitals, listings: sum.listings, unconfirmed: sum.unconfirmed, next: sum.nextDeadline },
+    { hospitals: 1, listings: 1, unconfirmed: 1, next: null }); // only 'fresh' counts; the blocked one's Nov 20 date isn't the "next closing date"
+  // an open listing that went stale (> 7 days) is also Unconfirmed: not counted, no date shown
+  const stale = { ...blockedBase, id: 's', posting_type: 'open_vacancies', positions_listed: 3, last_verified: '2026-11-01' };
+  assert.equal(openSummary([stale], '2026-11-14').listings, 0);
+  assert.equal(shownDeadline(stale, '2026-11-14'), null);
+});
+
+test('flipping a blocked posting back to open without a fresh check fails the production build', () => {
+  const r = prodBuild(scenario({ posting_type: 'open_vacancies', positions_listed: 4 }), '2026-11-14');
+  assert.equal(r.ok, false);
+  assert.match(r.err, /BUILD FAILED: shown as open on a check older than 2 days: blocked \(checked 2026-11-09\)/);
+});
+
+test('backstop: a whole dataset older than 7 days fails production even if nothing is shown open', () => {
+  const d = scenario(UNCONF);
+  const r = prodBuild({ ...d, entries: d.entries.map(e => ({ ...e, last_verified: '2026-11-05' })), dataset_checked: '2026-11-05' }, '2026-11-14');
+  assert.equal(r.ok, false);
+  assert.match(r.err, /BUILD FAILED: data last checked 2026-11-05 \(9 days ago\)/);
+});
+
+test('an Unconfirmed entry must say why', () => {
+  const d = scenario({ posting_type: 'unconfirmed' });
+  assert.match(validateData(d).join(), /blocked: unconfirmed needs an unconfirmed_reason/);
+});
+
+test('data (Nov 14 release): Michael Garron x3 Unconfirmed with links and real check dates; counts exclude them', () => {
+  for (const id of ['mgh', 'mgh-help', 'mgh-hro']) {
+    const e = byId[id];
+    assert.equal(e.posting_type, 'unconfirmed', id);
+    assert.equal(e.positions_listed, undefined, id);           // no vacancy count shown for an unverified posting
+    assert.equal(e.last_verified, '2026-11-11', id);           // last real check, not advanced
+    assert.match(e.source_url, /^https:\/\/tehn\.njoyn\.com\/.*Jobid=J\d{4}-\d{4}/, id); // direct official link kept
+    assert.equal(e.deadline, null, id);
+  }
+  assert.equal(byId.nygh.posting_type, 'closed');
+  assert.equal(byId.nygh.last_verified, '2026-11-12');
+  assert.equal(byId.southlake.positions_listed, undefined);
+  assert.ok(data.dataset_checked <= data.entries.map(e => e.last_verified).sort()[0]);
+  const sum = openSummary(data.entries, '2026-11-14');
+  assert.deepEqual(sum, { hospitals: 6, listings: 6, positions: 1, pools: 2, other: 3, unconfirmed: 3, nextDeadline: '2026-11-20' });
+});
+
+test('data (Nov 14 release): HHS is a verified search that found nothing, not an Unconfirmed (blocked) check', () => {
+  const e = byId.hhs;
+  assert.equal(e.posting_type, 'check_employer');
+  assert.equal(e.unconfirmed_reason, undefined);
+  assert.match(e.window_text, /searched HHS's official job board for external applicants \(Taleo\) on Nov 14 and found no clinical extern posting/);
+  assert.equal(e.last_verified, '2026-11-14');
+  assert.equal(status(e, '2026-11-14').label, 'No live posting linked');
+  // Unconfirmed is reserved for postings we could not read: only the CAPTCHA-blocked Michael Garron ones
+  assert.deepEqual(data.entries.filter(x => status(x, '2026-11-14').key === 'unconfirmed').map(x => x.id).sort(), ['mgh', 'mgh-help', 'mgh-hro']);
+});
+
+test('page units reconcile: sections count listings; 17 listings at 15 hospitals', () => {
+  const t = '2026-11-14';
+  const g = (n) => data.entries.filter(e => status(e, t).group === n).length;
+  const sections = { taking: g(0), notOpenOrNoPosting: g(1) + g(2), unconfirmed: g(3), closed: g(4) };
+  assert.deepEqual(sections, { taking: 6, notOpenOrNoPosting: 4, unconfirmed: 3, closed: 4 });
+  assert.equal(Object.values(sections).reduce((a, b) => a + b, 0), data.entries.length);
+  assert.equal(data.entries.length, 17);
+  assert.equal(countHospitals(data.entries), 15); // Michael Garron has 3 listings; the date line names both units
+  assert.equal(openSummary(data.entries, t).hospitals, openSummary(data.entries, t).listings); // so the headline needs no "(N listings)"
 });
