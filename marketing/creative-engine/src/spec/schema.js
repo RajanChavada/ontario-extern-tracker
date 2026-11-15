@@ -278,6 +278,9 @@ export const SpecSchema = z.strictObject({
   title: text(120),
   status: z.enum(['verified', 'demo']),
   theme: z.enum(THEME_IDS),
+  // The look this post asks for. oet campaigns (tracker posts, Grokbot exports) default to 'c'; the slides must
+  // actually render in it (FORMAT_NOT_RENDERED), so a campaign never falls back to the flat classic layouts silently.
+  format: z.enum(['c', 'b', 'classic']).optional(),
   platforms: z.array(z.enum(PLATFORM_IDS)).min(1).default(['tiktok', 'instagram']),
   demo: z.strictObject({ referenceDate: isoDate, reason: text(200) }).optional(),
   brand: z.strictObject({ name: text(40), handle: text(40).optional() }).default({ name: 'Ontario Extern Tracker' }),

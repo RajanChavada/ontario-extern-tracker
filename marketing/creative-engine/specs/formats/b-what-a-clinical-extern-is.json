@@ -2,6 +2,7 @@
   "id": "b-what-a-clinical-extern-is",
   "title": "Format B reference: what a clinical extern actually is (prototype, not published)",
   "status": "verified",
+  "format": "b",
   "theme": "board",
   "brand": {
     "name": "Ontario Extern Tracker",

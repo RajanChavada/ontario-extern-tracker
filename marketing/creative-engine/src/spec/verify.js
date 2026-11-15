@@ -285,6 +285,10 @@ export function verifySpec(spec, opts) {
   // --- formats C and B, and photo provenance
   const fmt = formatOf(spec);
   if (fmt === 'mixed') err('FORMAT_MIX', 'slides', 'Use one format per carousel: classic layouts, format C (c_*) or format B (b_*).');
+  if (spec.format && fmt !== 'mixed' && fmt !== spec.format) {
+    const got = fmt === 'classic' ? 'classic (flat background) layouts' : `format ${fmt.toUpperCase()} layouts`;
+    err('FORMAT_NOT_RENDERED', 'format', `This post asks for ${spec.format === 'classic' ? 'classic layouts' : `format ${spec.format.toUpperCase()}`}, but its slides are ${got}. Marketing posts default to format C (c_photo / c_notes / c_paper); dense reference posts use format B with "format": "b". To use classic layouts on purpose, set "format": "classic".`);
+  }
   if (fmt === 'c' || fmt === 'b') checkFormat(spec, fmt, err, warn);
   if (spec.slides.some((s) => s.photo)) {
     const img = checkImagery(spec, opts.registry ?? loadRegistry());

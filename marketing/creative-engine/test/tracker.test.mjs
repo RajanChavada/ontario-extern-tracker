@@ -155,7 +155,7 @@ test('only entries the site shows as open today can be promoted; missing evidenc
 
 // ---------------------------------------------------------------- campaigns
 const campaign = (over = {}) => ({
-  id: 'wch-test', title: 'WCH test', status: 'verified', theme: 'wine', tracker: { entries: ['wch'] },
+  id: 'wch-test', title: 'WCH test', status: 'verified', format: 'classic', theme: 'wine', tracker: { entries: ['wch'] },
   slides: [
     { layout: 'hook', variant: 'plain', title: 'one posting closes nov 20', facts: ['wch-deadline'] },
     { layout: 'deadline', fact: 'wch-deadline', details: [{ label: 'Pay', fact: 'wch-pay' }] },

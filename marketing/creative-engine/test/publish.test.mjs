@@ -120,7 +120,7 @@ test('end to end: a tracker campaign renders, and its artifacts match the schema
   const dir = tmp();
   const campaignFile = path.join(dir, 'campaign.json');
   writeFileSync(campaignFile, JSON.stringify({
-    id: 'wch-e2e', title: 'WCH e2e', status: 'verified', theme: 'wine', platforms: ['tiktok'], tracker: { entries: ['wch'] },
+    id: 'wch-e2e', title: 'WCH e2e', status: 'verified', format: 'classic', theme: 'wine', platforms: ['tiktok'], tracker: { entries: ['wch'] },
     slides: [
       { layout: 'hook', variant: 'plain', title: 'one extern posting closes nov 20', facts: ['wch-deadline'] },
       { layout: 'deadline', fact: 'wch-deadline', details: [{ label: 'Pay', fact: 'wch-pay' }, { label: 'Certification', fact: 'wch-bcls' }] },

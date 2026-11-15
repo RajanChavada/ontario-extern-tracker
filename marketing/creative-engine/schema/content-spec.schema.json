@@ -30,6 +30,14 @@
         "caribbean"
       ]
     },
+    "format": {
+      "type": "string",
+      "enum": [
+        "c",
+        "b",
+        "classic"
+      ]
+    },
     "platforms": {
       "default": [
         "tiktok",
