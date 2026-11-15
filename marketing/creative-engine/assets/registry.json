@@ -260,6 +260,126 @@
         "legible_logo": false
       },
       "notes": "Blank blue sticky notes, spiral notepad and lined paper on a white desk; no text, people or marks. Added 2026-11-15 for the application-checklist B cover (Growth Ops brief: not the SHN image family). Page read via web extract (names the photographer); licence page checked the same day."
+    },
+    {
+      "id": "pexels-30149857",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/cozy-workspace-with-coffee-and-laptop-lamp-30149857/",
+      "image_url": "https://images.pexels.com/photos/30149857/pexels-photo-30149857.jpeg",
+      "photographer": "Han",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-15",
+      "file": "photos/pexels-30149857.jpg",
+      "sha256": "6750526dee0efc16a5411a7378cc0cf7f7b1bac8c745e3a5bf7476737959e3ce",
+      "width": 1601,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "han/night-desk-lamp",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Night desk: round lamp, coffee, pen holder, open laptop keyboard (screen not visible). No people, logos or legible text. Added 2026-11-15 for the Nov 16 batch (not the SHN image family). Page read via web extract (names the photographer); Pexels licence checked the same day."
+    },
+    {
+      "id": "pexels-19844043",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/glowing-desk-lamp-19844043/",
+      "image_url": "https://images.pexels.com/photos/19844043/pexels-photo-19844043.jpeg",
+      "photographer": "Shawn Nir",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-15",
+      "file": "photos/pexels-19844043.jpg",
+      "sha256": "1a930deb69cbb5267618a527368817cb35155bc942e329294ba34079df5b32d3",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "shawn-nir/desk-lamp",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Black desk lamp over a closed laptop in a dark room. No people, logos or legible text. Added 2026-11-15 for the Nov 16 batch (not the SHN image family). Page read via web extract (names the photographer); Pexels licence checked the same day."
+    },
+    {
+      "id": "pexels-205508",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/silver-and-black-laptop-205508/",
+      "image_url": "https://images.pexels.com/photos/205508/pexels-photo-205508.jpeg",
+      "photographer": "Burak The Weekender",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-15",
+      "file": "photos/pexels-205508.jpg",
+      "sha256": "af22f536259bdaf8d43c549ef29142d1c887bf860ee47700c5e1e108bf62779f",
+      "width": 3200,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "burak/laptop-lamp-night",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Warm-lit desk: laptop (screen dark), tablet (screen dark), coffee cup, lamp. No people; no legible logo or text. Added 2026-11-15 for the Nov 16 batch (not the SHN image family). Page read via web extract (names the photographer); Pexels licence checked the same day."
+    },
+    {
+      "id": "pexels-7718652",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/a-flatlay-of-office-supplies-7718652/",
+      "image_url": "https://images.pexels.com/photos/7718652/pexels-photo-7718652.jpeg",
+      "photographer": "MART PRODUCTION",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-15",
+      "file": "photos/pexels-7718652.jpg",
+      "sha256": "6398a57d74ba4decabd60bcfb26cc699dd68ba626f2488c1ca5e10513daf91ba",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "mart-production/orange-flatlay",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Orange flatlay: blue notebook, notepad, pen, phone (screen dark), cards, clips. No people, logos or legible text. Added 2026-11-15 for the Nov 16 batch (not the SHN image family). Page read via web extract (names the photographer); Pexels licence checked the same day."
     }
   ],
   "rejected": [
