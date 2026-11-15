@@ -8,7 +8,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cleanAlt, checkPackage, exportPackage, fingerprint, imageInfo, loadSchema, parseHashtags, schemaErrors, SCHEMA_PATH } from '../src/handoff/pubkit.js';
-import { checkSourceQuotes, normalizeForQuote } from '../src/handoff/sources.js';
+import { checkSourceQuotes, normalizeForQuote, dayforcePageText } from '../src/handoff/sources.js';
 import { makeIndex, parseCapture } from '../src/tracker/evidence.js';
 
 const FIX = new URL('./fixtures/grokbot/', import.meta.url);
@@ -223,4 +223,53 @@ test("Grokbot's validate.py: every content check passes, only the approval is mi
     assert.equal(v.verdict, 'APPROVAL_REQUIRED');
     assert.deepEqual(v.checks.filter((c) => !c.ok).map((c) => c.check), ['exact_approval_on_record']);
   } finally { rmSync(inbox, { recursive: true, force: true }); }
+});
+
+// ---------- Dayforce live check (WCH): job text arrives only as Next.js page data ----------
+// Fixture: the real jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892 response of 2026-11-14 (plain fetch),
+// trimmed to the __NEXT_DATA__ fields this check reads (job id, title, two timestamps, job description HTML).
+const DF_URL = 'https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892';
+const DF_HTML = readFileSync(new URL('./fixtures/sources/dayforce-wch-3892-2026-11-14.html', import.meta.url), 'utf8');
+const dfSpec = (quote, url = DF_URL) => ({ facts: [{ id: 'f', kind: 'pay', quote, sources: ['s'], verifiedAt: TODAY }], sources: [{ id: 's', url, primary: true }] });
+const dfFetch = (html) => async () => ({ ok: true, status: 200, text: async () => html });
+
+test('dayforce: quotes in the job description are confirmed from the page data, and labelled as such', async () => {
+  for (const q of ['Hourly Rate: $20.60', 'Completion of Basic Cardiac Life Support (B.C.L.S.) required.', 'Maximum of 7.5 hours per week', 'Enrolled in an accredited degree (Bachelor of Science in Nursing)']) {
+    const r = await checkSourceQuotes(dfSpec(q), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+    assert.deepEqual(r.blockers, [], q);
+    assert.equal(r.results[0].online.via, 'page-data', q);
+    assert.match(r.warnings.join(), /Dayforce __NEXT_DATA__ for this job id/);
+  }
+  // the old behaviour this fixes: visible HTML alone has none of it
+  assert.equal(normalizeForQuote(DF_HTML).includes('Hourly Rate: $20.60'), false);
+});
+
+test('dayforce: the Posted/Expires line is rebuilt from the timestamps in Toronto time and must match exactly', async () => {
+  const ok = await checkSourceQuotes(dfSpec('Posted Friday, November 6, 2026 at 12:00 AM | Expires Friday, November 20, 2026 at 11:59 PM'), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+  assert.deepEqual(ok.blockers, []);
+  const wrongDay = await checkSourceQuotes(dfSpec('Posted Friday, November 6, 2026 at 12:00 AM | Expires Saturday, November 21, 2026 at 11:59 PM'), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+  assert.match(wrongDay.blockers.join(), /quote no longer on the live page/);
+  // the posting moves its expiry: the old quote is blocked
+  const moved = DF_HTML.replace('2026-11-21T04:59:00+00:00', '2026-11-18T04:59:00+00:00');
+  const r = await checkSourceQuotes(dfSpec('Posted Friday, November 6, 2026 at 12:00 AM | Expires Friday, November 20, 2026 at 11:59 PM'), { evidence: null, fetchImpl: dfFetch(moved) });
+  assert.match(r.blockers.join(), /quote no longer on the live page/);
+});
+
+test('dayforce: a quote that differs from the job data is still rejected (pay, hours, wording)', async () => {
+  for (const q of ['Hourly Rate: $21.60', 'Maximum of 15 hours per week', 'Completion of Basic Life Support (B.L.S.) required.', 'Enrolled in an accredited diploma (Practical Nursing)']) {
+    const r = await checkSourceQuotes(dfSpec(q), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+    assert.match(r.blockers.join(), /quote no longer on the live page/, q);
+    assert.equal(r.results[0].online.found, false, q);
+  }
+});
+
+test('dayforce: another job id, another host or a page without the job data never confirms a quote', async () => {
+  assert.equal(dayforcePageText('https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/9999', DF_HTML), '');
+  assert.equal(dayforcePageText('https://jobs.example.org/en-US/wch/CANDIDATEPORTAL/jobs/3892', DF_HTML), '');
+  assert.equal(dayforcePageText(DF_URL, '<html><body>Hourly Rate: $20.60</body></html>'), '');
+  const other = await checkSourceQuotes(dfSpec('Hourly Rate: $20.60', 'https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/9999'), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+  assert.match(other.blockers.join(), /quote no longer on the live page/);
+  // a script on a non-Dayforce page is still ignored, as before
+  const gen = await checkSourceQuotes(dfSpec('Hourly Rate: $20.60', 'https://example.org/job'), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
+  assert.match(gen.blockers.join(), /quote no longer on the live page/);
 });

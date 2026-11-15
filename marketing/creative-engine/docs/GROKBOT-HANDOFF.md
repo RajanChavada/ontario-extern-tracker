@@ -26,6 +26,11 @@ Writes `~/AgentHandoff/publishing/inbox/<project>/<post_id>/`:
 2. **Sources**: every fact's verbatim quote is looked up on its primary source, both in the newest saved
    capture and on the live page (`--offline` skips the live fetch). Invisible format characters
    (Ontario Health's U+2060 word joiner) are ignored; everything else must match exactly.
+   Dayforce (Women's College) sends the posting only as Next.js page data, so for `jobs.dayforcehcm.com/.../jobs/<id>`
+   the live check also reads that job's own `__NEXT_DATA__`. This happens only when its `jobPostingId` equals `<id>`. The
+   check reads the job description, plus the "Posted … | Expires …" line rebuilt from the timestamps in Toronto time.
+   Matches found this way are labelled `page-data`. A different date, job id or wording still blocks the export.
+   `--offline` is for a fresh browser capture when the live page can't be read, never a permanent substitute.
 3. **Render** TikTok only, with the engine's visual QA.
 4. **Export** into a hidden temp folder `.<post_id>.tmp-<pid>`: assets → contact sheet → manifest.
 5. **Validate what's on disk** (schema, contiguous order, sha256 of each file, JPEG header size =
