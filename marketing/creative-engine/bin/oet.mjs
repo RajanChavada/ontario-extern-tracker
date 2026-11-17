@@ -18,6 +18,7 @@ import { artifactJsonSchema } from '../src/publish/schema.js';
 import { exportPackage, imageInfo, SCHEMA_PATH } from '../src/handoff/pubkit.js';
 import { checkSourceQuotes } from '../src/handoff/sources.js';
 import { composeCaption } from '../src/spec/verify.js';
+import { loadRegistry } from '../src/assets/registry.js';
 
 const ENGINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REPO = path.resolve(ENGINE, '../..');
@@ -81,6 +82,14 @@ const show = (list, mark) => list.map((e) => `  ${mark} ${e.code.padEnd(26)} ${e
 
 /** Factual stage: bridge + engine fact rules. Never opens a browser. */
 export const DEFAULT_CAMPAIGN_FORMAT = 'c';
+
+/** "; cover: ..." for manifest notes, so performance can be compared by cover type. */
+export function coverType(spec) {
+  const first = spec.slides.find((s) => !s._auto);
+  if (!first?.photo) return '; cover: designed (no photo)';
+  const a = loadRegistry().byId.get(first.photo);
+  return `; cover: ${a?.contains_people ? 'licensed stock photo with people' : 'faceless licensed photo'} (${first.photo})`;
+}
 
 /** Every photo slide (c_photo, c_notes, b_cover) must have rendered its registered photo. Checks the render manifest. */
 export function photoLayerErrors(spec, platform) {
@@ -276,7 +285,7 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
         sources: (spec?.sources ?? []).map((s) => ({ url: s.url, publisher: s.publisher, title: s.title, primary: s.primary, accessed_at: s.accessedAt })),
         blockers: src.blockers, conflicts: [], engagement_claims: [],
       },
-      notes: spec ? `Style: format ${(spec.format ?? 'c').toUpperCase()} (${[...new Set(spec.slides.filter((s) => !s._auto).map((s) => s.layout))].join(', ')}); voice: ${spec.voice === 'student' ? 'first person (account owner)' : 'neutral (second/third person)'}${spec.brief ? `; brief type: ${spec.brief.type}` : ''}${flags.slot ? `; slot: ${flags.slot}` : ''}. Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
+      notes: spec ? `Style: format ${(spec.format ?? 'c').toUpperCase()} (${[...new Set(spec.slides.filter((s) => !s._auto).map((s) => s.layout))].join(', ')}); voice: ${spec.voice === 'student' ? 'first person (account owner)' : 'neutral (second/third person)'}${spec.brief ? `; brief type: ${spec.brief.type}` : ''}${coverType(spec)}${flags.slot ? `; slot: ${flags.slot}` : ''}. Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
       externalCheck: grokbotValidator({ kit, python, today }),
     });
     const report = { ok: r.ok, post_id: postId, dir: r.dir, errors: r.errors, source_checks: src, ready: r.ready ?? null, fingerprint: r.manifest?.content_fingerprint ?? null };

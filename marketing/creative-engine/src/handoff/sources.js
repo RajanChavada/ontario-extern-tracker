@@ -12,6 +12,7 @@ const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', 
 export function normalizeForQuote(s) {
   return String(s)
     .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<\/?(?:sup|sub|b|i|em|strong|u|span|a|small|mark)\b[^>]*>/gi, '') // inline tags don't split words: 2<sup>nd</sup> -> 2nd
     .replace(/<[^>]+>/g, ' ')
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n))
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
@@ -57,6 +58,15 @@ export function dayforcePageText(url, html) {
  * Returns { results, blockers, warnings }.
  *  evidence: index from loadEvidence(); online: fetch the live page too; fetchImpl for tests.
  */
+/**
+ * The verbatim pieces of a fact quote. The tracker bridge joins several posting lines with " … " and clips long lines
+ * with a trailing "…"; each piece must be found on its own (all of them, verbatim), never the joined string.
+ */
+export function quoteSegments(quote) {
+  return String(quote).split(/\s+…\s+/).map((p) => normalizeForQuote(p.replace(/…\s*$/, ''))).filter(Boolean);
+}
+const hasAll = (text, segs) => segs.every((q) => text.includes(q));
+
 export async function checkSourceQuotes(spec, { evidence, online = true, fetchImpl = globalThis.fetch, timeoutMs = 20000 } = {}) {
   const blockers = [];
   const warnings = [];
@@ -68,11 +78,11 @@ export async function checkSourceQuotes(spec, { evidence, online = true, fetchIm
     const prim = f.sources.map((id) => sources.get(id)).filter((s) => s?.primary);
     if (!prim.length) { blockers.push(`${f.id}: no primary source`); continue; }
     if (!f.quote) { blockers.push(`${f.id}: no verbatim quote to check`); continue; }
-    const q = normalizeForQuote(f.quote);
+    const segs = quoteSegments(f.quote);
     for (const s of prim) {
       const r = { fact: f.id, url: s.url, capture: null, online: null };
       const cap = evidence?.forUrl(s.url)?.[0];
-      if (cap) r.capture = { file: cap.file, capturedAt: cap.capturedAt, found: normalizeForQuote(cap.text).includes(q) };
+      if (cap) r.capture = { file: cap.file, capturedAt: cap.capturedAt, found: hasAll(normalizeForQuote(cap.text), segs) };
       if (online) {
         const key = normalizeUrl(s.url);
         if (!live.has(key)) {
@@ -83,8 +93,8 @@ export async function checkSourceQuotes(spec, { evidence, online = true, fetchIm
           } catch (e) { live.set(key, { status: null, error: e.cause?.code ?? e.name, text: null }); }
         }
         const page = live.get(key);
-        const inHtml = page.text ? page.text.includes(q) : null;
-        const inData = !inHtml && page.pageData ? page.pageData.includes(q) : false;
+        const inHtml = page.text ? hasAll(page.text, segs) : null;
+        const inData = !inHtml && page.pageData ? hasAll(page.pageData, segs) : false;
         r.online = { status: page.status, error: page.error ?? null, found: inHtml || inData ? true : inHtml, via: inHtml ? 'html' : inData ? 'page-data' : null };
         if (inData) warnings.push(`${f.id}: confirmed in the live page's own job data (Dayforce __NEXT_DATA__ for this job id), not in static HTML`);
       }
