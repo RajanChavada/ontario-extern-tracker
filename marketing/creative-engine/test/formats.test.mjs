@@ -31,14 +31,14 @@ const codes = (r) => r.errors.map((e) => e.code);
 const warnCodes = (r) => r.warnings.map((w) => w.code);
 
 // A throwaway registry: one real photo file, entries edited per test.
-function tempRegistry(edit = (a) => a, extra = []) {
+function tempRegistry(edit = (a) => a, extra = [], top = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'oet-registry-'));
   const real = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
   const src = real.assets.find((a) => a.id === 'pexels-5386483');
   copyFileSync(path.join(ASSETS_DIR, src.file), path.join(dir, 'photo.jpg'));
   const base = { ...structuredClone(src), id: 'test-photo', file: 'photo.jpg' };
   const others = real.assets.map((a) => ({ ...a, file: path.join(ASSETS_DIR, a.file) })); // the rest of the real registry
-  const reg = { ...real, assets: [...others, edit(base), ...extra.map((e) => ({ ...structuredClone(src), file: 'photo.jpg', ...e }))] };
+  const reg = { ...real, ...top, assets: [...others, edit(base), ...extra.map((e) => ({ ...structuredClone(src), file: 'photo.jpg', ...e }))] };
   const file = path.join(dir, 'registry.json');
   writeFileSync(file, JSON.stringify(reg));
   return loadRegistry(file);
@@ -148,6 +148,16 @@ test('every imagery guardrail flag, and identifiable faces, rejects the photo', 
   assert.match(faces.errors[0].message, /identifiable faces/);
   const noFlags = check(cWith(), { registry: tempRegistry((a) => { delete a.flags; return a; }) });
   assert.deepEqual(codes(noFlags), ['ASSET_FLAGGED']);
+});
+
+test('face covers (2026-11-18): faces pass only with the face policy on AND the photo marked stock_person_not_student', () => {
+  const on = (edit) => tempRegistry(edit, [], { face_policy: { allowed: true } });
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => ({ ...a, identifiable_faces: true, stock_person_not_student: true })) })), []);
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => ({ ...a, identifiable_faces: true })) })), ['ASSET_FLAGGED']);
+  // policy off (as before): faces refused even if marked
+  assert.deepEqual(codes(check(cWith(), { registry: tempRegistry((a) => ({ ...a, identifiable_faces: true, stock_person_not_student: true }), [], { face_policy: { allowed: false } }) })), ['ASSET_FLAGGED']);
+  // clinical tools stay forbidden on face photos
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => ({ ...a, identifiable_faces: true, stock_person_not_student: true, flags: { ...a.flags, clinical_tools: true } })) })), ['ASSET_FLAGGED']);
 });
 
 test('unregistered, rejected-in-review, altered and blur-only photos are refused', () => {

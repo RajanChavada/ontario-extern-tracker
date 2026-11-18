@@ -88,7 +88,7 @@ export function coverType(spec) {
   const first = spec.slides.find((s) => !s._auto);
   if (!first?.photo) return '; cover: designed (no photo)';
   const a = loadRegistry().byId.get(first.photo);
-  return `; cover: ${a?.contains_people ? 'licensed stock photo with people' : 'faceless licensed photo'} (${first.photo})`;
+  return `; cover: ${a?.identifiable_faces ? 'face cover (licensed stock model, not a student)' : a?.contains_people ? 'licensed stock photo with people, no faces' : 'faceless licensed photo'} (${first.photo})`;
 }
 
 /** Every photo slide (c_photo, c_notes, b_cover) must have rendered its registered photo. Checks the render manifest. */

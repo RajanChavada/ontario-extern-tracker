@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "do-externs-get-paid",
+  "title": "Wait, do nursing externs actually get paid? (format C, face cover)",
+  "status": "verified",
+  "format": "c",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "thp"
+    ]
+  },
+  "brief": {
+    "type": "explainer",
+    "problem": "Many students don't know externships are paid (vs unpaid placements), or what a posted rate looks like, so they skip applying or can't plan around school.",
+    "hooks": [
+      "wait, do nursing externs actually get paid?",
+      "is a nursing externship paid or unpaid?",
+      "how much do nursing externs make?",
+      "nursing students, did you know externs get paid?"
+    ],
+    "why": "A question any nursing student can have, anywhere; Ontario Health answers it for the program, and one current Ontario posting gives a real rate. 'how much do externs make' was rejected: we have one verified rate, not a range, so it would overpromise. Face cover per the owner's 2026-11-18 test; the stock model is never presented as a student.",
+    "payoff": "Confirms it's paid (program-level source), shows a real posted rate, and what else to check (hours, status, contract length).",
+    "evidence": [
+      "Owner request 2026-11-18 (face covers, question hook)",
+      "tiktok-research-2026-11-14 pain_points.md #3 (what an extern is / is it paid; P025) and #7 (money); REPORT F5 (real numbers)"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-8460374",
+      "title": "wait, do nursing externs actually get paid?",
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.52,
+            "y": 0.84
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-19844043",
+      "title": "short answer: yes",
+      "body": "Ontario Health describes the extern program as paid, hands-on work in hospitals. it's a job, not a placement.",
+      "basis": "facts",
+      "facts": [
+        "oh-paid-hands-on"
+      ]
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-7718652",
+      "label": "extern notes 📝",
+      "title": "one real Ontario example",
+      "body": "Trillium Health Partners’ extern posting lists $26.756/hr.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "$26.756/hr"
+      },
+      "facts": [
+        "thp-pay"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-205508",
+      "title": "rates differ by posting",
+      "body": "each hospital posts its own rate, so compare postings instead of guessing.",
+      "basis": "advice"
+    },
+    {
+      "layout": "c_paper",
+      "title": "before you count on the money",
+      "body": "check the hours, whether it's part-time, how long the contract runs and which shifts you'd work.",
+      "tags": [
+        "hours",
+        "contract",
+        "shifts"
+      ],
+      "basis": "advice"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-30149857",
+      "title": "looking for paid extern postings in ontario?",
+      "body": "ontarioexterns.ca lists them, checked on each hospital's own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "bookmark it!",
+          "at": {
+            "x": 0.55,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -5
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "oh-paid-hands-on",
+      "kind": "program",
+      "claim": "The Enhanced Extern Program gives nursing and allied health students paid, hands-on work in Ontario hospitals.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "By offering paid, hands-on work in hospitals, students get to step into the heart of health care",
+      "asOf": "2026-06-04"
+    }
+  ],
+  "sources": [
+    {
+      "id": "ontario-health-extern",
+      "publisher": "Ontario Health",
+      "title": "Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program",
+      "url": "https://www.ontariohealth.ca/news/enhanced-extern-program",
+      "accessedAt": "2026-11-18",
+      "primary": true,
+      "updated": "2026-06-04",
+      "label": "Enhanced Extern Program page"
+    }
+  ],
+  "caption": {
+    "text": "wait, do nursing externs actually get paid? 👇\n\nOntario Health describes the extern program as paid, hands-on work in hospitals. one current example: Trillium Health Partners’ extern posting lists $26.756/hr. rates, hours and contract length differ by posting, so check each one.\n\ndid you know it was a paid role?\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "wait, do nursing externs actually get paid? 👇\n\nOntario Health describes the extern program as paid, hands-on work in hospitals. one current example: Trillium Health Partners’ extern posting lists $26.756/hr. rates, hours and contract length differ by posting, so check each one.\n\ndid you know it was a paid role?\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "what-externs-do-all-shift",
+  "title": "What do nursing externs actually do all shift? (format B, face cover)",
+  "status": "verified",
+  "format": "b",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "brief": {
+    "type": "explainer",
+    "problem": "Students apply without knowing what the job is day to day (care tasks, unit work, how physical it is), so they can't judge fit or prepare.",
+    "hooks": [
+      "what do nursing externs actually do all shift?",
+      "what does an extern shift actually look like?",
+      "nursing students, here's what externs really do",
+      "think externs just shadow nurses?"
+    ],
+    "why": "Format B cards had the best hold and most likes in the 48h numbers; this is the owner's first face-cover test. The question works for any nursing student; every card answers it with a quote from a current Ontario posting (Sunnybrook, plus Trillium for breadth). Rejected: 'just shadow nurses' assumes a belief; 'really do' adds nothing over 'actually do all shift'.",
+    "payoff": "Five concrete parts of the role from real postings: the role type, everyday care tasks, unit tasks, the physical side, and that another hospital lists much the same.",
+    "evidence": [
+      "Owner request 2026-11-18 (face covers; B performed best at 48h)",
+      "tiktok-research-2026-11-14 pain_points.md #3 (what an extern actually does; P050, P025, P039)"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "b_cover",
+      "photo": "pexels-5965673",
+      "title": "what do nursing externs actually do all shift?",
+      "sticker": "from real Ontario postings"
+    },
+    {
+      "layout": "b_card",
+      "chip": "the role",
+      "icon": "hospital",
+      "title": "you work as an unregulated care provider",
+      "body": "Sunnybrook’s posting says externs work in the capacity of an unregulated health care provider, supervised by nurses.",
+      "facts": [
+        "sb-ucp"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "patient care",
+      "icon": "clipboard",
+      "title": "everyday care, with your patients",
+      "body": "vital signs, plus helping with mobility and daily living: toileting, bathing, feeding.",
+      "facts": [
+        "sb-care"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "on the unit",
+      "icon": "calendar",
+      "title": "keeping the unit moving",
+      "body": "setting up rooms, admissions, transfers and discharges, rounding and answering call bells.",
+      "facts": [
+        "sb-unit"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "heads up",
+      "icon": "briefcase",
+      "title": "it’s a physical job",
+      "body": "the posting calls the work moderately heavy: lifting, lots of walking and standing.",
+      "facts": [
+        "sb-physical"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "elsewhere",
+      "icon": "handshake",
+      "title": "other hospitals list much the same",
+      "body": "Trillium Health Partners’ posting also lists help with ambulation, toileting, bathing and feeding.",
+      "facts": [
+        "thp-care"
+      ]
+    },
+    {
+      "layout": "b_cta",
+      "title": "looking for postings?",
+      "site": "ontarioexterns.ca",
+      "body": "ontarioexterns.ca lists Ontario extern postings, checked against each hospital’s own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "footer": "save this before your interview",
+      "basis": "promo"
+    }
+  ],
+  "facts": [
+    {
+      "id": "sb-ucp",
+      "kind": "other",
+      "claim": "Sunnybrook's extern posting says externs work as unregulated health care providers.",
+      "sources": [
+        "sb-duties"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "will be working in the capacity of an unregulated health care provider"
+    },
+    {
+      "id": "sb-care",
+      "kind": "other",
+      "claim": "Sunnybrook's posting lists measuring vital signs and helping with mobility and daily living (toileting, bathing, feeding).",
+      "sources": [
+        "sb-duties"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "measuring vital signs, assisting with ambulation and activities of daily living (toileting, bathing, feeding)"
+    },
+    {
+      "id": "sb-unit",
+      "kind": "other",
+      "claim": "Sunnybrook's posting lists setting up rooms, admissions, transfers and discharges, rounding and call bells.",
+      "sources": [
+        "sb-duties"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "setting up patient rooms to receive patients, assist with admissions, transfers and discharges, intentional-rounding, responding to call bells"
+    },
+    {
+      "id": "sb-physical",
+      "kind": "other",
+      "claim": "Sunnybrook's posting says the work is moderately heavy: lifting, walking, standing.",
+      "sources": [
+        "sb-duties"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "Work is moderately heavy involving lifting, considerable walking, and standing, bending, pushing and pulling of equipment"
+    },
+    {
+      "id": "thp-care",
+      "kind": "other",
+      "claim": "Trillium Health Partners' posting lists help with ambulation, toileting, bathing and feeding.",
+      "sources": [
+        "thp-duties"
+      ],
+      "verifiedAt": "2026-11-18",
+      "quote": "assisting with ambulation, toileting, bathing, feeding and other care activities"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sb-duties",
+      "publisher": "Sunnybrook Health Sciences Centre",
+      "title": "Clinical Extern (job 14354)",
+      "label": "Clinical Extern posting (job 14354)",
+      "url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
+      "accessedAt": "2026-11-18",
+      "primary": true
+    },
+    {
+      "id": "thp-duties",
+      "publisher": "Trillium Health Partners",
+      "title": "Clinical Extern - Nursing (job 6976)",
+      "label": "Clinical Extern posting (job 6976)",
+      "url": "https://iadyup.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_4001/job/6976/",
+      "accessedAt": "2026-11-18",
+      "primary": true
+    }
+  ],
+  "caption": {
+    "text": "what do nursing externs actually do all shift? 👇\n\nstraight from two current Ontario postings: Sunnybrook’s lists vital signs, help with mobility and daily living, admissions and discharges, call bells, and says the work is moderately heavy. Trillium Health Partners’ lists much the same care. duties vary by hospital and unit, so read the posting.\n\nwhich part surprised you?\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "what do nursing externs actually do all shift? 👇\n\nstraight from two current Ontario postings: Sunnybrook’s lists vital signs, help with mobility and daily living, admissions and discharges, call bells, and says the work is moderately heavy. Trillium Health Partners’ lists much the same care. duties vary by hospital and unit, so read the posting.\n\nwhich part surprised you?\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}
