@@ -203,3 +203,18 @@ test('factual check runs without a browser and includes the engine fact rules (c
   } finally { rmSync(tmp, { force: true }); }
 });
 
+
+test('eligibility values fit the 80-character slide limit; long program notes stay in the claim', async () => {
+  const { eligibilityText } = await import('../src/tracker/bridge.js');
+  const programs = [
+    ['BSCN', { anyYear: true, note: 'preference to years 3 and 4' }],
+    ['PN', { anyYear: true }],
+    ['IEN', { anyYear: true, note: 'Needs a CNO letter of direction plus one of the listed program or micro-credential routes' }],
+  ];
+  const { full, value } = eligibilityText(programs);
+  assert.ok(value.length <= 80, value);
+  assert.match(full, /CNO letter of direction/);
+  assert.doesNotMatch(value, /letter of direction/);
+  const short = eligibilityText([['BSCN', { minYear: 2, maxYear: 4 }]]);
+  assert.equal(short.value, short.full);
+});

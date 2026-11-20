@@ -88,6 +88,13 @@ export function describeProgram(code, r) {
   return `${label}, ${pre}years ${WORDS[r.minYear]} to ${WORDS[r.maxYear]}`;
 }
 
+/** Eligibility for a slide value (schema: 80 chars) and the full wording for the claim. Long notes stay in the claim only. */
+export function eligibilityText(programs) {
+  const full = programs.map(([c, r]) => describeProgram(c, r)).join('; ');
+  const short = programs.map(([c, r]) => describeProgram(c, { ...r, note: undefined })).join('; ');
+  return { full, value: full.length <= 80 ? full : short.length <= 80 ? short : `${short.slice(0, 77)}...` };
+}
+
 /** What a capture line must show to support a program rule. */
 function programSupported(line, code, r) {
   if (!PROGRAM_WORDS[code]?.test(line)) return false;
@@ -208,8 +215,8 @@ export function entryFacts(entry, evidence, { today, staleAfterDays = 7 }) {
       else if (!quotes.includes(line)) quotes.push(line);
     }
     if (quotes.length === programs.length || (quotes.length && !errors.some((e) => e.code === 'ELIGIBILITY_NOT_IN_CAPTURE'))) {
-      const value = programs.map(([c, r]) => describeProgram(c, r)).join('; ');
-      add({ id: `${entry.id}-eligibility`, kind: 'eligibility', value, claim: `${entry.hospital}'s posting lists: ${value}.` }, quotes.map((q) => clip(q, 190)).join(' … '));
+      const { full, value } = eligibilityText(programs);
+      add({ id: `${entry.id}-eligibility`, kind: 'eligibility', value, claim: `${entry.hospital}'s posting lists: ${full}.` }, quotes.map((q) => clip(q, 190)).join(' … '));
     }
   }
   if (entry.eligibility?.bcls === true) {

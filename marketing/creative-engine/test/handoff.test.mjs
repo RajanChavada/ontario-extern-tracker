@@ -273,3 +273,23 @@ test('dayforce: another job id, another host or a page without the job data neve
   const gen = await checkSourceQuotes(dfSpec('Hourly Rate: $20.60', 'https://example.org/job'), { evidence: null, fetchImpl: dfFetch(DF_HTML) });
   assert.match(gen.blockers.join(), /quote no longer on the live page/);
 });
+
+test('multi-line fact quotes: every " … " piece must be found verbatim, never the joined string', async () => {
+  const { quoteSegments, checkSourceQuotes } = await import('../src/handoff/sources.js');
+  assert.deepEqual(quoteSegments('enrolled in 2nd year … Clinical Extern - Nursing (RN, RPN, IEN)'), ['enrolled in 2nd year', 'Clinical Extern - Nursing (RN, RPN, IEN)']);
+  assert.deepEqual(quoteSegments('a long line that was clipped… … second line'), ['a long line that was clipped', 'second line']);
+  const spec = { sources: [{ id: 's', url: 'https://example.org/job/1', primary: true }],
+    facts: [{ id: 'f', sources: ['s'], verifiedAt: '2026-11-17', quote: 'students in any year … Clinical Extern - Nursing' }] };
+  const ev = (text) => ({ forUrl: () => [{ file: 'cap.txt', capturedAt: '2026-11-17', text }] });
+  const ok = await checkSourceQuotes(spec, { evidence: ev('Title: Clinical Extern - Nursing\n\nRequirements: students in any year of study'), online: false });
+  assert.deepEqual(ok.blockers, []);
+  const missing = await checkSourceQuotes(spec, { evidence: ev('Title: Clinical Extern - Nursing\n\nRequirements: final-year students only'), online: false });
+  assert.ok(missing.blockers.some((b) => /quote not in the saved capture/.test(b)), 'one missing piece still blocks');
+});
+
+test('normalizeForQuote: inline tags do not split words, block tags still separate them', async () => {
+  const { normalizeForQuote } = await import('../src/handoff/sources.js');
+  assert.equal(normalizeForQuote('<li>enrolled in their 2<sup>nd</sup>, 3<sup>rd</sup> year</li>'), 'enrolled in their 2nd, 3rd year');
+  assert.equal(normalizeForQuote('<p>one</p><p>two</p>'), 'one two');
+  assert.equal(normalizeForQuote('a <strong>bold</strong> word'), 'a bold word');
+});

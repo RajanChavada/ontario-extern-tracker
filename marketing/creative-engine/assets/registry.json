@@ -380,6 +380,36 @@
         "legible_logo": false
       },
       "notes": "Orange flatlay: blue notebook, notepad, pen, phone (screen dark), cards, clips. No people, logos or legible text. Added 2026-11-15 for the Nov 16 batch (not the SHN image family). Page read via web extract (names the photographer); Pexels licence checked the same day."
+    },
+    {
+      "id": "pexels-9996457",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/a-coffee-mug-near-the-glass-window-9996457/",
+      "image_url": "https://images.pexels.com/photos/9996457/pexels-photo-9996457.jpeg",
+      "photographer": "RENDAN CATIPAY",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-17",
+      "file": "photos/pexels-9996457.jpg",
+      "sha256": "825ee12df700b6cf309db7635e1f73f6ddfab47b922f2e6a51c9e7d7074f8045",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": false,
+      "identifiable_faces": false,
+      "shoot_id": "rendan-catipay/rain-window-mug",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "object",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Plain yellow mug by a rain-covered window; no people, text or marks. Added 2026-11-17 for the Nov 18 B cover. Page read via web extract (names the photographer); Pexels licence as checked 2026-11-14/15."
     }
   ],
   "rejected": [

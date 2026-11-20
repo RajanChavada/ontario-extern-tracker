@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "when-extern-hiring-happens",
+  "title": "Wondering when extern hiring actually happens? (format C, photo cover)",
+  "status": "verified",
+  "format": "c",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "brief": {
+    "type": "explainer",
+    "problem": "Students don't know when extern hiring happens, so they look too late or give up after one quiet week.",
+    "hooks": [
+      "wondering when extern hiring actually happens?",
+      "is it too late to apply for an externship?",
+      "when do externship postings actually open?",
+      "missed extern season?"
+    ],
+    "why": "Photo cover with a question hook, as requested. 'When is extern hiring season, and are applications open now?' is the first recurring question in the research (P020, P029). Slides answer it honestly: each posting has its own dates, the program matches twice a year (October, February), a long-term care pilot is planned (labelled planned), and a simple routine so they don't miss postings. Rejected: 'too late' and 'missed extern season?' imply a season we can't confirm for every hospital.",
+    "payoff": "The reader knows there isn't one season for every hospital, the two program matching rounds, what's planned next, and a routine for not missing postings.",
+    "evidence": [
+      "Owner request 2026-11-17 (photo cover, struggle or question hook)",
+      "tiktok-research-2026-11-14 pain_points.md recurring question 1 and #2 (where/when to apply)",
+      "Ontario Health Enhanced Extern Program page, checked 2026-11-17"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-19844043",
+      "title": "wondering when extern hiring actually happens?",
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.52,
+            "y": 0.84
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-205508",
+      "title": "it's not one season for every hospital",
+      "body": "each posting has its own dates, and some don't list a closing date at all.",
+      "basis": "opinion"
+    },
+    {
+      "layout": "c_notes",
+      "photo": "pexels-7718652",
+      "label": "extern notes 📝",
+      "title": "the program matches twice a year",
+      "body": "Ontario Health says students are matched with hospitals in October and February through the Enhanced Extern Program.",
+      "mark": {
+        "kind": "highlight",
+        "phrase": "October and February"
+      },
+      "facts": [
+        "oh-matching-rounds"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-30149857",
+      "title": "long-term care is next (planned)",
+      "body": "Ontario Health plans a new extern pilot in long-term care for 2026/27. planned, not open yet.",
+      "basis": "facts",
+      "facts": [
+        "oh-ltc-pilot"
+      ]
+    },
+    {
+      "layout": "c_paper",
+      "title": "how not to miss postings",
+      "body": "check every couple of weeks, write down each closing date the day you find it, and keep your certification and references ready.",
+      "tags": [
+        "dates",
+        "certs",
+        "refs"
+      ],
+      "basis": "advice"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-9996457",
+      "title": "looking for extern postings in ontario?",
+      "body": "ontarioexterns.ca lists them with closing dates, checked on each hospital's own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "bookmark it!",
+          "at": {
+            "x": 0.55,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -5
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "oh-matching-rounds",
+      "kind": "program",
+      "claim": "Through the program, students are matched with hospitals twice a year, in October and February. This describes the program, not every posting.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-17",
+      "quote": "Each year, students are matched with hospitals twice – once in October and again in February",
+      "asOf": "2026-06-04"
+    },
+    {
+      "id": "oh-ltc-pilot",
+      "kind": "program",
+      "claim": "Ontario Health says it will be working with the Ministry of Long-Term Care to launch a new extern pilot program in long-term care in 2026/27. Planned, not open.",
+      "sources": [
+        "ontario-health-extern"
+      ],
+      "verifiedAt": "2026-11-17",
+      "quote": "will be working with the Ministry of Long-Term Care to launch a new extern pilot program in long-term care in 2026/27",
+      "asOf": "2026-06-04"
+    }
+  ],
+  "sources": [
+    {
+      "id": "ontario-health-extern",
+      "publisher": "Ontario Health",
+      "title": "Building Tomorrow’s Health Care Teams Through the Enhanced Extern Program",
+      "url": "https://www.ontariohealth.ca/news/enhanced-extern-program",
+      "accessedAt": "2026-11-17",
+      "primary": true,
+      "updated": "2026-06-04",
+      "label": "Enhanced Extern Program page"
+    }
+  ],
+  "caption": {
+    "text": "wondering when extern hiring actually happens? 👇\n\npostings open and close on their own dates. through Ontario Health’s Enhanced Extern Program, students are matched with hospitals twice a year, in October and February, and Ontario Health says a long-term care extern pilot is planned for 2026/27 (planned, not open).\n\nwhen did you start looking?\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "wondering when extern hiring actually happens? 👇\n\npostings open and close on their own dates. through Ontario Health’s Enhanced Extern Program, students are matched with hospitals twice a year, in October and February, and Ontario Health says a long-term care extern pilot is planned for 2026/27 (planned, not open).\n\nwhen did you start looking?\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}

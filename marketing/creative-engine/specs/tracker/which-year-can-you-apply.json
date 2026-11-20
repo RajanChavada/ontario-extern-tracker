@@ -1,0 +1,109 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "which-year-can-you-apply",
+  "title": "Which year can you apply for an externship? (format B)",
+  "status": "verified",
+  "format": "b",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "sunnybrook",
+      "thp"
+    ]
+  },
+  "brief": {
+    "type": "explainer",
+    "problem": "Students assume externs are only for final-year students (or don't know if their year counts) and skip postings they qualify for.",
+    "hooks": [
+      "which year can you apply for an externship?",
+      "think you're too early for an externship?",
+      "2nd year nursing students, read this",
+      "can you apply for an externship before final year?"
+    ],
+    "why": "Format B cards had the best hold and most likes in the 48h numbers (clinical extern explainer). A direct question every nursing student can answer for themselves, outside Ontario too; the cards answer it with two current, verified Ontario postings that differ (2nd-4th year vs any year with preference for 3-4), plus the IEN lines. Rejected: 'too early' presumes the reader's situation; '2nd year, read this' narrows the audience.",
+    "payoff": "The reader knows year rules vary by posting, sees two real examples, knows the IEN line to look for, and how to read 'in' vs 'entering'.",
+    "evidence": [
+      "Owner's 48h numbers (format B clinical extern post: best hold, most likes), request 2026-11-17",
+      "tiktok-research-2026-11-14 pain_points.md recurring questions (who can apply); REPORT F1 (saveable utility)"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "b_cover",
+      "photo": "pexels-9996457",
+      "title": "which year can you apply for an externship?",
+      "sticker": "it depends on the posting"
+    },
+    {
+      "layout": "b_card",
+      "chip": "short answer",
+      "icon": "clipboard",
+      "title": "it depends on the posting",
+      "body": "each hospital sets its own year-of-study line, so two postings can say very different things. here are two current Ontario examples.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_card",
+      "chip": "example 1",
+      "icon": "hospital",
+      "title": "Sunnybrook: 2nd to 4th year",
+      "body": "nursing students in 2nd, 3rd or 4th year of an accredited baccalaureate or diploma program.",
+      "facts": [
+        "sunnybrook-eligibility"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "example 2",
+      "icon": "hospital",
+      "title": "Trillium Health Partners: any year",
+      "body": "nursing students in any year, with preference given to year 3 and 4.",
+      "facts": [
+        "thp-eligibility"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "IENs",
+      "icon": "handshake",
+      "title": "internationally educated?",
+      "body": "THP’s posting includes IENs who have started CNO registration and have a CNO letter of direction.",
+      "facts": [
+        "thp-eligibility"
+      ]
+    },
+    {
+      "layout": "b_card",
+      "chip": "read closely",
+      "icon": "calendar",
+      "title": "\"in\" vs \"entering\"",
+      "body": "check whether a posting means the year you’re in now or the year you’re entering. it changes who can apply.",
+      "basis": "advice"
+    },
+    {
+      "layout": "b_cta",
+      "title": "which ones list you?",
+      "site": "ontarioexterns.ca",
+      "body": "enter your program and year on ontarioexterns.ca to see which Ontario postings list you, checked against each hospital’s own careers page.",
+      "fine": "Not affiliated with any hospital.",
+      "footer": "save this for application season",
+      "basis": "promo"
+    }
+  ],
+  "caption": {
+    "text": "which year can you apply for an externship? it depends on the posting 👇\n\ntwo current Ontario examples: Sunnybrook’s posting takes nursing students in 2nd, 3rd or 4th year, and Trillium Health Partners’ accepts nursing students in any year, with preference given to years 3 and 4. both include internationally educated nurses who have started CNO registration.\n\nwhat year are you in?\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital.",
+    "instagram": "which year can you apply for an externship? it depends on the posting 👇\n\ntwo current Ontario examples: Sunnybrook’s posting takes nursing students in 2nd, 3rd or 4th year, and Trillium Health Partners’ accepts nursing students in any year, with preference given to years 3 and 4. both include internationally educated nurses who have started CNO registration.\n\nwhat year are you in?\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}
