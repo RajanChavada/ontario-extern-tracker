@@ -78,7 +78,8 @@ eligibility, vacancies) also get ", checked <date>". Covers and CTAs about the t
 
 - **Photo provenance:**
   - every photo must be in `assets/registry.json`, with source, page URL, photographer, licence URL and check date;
-  - no guardrail flags (clinical tools, badges or IDs, patients or clinical settings, third-party screens, legible logos) and no identifiable faces;
+  - no guardrail flags (clinical tools, badges or IDs, patients or clinical settings, third-party screens, legible logos);
+  - identifiable faces only under the registry's `face_policy` (owner approval, 2026-11-18) and only on photos marked `stock_person_not_student: true`. Stock models are never captioned as students, nurses or externs, never carry first-person lines, and are never implied to run the account. B covers may use them too. Check that the cover title doesn't sit over a face;
   - the file's sha256 must match the registry;
   - blur-only assets can't be used unblurred;
   - no photos from the rejected list;

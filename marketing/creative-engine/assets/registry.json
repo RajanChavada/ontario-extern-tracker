@@ -410,6 +410,161 @@
         "legible_logo": false
       },
       "notes": "Plain yellow mug by a rain-covered window; no people, text or marks. Added 2026-11-17 for the Nov 18 B cover. Page read via web extract (names the photographer); Pexels licence as checked 2026-11-14/15."
+    },
+    {
+      "id": "pexels-6129506",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/nurse-wearing-a-scrub-suit-smiling-6129506/",
+      "image_url": "https://images.pexels.com/photos/6129506/pexels-photo-6129506.jpeg",
+      "photographer": "RDNE Stock project",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-18",
+      "file": "photos/pexels-6129506.jpg",
+      "sha256": "9011db9085cebd005fe37ef562953f568c5842f9ce9413eff549f580925b856f",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "rdne/scrubs-portrait",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Woman in blue scrubs smiling, hand in pocket, plain wall. No stethoscope, badge, logo or text. Face cover under the 2026-11-18 face policy: stock model, never captioned as a student. Licence page checked 2026-11-18."
+    },
+    {
+      "id": "pexels-8460374",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/a-smiling-woman-wearing-scrubs-8460374/",
+      "image_url": "https://images.pexels.com/photos/8460374/pexels-photo-8460374.jpeg",
+      "photographer": "Los Muertos Crew",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-18",
+      "file": "photos/pexels-8460374.jpg",
+      "sha256": "e7c0636809f4573a65cd69281dc377941b2c3cf68831edc024bb184762f10ecc",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "los-muertos/scrubs-door",
+      "quiet_area": "bottom",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Young woman in blue scrubs smiling, holding a glass door. Floor decal at bottom left is not legible; no badge, stethoscope or signage. Face cover under the 2026-11-18 face policy: stock model, never captioned as a student. Licence page checked 2026-11-18."
+    },
+    {
+      "id": "pexels-5965673",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/focused-diverse-students-working-together-5965673/",
+      "image_url": "https://images.pexels.com/photos/5965673/pexels-photo-5965673.jpeg",
+      "photographer": "Charlotte May",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-18",
+      "file": "photos/pexels-5965673.jpg",
+      "sha256": "6530cde999f871104ce275b67302a0f25f6d10e8f8f26686d7db1b8cc0a0060b",
+      "width": 1600,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "charlotte-may/steps-laptop",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "scene",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Two young women studying with a laptop and tablet on campus steps (casual clothes). No logos or legible text. Face cover under the 2026-11-18 face policy: stock model, never captioned as a student. Licence page checked 2026-11-18."
+    },
+    {
+      "id": "pexels-6097955",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/adult-black-nurse-enjoying-takeaway-coffee-in-outdoor-cafe-6097955/",
+      "image_url": "https://images.pexels.com/photos/6097955/pexels-photo-6097955.jpeg",
+      "photographer": "Laura James",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-20",
+      "file": "photos/pexels-6097955.jpg",
+      "sha256": "203265a4eb1e44ede17a002624fa49fedcd1ccea73c5b73cdb6143737608c330",
+      "width": 3600,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "laura-james/coffee-break",
+      "quiet_area": "bottom",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Candid: woman in teal scrubs and a white puffer jacket sipping a takeaway coffee at an outdoor table, looking off-camera; phone in hand (screen not visible). Mask pulled down under the chin. A small decorative heart pin (not an ID badge) and handwritten script on the cup sleeve; no logo, no stethoscope. A park chair at the far left edge has lettering; it falls outside the 9:16 centre crop. Stock model, never captioned as a student. Licence page checked 2026-11-20."
+    },
+    {
+      "id": "pexels-28531741",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/healthcare-professional-in-green-scrubs-on-call-28531741/",
+      "image_url": "https://images.pexels.com/photos/28531741/pexels-photo-28531741.jpeg",
+      "photographer": "frank minjarez",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-20",
+      "file": "photos/pexels-28531741.jpg",
+      "sha256": "0b076e1a90f76f41d1df417695ea5d2db9a9eb403e53bb5072c46dff6afd70fd",
+      "width": 2400,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "frank-minjarez/green-scrubs-call",
+      "quiet_area": "bottom",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Candid: young woman in green scrubs on a phone call, smiling and looking to the side, plain white studio background. Tiny unreadable size tag on the trouser pocket; no badge, logo or stethoscope. Stock model, never captioned as a student. Licence page checked 2026-11-20."
     }
   ],
   "rejected": [
@@ -458,5 +613,11 @@
       "photographer": "kaboompics.com",
       "reason": "Near-identical composition to C3 on the next slide."
     }
-  ]
+  ],
+  "face_policy": {
+    "allowed": true,
+    "since": "2026-11-18",
+    "approved_by": "account owner",
+    "rule": "Licensed Pexels/Unsplash stock photos of people with visible faces may be used (covers and inside slides) only if the asset has stock_person_not_student: true. Stock models are never captioned or described as real students, nurses or externs, never paired with first-person lines, and never implied to run the account. Clinical tools, badges, logos, patients and legible text stay forbidden."
+  }
 }

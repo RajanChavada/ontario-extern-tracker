@@ -268,6 +268,7 @@ export const SourceSchema = z.strictObject({
   published: isoDate.optional(),
   updated: isoDate.optional(), // the page's own "last updated" date, when it shows one instead of a publish date
   label: text(60).optional(), // short name for source lines, e.g. "Enhanced Extern Program page"
+  snapshot: isoDate.optional(), // historical: the quote is checked against the saved capture from this date, not the live page
   accessedAt: isoDate,
   primary: z.boolean(), // true = the hospital / agency's own page
 });

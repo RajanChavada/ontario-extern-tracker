@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "extern-closing-dates-5-things",
+  "title": "5 things about extern closing dates (v2 cheat sheet, locked face cover)",
+  "status": "verified",
+  "format": "c",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "shn"
+    ],
+    "removed": [
+      "nygh",
+      "southlake"
+    ]
+  },
+  "brief": {
+    "type": "checklist",
+    "problem": "Students treat a listed closing date as guaranteed time to apply; some Ontario postings came down before it, and talent pools look like open jobs.",
+    "hooks": [
+      "5 things every ontario nursing student should know about extern closing dates",
+      "your extern posting might disappear before its closing date",
+      "closing dates aren't a promise",
+      "nursing students, don't wait for the closing date"
+    ],
+    "why": "Growth Ops brief v2.1 (2026-11-20): cheat-sheet format modelled on recurring nursing slideshow accounts; number + audience + payoff. Every item is backed by a capture of the hospital's own posting page, re-checked 2026-11-20.",
+    "payoff": "Two real Ontario postings that came down before their listed dates, what a talent pool is, where to find postings, and to apply early.",
+    "evidence": [
+      "~/AgentHandoff/briefs/ontario-extern-tracker/2026-11-20-brief-v2.1.md",
+      "Growth Ops research pass 2026-11-20 (cheat-sheet accounts)"
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pexels-6097955",
+      "title": "5 things every ontario nursing student should know about extern closing dates",
+      "body": "incl. a talent pool closing nov 30",
+      "facts": [
+        "shn-deadline"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965524",
+      "title": "1. closing dates aren't a promise",
+      "body": "north york general's posting listed nov 16, but was “no longer available” by nov 12.",
+      "basis": "facts",
+      "facts": [
+        "nygh-listed-close",
+        "nygh-removed"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-30149857",
+      "title": "2. it's not a one-off",
+      "body": "southlake's extern posting listed nov 30. its page was gone by nov 14.",
+      "basis": "facts",
+      "facts": [
+        "southlake-listed-close",
+        "southlake-removed"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965673",
+      "title": "3. a talent pool isn't an open job",
+      "body": "shn's extern talent pool closes nov 30 (as posted). it's a candidate pool for upcoming vacancies.",
+      "basis": "facts",
+      "facts": [
+        "shn-vacancy",
+        "shn-deadline"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "4. stop checking hospital sites one by one",
+      "body": "the free tracker behind this account, ontarioexterns.ca, lists ontario extern postings + closing dates in one place.",
+      "basis": "promo"
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-19844043",
+      "title": "5. apply the week you find it",
+      "body": "if you qualify, don't wait for the closing date.",
+      "basis": "advice",
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.52,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    }
+  ],
+  "facts": [],
+  "sources": [],
+  "caption": {
+    "text": "5 things every ontario nursing student should know about extern closing dates 👇\n\nclosing dates aren’t a promise: north york general’s clinical extern posting listed nov 16 but its page said “no longer available” by nov 12, and southlake’s listed nov 30 but its page was gone by nov 14 (both rechecked nov 20). scarborough health network’s clinical nurse extern posting is a talent pool for upcoming vacancies, not a specific open job, and closes nov 30 (as posted, checked nov 20).\n\nhave you ever had a posting disappear on you?\n\nontario extern postings + closing dates: ontarioexterns.ca\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital or Ontario Health.",
+    "instagram": "5 things every ontario nursing student should know about extern closing dates 👇\n\nclosing dates aren’t a promise: north york general’s clinical extern posting listed nov 16 but its page said “no longer available” by nov 12, and southlake’s listed nov 30 but its page was gone by nov 14 (both rechecked nov 20). scarborough health network’s clinical nurse extern posting is a talent pool for upcoming vacancies, not a specific open job, and closes nov 30 (as posted, checked nov 20).\n\nhave you ever had a posting disappear on you?\n\nontario extern postings + closing dates: ontarioexterns.ca\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital or Ontario Health.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}

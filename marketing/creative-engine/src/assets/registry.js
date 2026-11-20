@@ -89,7 +89,10 @@ export function checkImagery(spec, registry) {
       if (missing.length) err('ASSET_PROVENANCE', loc, `Missing provenance: ${missing.join(', ')}.`, 'Every photo needs its source, page URL, photographer, licence URL and the date the licence was checked.');
 
       const flags = Object.entries(a.flags ?? {}).filter(([, v]) => v === true).map(([k]) => FLAG_LABELS[k] ?? k);
-      if (a.identifiable_faces) flags.push('identifiable faces');
+      // Face covers (owner, 2026-11-18): identifiable stock faces are allowed when the registry's face policy is on and the
+      // photo is recorded as a stock model who is not a student (never captioned as one, no first person over it).
+      const faceOk = registry.face_policy?.allowed === true && a.stock_person_not_student === true;
+      if (a.identifiable_faces && !faceOk) flags.push(registry.face_policy?.allowed ? 'identifiable faces (not marked stock_person_not_student)' : 'identifiable faces');
       if (!a.flags) flags.push('no guardrail flags recorded');
       if (flags.length) err('ASSET_FLAGGED', loc, `Photo shows ${flags.join(', ')}. Not allowed (imagery guardrails).`);
 
@@ -98,7 +101,7 @@ export function checkImagery(spec, registry) {
       else if (a.sha256 && fileSha(file) !== a.sha256) err('ASSET_FILE', loc, `${a.file} does not match the registered sha256; the image changed since it was reviewed.`);
 
       if (blurOnly(a) && role !== 'blurred-background') err('ASSET_TREATMENT', loc, `"${id}" may only be used blurred (${a.treatment}). ${a.notes ?? ''}`.trim());
-      if (slide.layout === 'b_cover' && a.contains_people) err('B_COVER_PEOPLE', loc, 'B covers use a study-desk photo: no people, clinical objects or screens.');
+      if (slide.layout === 'b_cover' && a.contains_people && !(registry.face_policy?.allowed && a.stock_person_not_student === true)) err('B_COVER_PEOPLE', loc, 'B covers use a study-desk photo: no people, clinical objects or screens.');
 
       if (a.shoot_id) {
         if (seenShoot.has(a.shoot_id)) warn('SAME_SHOOT', loc, `Same shoot as slide ${seenShoot.get(a.shoot_id)} (${a.shoot_id}). Repeats can read as one real person's story.`);
