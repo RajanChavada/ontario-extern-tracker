@@ -364,3 +364,30 @@ test("Grokbot manifest v1 is unchanged: no new keys; photo provenance travels in
   assert.deepEqual(Object.keys(m).filter((k) => !allowed.includes(k)), []);
   assert.deepEqual(Object.keys(m.assets[0]), ['index', 'file', 'sha256', 'width', 'height', 'alt']);
 });
+
+test('unlicensed photos (owner, 2026-11-20): only with the policy on, never an identifiable person, never a licence claim, flags still apply', () => {
+  const un = (a) => { const b = { ...a, rights: 'unlicensed', source: 'Pinterest', page_url: 'https://www.pinterest.com/pin/1/' }; delete b.licence; delete b.photographer; return b; };
+  const on = (edit) => tempRegistry(edit, [], { unlicensed_policy: { allowed: true }, face_policy: { allowed: true } });
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => un(a)) })), []);
+  // policy off: refused
+  assert.deepEqual(codes(check(cWith(), { registry: tempRegistry((a) => un(a), [], { unlicensed_policy: { allowed: false } }) })), ['UNLICENSED_ASSET']);
+  // identifiable person: refused even with the face policy on and the stock flag set
+  assert.ok(codes(check(cWith(), { registry: on((a) => ({ ...un(a), identifiable_faces: true, stock_person_not_student: true })) })).includes('UNLICENSED_PERSON'));
+  // a licence or photographer claim on an unlicensed photo: refused
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => ({ ...un(a), photographer: 'someone' })) })), ['UNLICENSED_CLAIM']);
+  // guardrail flags still apply
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => ({ ...un(a), flags: { ...a.flags, legible_logo: true } })) })), ['ASSET_FLAGGED']);
+  // licensed photos still need photographer + licence
+  assert.deepEqual(codes(check(cWith(), { registry: on((a) => { const b = { ...a }; delete b.photographer; return b; }) })), ['ASSET_PROVENANCE']);
+});
+
+test('manifest notes never call an unlicensed photo licensed', async () => {
+  const { photoNotes } = await import('../bin/oet.mjs');
+  const n = photoNotes({ slides: [
+    { n: 1, assets: [{ id: 'pinterest-1', role: 'photo', source: 'Pinterest', page_url: 'https://www.pinterest.com/pin/1/', photographer: null, licence: null, licence_url: null, checked: '2026-11-20', rights: 'unlicensed' }] },
+    { n: 2, assets: [{ id: 'pexels-1', role: 'photo', source: 'Pexels', page_url: 'https://www.pexels.com/photo/x-1/', photographer: 'A', licence: 'Pexels License', licence_url: 'https://www.pexels.com/license/', checked: '2026-11-20' }] },
+  ] });
+  assert.match(n, /slide 1 pinterest-1 from https:\/\/www\.pinterest\.com\/pin\/1\/ \(NOT licensed/);
+  assert.doesNotMatch(n, /pinterest-1 by/);
+  assert.match(n, /Licence \(licensed photos only\): Pexels License/);
+});

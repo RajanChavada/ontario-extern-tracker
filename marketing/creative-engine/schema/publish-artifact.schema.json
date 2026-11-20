@@ -107,7 +107,10 @@
                   "type": "string"
                 },
                 "photographer": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "licence": {
                   "type": [
@@ -120,6 +123,10 @@
                     "string",
                     "null"
                   ]
+                },
+                "rights": {
+                  "type": "string",
+                  "const": "unlicensed"
                 },
                 "checked": {
                   "anyOf": [

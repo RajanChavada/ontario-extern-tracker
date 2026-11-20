@@ -23,8 +23,8 @@ export const PublishArtifactSchema = z.strictObject({
     alt: z.string(),
     layout: z.string(),
     assets: z.array(z.strictObject({
-      id: z.string(), role: z.enum(['photo', 'blurred-background']), source: z.string(), page_url: z.string(), photographer: z.string(),
-      licence: z.string().nullable(), licence_url: z.string().nullable(), checked: isoDate.nullable(), shoot_id: z.string().nullable().optional(), file_sha256: z.string().nullable(),
+      id: z.string(), role: z.enum(['photo', 'blurred-background']), source: z.string(), page_url: z.string(), photographer: z.string().nullable(),
+      licence: z.string().nullable(), licence_url: z.string().nullable(), rights: z.literal('unlicensed').optional(), checked: isoDate.nullable(), shoot_id: z.string().nullable().optional(), file_sha256: z.string().nullable(),
     })).optional().describe('Provenance of each photo on the slide (formats C and B).'),
   })).min(1).max(20),
   previews: z.array(z.string()).describe('Interface-overlay previews for human review. Never publish these.'),

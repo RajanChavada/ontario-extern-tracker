@@ -49,8 +49,9 @@ export function slidePhotos(slide) {
 /** Provenance record for the manifest (per slide). */
 export function provenance(asset, role) {
   return {
-    id: asset.id, role, source: asset.source, page_url: asset.page_url, photographer: asset.photographer,
-    licence: asset.licence?.name ?? null, licence_url: asset.licence?.url ?? null, checked: asset.checked ?? null,
+    id: asset.id, role, source: asset.source, page_url: asset.page_url, photographer: asset.photographer ?? null,
+    licence: asset.rights === 'unlicensed' ? null : asset.licence?.name ?? null, licence_url: asset.rights === 'unlicensed' ? null : asset.licence?.url ?? null, checked: asset.checked ?? null,
+    ...(asset.rights === 'unlicensed' && { rights: 'unlicensed' }),
     shoot_id: asset.shoot_id, file_sha256: asset.sha256,
   };
 }
@@ -81,9 +82,18 @@ export function checkImagery(spec, registry) {
       const a = registry.byId.get(id);
       if (!a) { err('UNKNOWN_ASSET', loc, `"${id}" is not in assets/registry.json.`, 'Register the photo with source, page URL, photographer, licence URL, check date and guardrail flags first.'); continue; }
 
+      // Unlicensed photos (account owner's decision 2026-11-20, accepting the copyright risk): allowed only while the
+      // registry's unlicensed_policy is on, never with an identifiable person, and with every guardrail flag still applied.
+      // They carry their source page (e.g. the pin URL) and review date, never a photographer or licence claim.
+      const unlicensed = a.rights === 'unlicensed';
+      if (unlicensed) {
+        if (registry.unlicensed_policy?.allowed !== true) err('UNLICENSED_ASSET', loc, `"${id}" is not licensed and the registry's unlicensed_policy is off.`);
+        if (a.identifiable_faces || a.stock_person_not_student) err('UNLICENSED_PERSON', loc, `"${id}" is unlicensed and shows an identifiable person. Unlicensed photos may only show people who can't be identified (from behind, no faces).`);
+        if (a.licence || a.photographer) err('UNLICENSED_CLAIM', loc, `"${id}" is unlicensed but records a licence or photographer. Don't claim either.`);
+      }
       const missing = [
-        ['source', a.source], ['page_url', a.page_url], ['photographer', a.photographer],
-        ['licence.url', a.licence?.url], ['checked', a.checked],
+        ['source', a.source], ['page_url', a.page_url],
+        ...(unlicensed ? [] : [['photographer', a.photographer], ['licence.url', a.licence?.url]]), ['checked', a.checked],
       ].filter(([, v]) => !v || !String(v).trim()).map(([k]) => k);
       if (a.checked && !/^\d{4}-\d{2}-\d{2}$/.test(a.checked)) missing.push('checked (YYYY-MM-DD)');
       if (missing.length) err('ASSET_PROVENANCE', loc, `Missing provenance: ${missing.join(', ')}.`, 'Every photo needs its source, page URL, photographer, licence URL and the date the licence was checked.');
@@ -91,7 +101,7 @@ export function checkImagery(spec, registry) {
       const flags = Object.entries(a.flags ?? {}).filter(([, v]) => v === true).map(([k]) => FLAG_LABELS[k] ?? k);
       // Face covers (owner, 2026-11-18): identifiable stock faces are allowed when the registry's face policy is on and the
       // photo is recorded as a stock model who is not a student (never captioned as one, no first person over it).
-      const faceOk = registry.face_policy?.allowed === true && a.stock_person_not_student === true;
+      const faceOk = !unlicensed && registry.face_policy?.allowed === true && a.stock_person_not_student === true;
       if (a.identifiable_faces && !faceOk) flags.push(registry.face_policy?.allowed ? 'identifiable faces (not marked stock_person_not_student)' : 'identifiable faces');
       if (!a.flags) flags.push('no guardrail flags recorded');
       if (flags.length) err('ASSET_FLAGGED', loc, `Photo shows ${flags.join(', ')}. Not allowed (imagery guardrails).`);
