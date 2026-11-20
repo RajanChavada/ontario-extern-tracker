@@ -198,7 +198,7 @@ function writeDurable(file, data, onWrite) {
  *  externalCheck: optional async (tmpDir) → { ok, detail } run on the finished temp folder, READY.json included
  */
 export async function exportPackage(opts) {
-  const { inbox, project, postId, slides, toJpeg, contactSheetPng = null, caption, destination, generator, sourceVerification, supersedes = null, notes, preflight = [], today, projectConfig = null, externalCheck = null, onWrite = null, now = () => new Date() } = opts;
+  const { inbox, project, postId, slides, toJpeg, contactSheetPng = null, extraFiles = [], caption, destination, generator, sourceVerification, supersedes = null, notes, preflight = [], today, projectConfig = null, externalCheck = null, onWrite = null, now = () => new Date() } = opts;
   const errors = [...preflight];
   if (!/^[a-z0-9][a-z0-9._-]{1,79}$/.test(postId ?? '')) errors.push({ code: 'POST_ID', message: `invalid post_id "${postId}"` });
   if (!/^[a-z0-9][a-z0-9-]{1,63}$/.test(project ?? '')) errors.push({ code: 'PROJECT', message: `invalid project "${project}"` });
@@ -220,6 +220,12 @@ export async function exportPackage(opts) {
       writeDurable(path.join(tmp, file), jpg, onWrite);
       const info = imageInfo(jpg);
       assets.push({ index: i + 1, file, sha256: sha256(jpg), width: info.width, height: info.height, alt: cleanAlt(s.alt) });
+    }
+    // previews only (e.g. alt-covers/): outside assets/, so not in the manifest or the content fingerprint
+    for (const f of extraFiles) {
+      if (!/^alt-covers\/[a-z0-9._-]+\.jpg$/.test(f.rel)) throw new Error(`extra file ${f.rel} must be alt-covers/<name>.jpg`);
+      mkdirSync(path.join(tmp, 'alt-covers'), { recursive: true });
+      writeDurable(path.join(tmp, f.rel), await toJpeg(Buffer.isBuffer(f.png) ? f.png : readFileSync(f.png)), onWrite);
     }
     if (contactSheetPng) writeDurable(path.join(tmp, 'contact-sheet.jpg'), await toJpeg(Buffer.isBuffer(contactSheetPng) ? contactSheetPng : readFileSync(contactSheetPng)), onWrite);
 

@@ -81,9 +81,11 @@ export async function checkSourceQuotes(spec, { evidence, online = true, fetchIm
     const segs = quoteSegments(f.quote);
     for (const s of prim) {
       const r = { fact: f.id, url: s.url, capture: null, online: null };
-      const cap = evidence?.forUrl(s.url)?.[0];
+      const all = evidence?.forUrl(s.url) ?? [];
+      const cap = s.snapshot ? all.find((c) => c.capturedAt === s.snapshot && hasAll(normalizeForQuote(c.text), segs)) ?? all.find((c) => c.capturedAt === s.snapshot) : all[0];
       if (cap) r.capture = { file: cap.file, capturedAt: cap.capturedAt, found: hasAll(normalizeForQuote(cap.text), segs) };
-      if (online) {
+      if (s.snapshot) { if (!cap) blockers.push(`${f.id}: no saved capture from ${s.snapshot} of ${s.url}`); else warnings.push(`${f.id}: historical fact, checked against the saved capture from ${s.snapshot} (not the live page)`); }
+      if (online && !s.snapshot) {
         const key = normalizeUrl(s.url);
         if (!live.has(key)) {
           try {
@@ -102,7 +104,7 @@ export async function checkSourceQuotes(spec, { evidence, online = true, fetchIm
       if (r.online?.status >= 400) blockers.push(`${s.url} returned HTTP ${r.online.status}`);
       if (r.online && r.online.found === false) blockers.push(`${f.id}: quote no longer on the live page ${s.url}`);
       if (r.capture && r.capture.found === false) blockers.push(`${f.id}: quote not in the saved capture ${r.capture.file}`);
-      if (!r.capture && (!r.online || r.online.found !== true)) blockers.push(`${f.id}: no saved capture and no live confirmation for ${s.url}`);
+      if (!r.capture && !s.snapshot && (!r.online || r.online.found !== true)) blockers.push(`${f.id}: no saved capture and no live confirmation for ${s.url}`);
       if (online && r.online && r.online.found === null) warnings.push(`${f.id}: live page not checked (${r.online.error ?? 'HTTP ' + r.online.status}); saved capture used`);
       if (r.capture && f.verifiedAt > r.capture.capturedAt) warnings.push(`${f.id}: verifiedAt ${f.verifiedAt} is later than the newest capture (${r.capture.capturedAt})`);
     }

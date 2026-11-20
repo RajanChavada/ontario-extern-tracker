@@ -503,6 +503,68 @@
         "legible_logo": false
       },
       "notes": "Two young women studying with a laptop and tablet on campus steps (casual clothes). No logos or legible text. Face cover under the 2026-11-18 face policy: stock model, never captioned as a student. Licence page checked 2026-11-18."
+    },
+    {
+      "id": "pexels-6097955",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/adult-black-nurse-enjoying-takeaway-coffee-in-outdoor-cafe-6097955/",
+      "image_url": "https://images.pexels.com/photos/6097955/pexels-photo-6097955.jpeg",
+      "photographer": "Laura James",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-20",
+      "file": "photos/pexels-6097955.jpg",
+      "sha256": "203265a4eb1e44ede17a002624fa49fedcd1ccea73c5b73cdb6143737608c330",
+      "width": 3600,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "laura-james/coffee-break",
+      "quiet_area": "bottom",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Candid: woman in teal scrubs and a white puffer jacket sipping a takeaway coffee at an outdoor table, looking off-camera; phone in hand (screen not visible). Mask pulled down under the chin. A small decorative heart pin (not an ID badge) and handwritten script on the cup sleeve; no logo, no stethoscope. A park chair at the far left edge has lettering; it falls outside the 9:16 centre crop. Stock model, never captioned as a student. Licence page checked 2026-11-20."
+    },
+    {
+      "id": "pexels-28531741",
+      "source": "Pexels",
+      "page_url": "https://www.pexels.com/photo/healthcare-professional-in-green-scrubs-on-call-28531741/",
+      "image_url": "https://images.pexels.com/photos/28531741/pexels-photo-28531741.jpeg",
+      "photographer": "frank minjarez",
+      "licence": {
+        "name": "Pexels License",
+        "url": "https://www.pexels.com/license/"
+      },
+      "checked": "2026-11-20",
+      "file": "photos/pexels-28531741.jpg",
+      "sha256": "0b076e1a90f76f41d1df417695ea5d2db9a9eb403e53bb5072c46dff6afd70fd",
+      "width": 2400,
+      "height": 2400,
+      "contains_people": true,
+      "identifiable_faces": true,
+      "stock_person_not_student": true,
+      "shoot_id": "frank-minjarez/green-scrubs-call",
+      "quiet_area": "bottom",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Candid: young woman in green scrubs on a phone call, smiling and looking to the side, plain white studio background. Tiny unreadable size tag on the trouser pocket; no badge, logo or stethoscope. Stock model, never captioned as a student. Licence page checked 2026-11-20."
     }
   ],
   "rejected": [

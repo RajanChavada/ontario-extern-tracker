@@ -6,8 +6,9 @@ import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { loadEvidence, makeIndex, parseCapture, normalizeUrl } from '../src/tracker/evidence.js';
-import { compileCampaign, entryFacts, jobIdFromUrl, sameJob, describeProgram } from '../src/tracker/bridge.js';
+import { compileCampaign, entryFacts, removedEarlyFacts, jobIdFromUrl, sameJob, describeProgram } from '../src/tracker/bridge.js';
 import { factualCheck } from '../bin/oet.mjs';
+import { checkSourceQuotes } from '../src/handoff/sources.js';
 
 const FIX = new URL('./fixtures/tracker/', import.meta.url);
 const DATA = JSON.parse(readFileSync(new URL('hospitals.json', FIX)));
@@ -217,4 +218,77 @@ test('eligibility values fit the 80-character slide limit; long program notes st
   assert.doesNotMatch(value, /letter of direction/);
   const short = eligibilityText([['BSCN', { minYear: 2, maxYear: 4 }]]);
   assert.equal(short.value, short.full);
+});
+
+// ---------------------------------------------------------------- closed early (tracker.removed)
+test('a posting removed before its listed close gives two dated, quoted facts pinned to their captures', () => {
+  const e = kestrel({ posting_type: 'closed', deadline: null });
+  const gone = "Skip to main content\nThe page you are looking for doesn't exist.\nSearch for Jobs";
+  const idx = makeIndex([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-14', gone), cap(e.source_url, '2026-11-20', gone, '11:19')]);
+  const r = removedEarlyFacts(e, idx, { today: '2026-11-20' });
+  assert.deepEqual(codes(r.errors), []);
+  const [listed, removed] = r.facts;
+  assert.equal(listed.id, 'kestrel-listed-close');
+  assert.equal(listed.verifiedAt, '2026-11-11');
+  assert.match(listed.quote, /November 20, 2026/);
+  assert.equal(removed.id, 'kestrel-removed');
+  assert.equal(removed.verifiedAt, '2026-11-14'); // first capture showing it gone, not the re-check
+  assert.match(removed.quote, /doesn't exist/);
+  assert.deepEqual(r.sources.map((s) => s.snapshot), ['2026-11-11', '2026-11-14']);
+  assert.ok(r.facts.every((f) => f.kind === 'other' && f.status === 'closed'));
+});
+
+test('removed-early facts are refused when the build-day re-check is missing, stale, or shows it back up', () => {
+  const e = kestrel({ posting_type: 'closed', deadline: null });
+  const gone = "The page you are looking for doesn't exist.";
+  const blocked = 'Njoyn - Unauthorized Request Blocked\nVous voyez cette page parce que nous avons détecté une activité non autorisée.';
+  const run = (caps, today = '2026-11-20') => codes(removedEarlyFacts(e, makeIndex(caps), { today }).errors);
+  // newest readable re-check older than 2 days (a block page today doesn't count as a re-check)
+  assert.deepEqual(run([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-14', gone), cap(e.source_url, '2026-11-20', blocked)]), ['STALE_REMOVAL_CHECK']);
+  // back up today
+  assert.deepEqual(run([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-14', gone), cap(e.source_url, '2026-11-20', KESTREL_OK)]), ['POSTING_BACK']);
+  // removed only after the listed close: not "early"
+  assert.deepEqual(run([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-21', gone)], '2026-11-21'), ['REMOVED_NOT_EARLY']);
+  // never saw the listing with a date
+  assert.deepEqual(run([cap(e.source_url, '2026-11-20', gone)]), ['NO_LISTED_CLOSE']);
+  // not marked closed in the data
+  assert.deepEqual(codes(removedEarlyFacts(kestrel(), makeIndex([]), { today: '2026-11-20' }).errors), ['REMOVED_NOT_CLOSED']);
+});
+
+test('a spec cites removed-early facts through tracker.removed, never by typing them', () => {
+  const e = kestrel({ posting_type: 'closed', deadline: null });
+  const gone = "The page you are looking for doesn't exist.";
+  const idx = makeIndex([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-19', gone)]);
+  const spec = { id: 't', status: 'verified', tracker: { removed: ['kestrel'] }, slides: [{ layout: 'c_photo', title: 'x', facts: ['kestrel-listed-close', 'kestrel-removed'] }], facts: [], sources: [] };
+  const r = compileCampaign(spec, { data: { entries: [e] }, evidence: idx, today: '2026-11-20' });
+  assert.deepEqual(codes(r.errors), []);
+  assert.deepEqual(r.spec.facts.map((f) => f.id), ['kestrel-listed-close', 'kestrel-removed']);
+  assert.deepEqual(r.spec.sources.map((s) => s.id), ['kestrel-as-listed', 'kestrel-as-removed']);
+});
+
+test('the listed close is the date after the closing label, not the posted date printed before it (NYGH layout)', () => {
+  const e = kestrel({ posting_type: 'closed', deadline: null });
+  const page = `Clinical Extern\nDate Posted:\nOctober 16, 2026\nClosing Date:\nNovember 16, 2026\n${FILLER}`;
+  const idx = makeIndex([cap(e.source_url, '2026-11-10', page), cap(e.source_url, '2026-11-12', 'This job is no longer available.'), cap(e.source_url, '2026-11-20', 'This job is no longer available.')]);
+  const r = removedEarlyFacts(e, idx, { today: '2026-11-20' });
+  assert.deepEqual(codes(r.errors), []);
+  assert.match(r.facts[0].claim, /Nov 16, 2026/);
+  assert.match(r.facts[0].quote, /November 16, 2026/);
+  assert.doesNotMatch(r.facts[0].quote, /October/);
+});
+
+test('historical (snapshot) facts are checked against that day\'s capture, never fetched live', async () => {
+  const e = kestrel({ posting_type: 'closed', deadline: null });
+  const gone = "The page you are looking for doesn't exist.";
+  const idx = makeIndex([cap(e.source_url, '2026-11-11', KESTREL_OK), cap(e.source_url, '2026-11-14', gone), cap(e.source_url, '2026-11-20', gone, '11:19')]);
+  const r = removedEarlyFacts(e, idx, { today: '2026-11-20' });
+  let fetched = 0;
+  const out = await checkSourceQuotes({ facts: r.facts, sources: r.sources }, { evidence: idx, online: true, fetchImpl: async () => { fetched += 1; throw new Error('no'); } });
+  assert.equal(fetched, 0);
+  assert.deepEqual(out.blockers, []);
+  assert.deepEqual(out.results.map((x) => [x.capture.capturedAt, x.capture.found]), [['2026-11-11', true], ['2026-11-14', true]]);
+  // a quote that isn't in that day's capture blocks
+  const bad = structuredClone(r.facts); bad[0].quote = 'End Date: December 30, 2026';
+  const out2 = await checkSourceQuotes({ facts: bad, sources: r.sources }, { evidence: idx, online: false });
+  assert.ok(out2.blockers.some((b) => b.includes('quote not in the saved capture')));
 });

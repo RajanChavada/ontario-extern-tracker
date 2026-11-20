@@ -14,7 +14,7 @@
 // and legibility are checked later by the renderer's visual QA.
 
 import { status as siteStatus } from '../../../../assets/logic.js';
-import { textHasDate, longDate } from '../util/dates.js';
+import { textHasDate, longDate, findDates, daysBetween } from '../util/dates.js';
 import { normalizeUrl } from './evidence.js';
 
 export const JOB_KINDS = new Set(['deadline', 'pay', 'eligibility', 'vacancy']);
@@ -245,6 +245,69 @@ export function entryFacts(entry, evidence, { today, staleAfterDays = 7 }) {
 const short = (f) => f.split('/').slice(-2).join('/');
 const STOP = new Set(['with', 'that', 'this', 'from', 'your', 'have', 'will', 'must', 'their', 'they', 'about', 'only', 'posting', 'posted']);
 
+// ---------------------------------------------------------------- closed early
+/**
+ * Facts for a CLOSED posting that came down before its own listed closing date (campaign: tracker.removed).
+ * Historical, so each fact is pinned to the saved capture that shows it (source.snapshot), never to the live page:
+ *   <id>-listed-close  the closing line from the last capture that still showed the posting;
+ *   <id>-removed       the "no longer available / doesn't exist" line from the first capture after it, dated
+ *                      before the listed closing date.
+ * The newest capture must still show the posting removed and be at most 2 days old (the build-day re-check).
+ */
+// the page's own sentence around the "removed" phrase (not any note line wrapped around it in the capture)
+const removedSentence = (text) => {
+  const flat = (text.split('\n').find((l) => REMOVED.test(l)) ?? '').replace(/[*_#>]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const m = flat.match(REMOVED);
+  if (!m) return null;
+  const stop = /[.!?'"“”\n]/;
+  let a = m.index; while (a > 0 && !stop.test(flat[a - 1])) a -= 1;
+  let z = m.index + m[0].length; while (z < flat.length && !stop.test(flat[z])) z += 1;
+  return (flat.slice(a, z) + (flat[z] === '.' ? '.' : '')).trim();
+};
+
+export function removedEarlyFacts(entry, evidence, { today }) {
+  const errors = [];
+  const warnings = [];
+  const err = (code, message, fix) => errors.push({ code, where: `tracker.removed.${entry.id}`, message, ...(fix && { fix }) });
+  const out = { facts: [], sources: [], errors, warnings, provenance: {} };
+  if (entry.posting_type !== 'closed') { err('REMOVED_NOT_CLOSED', `${entry.hospital} isn't marked closed in the tracker data.`); return out; }
+  const url = entry.source_url;
+  const job = jobIdFromUrl(url);
+  const caps = evidence.forUrl(url).filter((c) => !BLOCKED.test(c.text) && c.capturedAt <= today); // newest first
+  if (!caps.length) { err('NO_CAPTURE', `No readable saved capture of ${url}.`); return out; }
+  const newest = caps[0];
+  if (!REMOVED.test(newest.text)) { err('POSTING_BACK', `The newest capture (${newest.capturedAt}, ${short(newest.file)}) doesn't show the posting removed.`, 'Re-check the posting; it may be back up.'); return out; }
+  if (daysBetween(newest.capturedAt, today) > 2) err('STALE_REMOVAL_CHECK', `The newest capture showing the posting removed is from ${newest.capturedAt}; re-check it on build day.`, 'Open the posting URL in a browser and save a capture.');
+  const live = caps.filter((c) => !REMOVED.test(c.text) && c.text.replace(/\s+/g, ' ').length >= 300);
+  let listing = null; let closeLine = null; let closeDate = null;
+  for (const c of live) {
+    for (const l of candidates(c.text)) {
+      const k = l.search(new RegExp(CLOSING_KEY.source, 'im'));
+      if (k < 0) continue;
+      const d = findDates(l.slice(k)).find((x) => !x.startsWith('????')); // the date after the label, not "Date Posted" before it
+      if (d) { closeLine = l; closeDate = d; break; }
+    }
+    if (closeDate) { listing = c; break; }
+  }
+  if (!listing) { err('NO_LISTED_CLOSE', `No saved capture of ${url} shows the posting with a dated closing line.`); return out; }
+  const removal = [...caps].reverse().find((c) => REMOVED.test(c.text) && `${c.capturedAt} ${c.capturedTime ?? ''}` > `${listing.capturedAt} ${listing.capturedTime ?? ''}`);
+  if (!removal) { err('NO_REMOVAL_CAPTURE', `No capture after ${listing.capturedAt} shows the posting removed.`); return out; }
+  if (!(removal.capturedAt < closeDate)) { err('REMOVED_NOT_EARLY', `The first capture showing it removed (${removal.capturedAt}) isn't before the listed closing date (${closeDate}).`); return out; }
+  // short (it sits in the slide's source line); the job id keeps a non-breaking hyphen so it never splits across lines
+  const label = (when) => `posting${job ? ` ${job.id.replace(/-/g, '\u2011')}` : ''}, captured ${longDate(when).replace(/, \d{4}$/, '')}`;
+  const base = { org: entry.hospital, role: entry.program_name, status: 'closed' };
+  const srcL = `${entry.id}-as-listed`; const srcR = `${entry.id}-as-removed`;
+  out.sources.push({ id: srcL, publisher: entry.hospital, title: `${entry.program_name}${job ? ` (job ${job.id})` : ''}`, label: label(listing.capturedAt), url, accessedAt: listing.capturedAt, snapshot: listing.capturedAt, primary: true });
+  out.sources.push({ id: srcR, publisher: entry.hospital, title: `${entry.program_name}${job ? ` (job ${job.id})` : ''}`, label: label(removal.capturedAt), url, accessedAt: removal.capturedAt, snapshot: removal.capturedAt, primary: true });
+  const gone = removedSentence(removal.text) ?? removal.text.match(REMOVED)[0];
+  out.facts.push({ id: `${entry.id}-listed-close`, kind: 'other', value: `listed closing date ${longDate(closeDate)}`, claim: `${entry.hospital}'s ${entry.program_name} posting listed a closing date of ${longDate(closeDate)}.`, ...base, sources: [srcL], verifiedAt: listing.capturedAt, quote: clip(closeLine) });
+  out.facts.push({ id: `${entry.id}-removed`, kind: 'other', value: `removed before ${longDate(closeDate)}`, claim: `By ${longDate(removal.capturedAt)}, ${entry.hospital}'s posting page said "${gone.replace(/\.$/, '')}", before its listed ${longDate(closeDate)} closing date.`, ...base, sources: [srcR], verifiedAt: removal.capturedAt, quote: clip(gone) });
+  out.provenance[`${entry.id}-listed-close`] = { entry: entry.id, capture: listing.file, capturedAt: listing.capturedAt, url };
+  out.provenance[`${entry.id}-removed`] = { entry: entry.id, capture: removal.file, capturedAt: removal.capturedAt, url, recheck: newest.file, recheckedAt: newest.capturedAt };
+  if (entry.window_text && !textHasDate(entry.window_text, closeDate)) warnings.push({ code: 'REMOVED_DATA_MISMATCH', where: `tracker.removed.${entry.id}`, message: `The tracker data's note doesn't mention ${longDate(closeDate)}.` });
+  return out;
+}
+
 // ---------------------------------------------------------------- campaigns
 /**
  * Compile a campaign into an engine content spec.
@@ -279,11 +342,21 @@ export function compileCampaign(campaign, { data, evidence, today }) {
       spec.sources.push(...r.sources);
       Object.assign(provenance, r.provenance);
     }
+    for (const id of tracker.removed ?? []) {
+      const entry = byId.get(id);
+      if (!entry) { errors.push({ code: 'UNKNOWN_ENTRY', where: `tracker.removed.${id}`, message: `No tracker entry "${id}" in data/hospitals.json.` }); continue; }
+      const r = removedEarlyFacts(entry, evidence, { today });
+      errors.push(...r.errors);
+      warnings.push(...r.warnings);
+      spec.facts.push(...r.facts);
+      spec.sources.push(...r.sources);
+      Object.assign(provenance, r.provenance);
+    }
     // facts the slides don't use are dropped, so the receipts slide lists only what's shown
     const used = usedFactIds(spec);
     spec.facts = spec.facts.filter((f) => used.has(f.id) || !provenance[f.id]);
     const cited = new Set(spec.facts.flatMap((f) => f.sources));
-    spec.sources = spec.sources.filter((s) => cited.has(s.id) || !s.id.endsWith('-posting'));
+    spec.sources = spec.sources.filter((s) => cited.has(s.id) || !/-(?:posting|as-listed|as-removed)$/.test(s.id));
     for (const id of used) if (!spec.facts.some((f) => f.id === id) && !errors.length)
       errors.push({ code: 'FACT_NOT_AVAILABLE', where: `facts.${id}`, message: `A slide cites "${id}", but the tracker data has no such value for that posting.` });
   }

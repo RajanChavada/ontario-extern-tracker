@@ -57,6 +57,9 @@ Usage
       --kit <dir>               Grokbot publishing kit (default $PUBKIT_DIR or ~/Downloads/publishing-kit)
       --validator-python <py>   Python with Pillow for the kit's validate.py (default $PUBKIT_PYTHON or python3)
       --offline                 skip the live source fetch (saved captures only)
+      --notes-prefix "<text>"   line put verbatim at the start of manifest notes (e.g. the brief's Notes line)
+      --alt-covers <id,id>      also render slide 1 with each registered photo into alt-covers/ (previews for a
+                                one-time cover choice; outside assets/, not in the fingerprint)
 
 Options
   --data <file>        tracker data (default: data/hospitals.json in this repo)
@@ -72,7 +75,7 @@ function parseArgs(argv) {
     const t = argv[i];
     if (!t.startsWith('--')) { a._.push(t); continue; }
     const [k, v] = t.slice(2).split('=');
-    const val = ['data', 'evidence', 'today', 'out', 'platform', 'by', 'note', 'post-id', 'inbox', 'project', 'account', 'visibility', 'supersedes', 'kit', 'validator-python', 'slot'].includes(k) ? v ?? argv[++i] : v ?? true;
+    const val = ['data', 'evidence', 'today', 'out', 'platform', 'by', 'note', 'post-id', 'inbox', 'project', 'account', 'visibility', 'supersedes', 'kit', 'validator-python', 'slot', 'alt-covers', 'notes-prefix'].includes(k) ? v ?? argv[++i] : v ?? true;
     if (k === 'evidence') a.evidence.push(val); else a.flags[k] = val;
   }
   return a;
@@ -270,12 +273,34 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
       } finally { await page.close(); }
     };
     const tt = res?.manifest.platforms.tiktok;
+    // --alt-covers id,id: slide 1 re-rendered with each alternative registered photo, as previews for a one-time cover
+    // choice. They sit in alt-covers/, outside assets/, so they're not part of the fingerprint; picking one means a
+    // re-export with that cover (new post_id).
+    const altCovers = [];
+    const altIds = (flags['alt-covers'] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+    if (tt && !preflight.length && altIds.length) {
+      const first = spec.slides.findIndex((s) => !s._auto);
+      const { renderSpec } = await import('../src/render/render.js');
+      for (const [i, id] of altIds.entries()) {
+        const alt = structuredClone(spec);
+        alt.slides[first].photo = id;
+        const altOut = path.join(outDir, `alt-cover-${id}`);
+        const ar = await renderSpec(alt, { outDir: altOut, today, specPath: path.resolve(target), platforms: ['tiktok'], browser, voiceProfile: fc.voiceProfile });
+        const s1 = ar.manifest.platforms.tiktok.slides.find((s) => s.n === first + 1);
+        const errs = [...s1.qa.errors, ...photoLayerErrors({ ...alt, slides: [alt.slides[first]] }, { slides: [s1] })];
+        if (!ar.manifest.verification.publishable) errs.push({ code: 'ENGINE_NOT_PUBLISHABLE', message: ar.manifest.verification.blockers.join('; ') });
+        if (errs.length) { preflight.push(...errs.map((e) => ({ ...e, where: `alt cover ${id}` }))); continue; }
+        altCovers.push({ rel: `alt-covers/01-cover-${String.fromCharCode(98 + i)}-${id}.jpg`, png: path.join(altOut, s1.file), id });
+      }
+      log(`${altCovers.length === altIds.length ? '✓' : '✗'} alt covers      ${altCovers.map((a) => a.rel).join(', ')}`);
+    }
     const r = await exportPackage({
       inbox, project, postId, today, projectConfig, destination,
       supersedes: flags.supersedes ?? null,
       preflight: [...preflight, ...src.blockers.map((b) => ({ code: 'SOURCE', message: b }))],
       slides: tt ? tt.slides.map((s) => ({ png: path.join(outDir, s.file), layout: s.layout, alt: s.alt })) : [],
       contactSheetPng: tt ? path.join(outDir, tt.contactSheet) : null,
+      extraFiles: altCovers,
       toJpeg,
       caption: spec ? composeCaption(spec, 'tiktok') : '',
       generator: { name: '@oet/creative-engine', version: JSON.parse(readFileSync(path.join(ENGINE, 'package.json'), 'utf8')).version, created_by: 'hermes', ...(spec && { spec_id: spec.id, spec_sha256: sha256(readFileSync(target)) }) },
@@ -285,7 +310,7 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
         sources: (spec?.sources ?? []).map((s) => ({ url: s.url, publisher: s.publisher, title: s.title, primary: s.primary, accessed_at: s.accessedAt })),
         blockers: src.blockers, conflicts: [], engagement_claims: [],
       },
-      notes: spec ? `Style: format ${(spec.format ?? 'c').toUpperCase()} (${[...new Set(spec.slides.filter((s) => !s._auto).map((s) => s.layout))].join(', ')}); voice: ${spec.voice === 'student' ? 'first person (account owner)' : 'neutral (second/third person)'}${spec.brief ? `; brief type: ${spec.brief.type}` : ''}${coverType(spec)}${flags.slot ? `; slot: ${flags.slot}` : ''}. Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
+      notes: spec ? `${flags['notes-prefix'] ? `${flags['notes-prefix'].trim()} ` : ''}${altCovers.length ? `Cover options (one-time choice; previews in alt-covers/, not in the fingerprint): a = ${spec.slides.find((s) => !s._auto).photo} (this package), ${altCovers.map((a) => `${a.rel.split('/')[1].slice(9, 10)} = ${a.id}`).join(', ')}; choosing another option means a re-export with that cover (new post_id). ` : ''}Style: format ${(spec.format ?? 'c').toUpperCase()} (${[...new Set(spec.slides.filter((s) => !s._auto).map((s) => s.layout))].join(', ')}); voice: ${spec.voice === 'student' ? 'first person (account owner)' : 'neutral (second/third person)'}${spec.brief ? `; brief type: ${spec.brief.type}` : ''}${coverType(spec)}${flags.slot ? `; slot: ${flags.slot}` : ''}. Source checks ${today}: ${src.results.length} verbatim quotes checked against the primary source, ${src.results.filter((r) => r.capture?.found).length} found in the saved capture${src.results[0]?.capture ? ` (${path.basename(src.results[0].capture.file)}, captured ${src.results[0].capture.capturedAt})` : ''} and ${src.results.filter((r) => r.online?.found).length} on the live page${src.results[0]?.online?.status ? ` (HTTP ${src.results[0].online.status})` : ''}. Rendered by the creative engine (visual QA passed); PNG slides exported to JPEG (quality 92) by Chromium; hashes are of these JPEGs.${photoNotes(tt)}` : undefined,
       externalCheck: grokbotValidator({ kit, python, today }),
     });
     const report = { ok: r.ok, post_id: postId, dir: r.dir, errors: r.errors, source_checks: src, ready: r.ready ?? null, fingerprint: r.manifest?.content_fingerprint ?? null };
