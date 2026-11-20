@@ -91,6 +91,7 @@ export function coverType(spec) {
   const first = spec.slides.find((s) => !s._auto);
   if (!first?.photo) return '; cover: designed (no photo)';
   const a = loadRegistry().byId.get(first.photo);
+  if (a?.rights === 'unlicensed') return `; cover: unlicensed ${a.source} photo (owner's decision), ${a.contains_people ? 'people, no identifiable faces' : 'no people'} (${first.photo})`;
   return `; cover: ${a?.identifiable_faces ? 'face cover (licensed stock model, not a student)' : a?.contains_people ? 'licensed stock photo with people, no faces' : 'faceless licensed photo'} (${first.photo})`;
 }
 
@@ -326,8 +327,15 @@ async function exportCmd(target, flags, evidenceFlags, today, json) {
 export function photoNotes(platform) {
   const used = (platform?.slides ?? []).flatMap((s) => (s.assets ?? []).map((a) => ({ n: s.n, ...a })));
   if (!used.length) return '';
-  const lic = [...new Set(used.map((a) => `${a.licence} (${a.licence_url}, checked ${a.checked})`))].join('; ');
-  return ` Photos: ${used.map((a) => `slide ${a.n} ${a.id} by ${a.photographer} (${a.page_url})${a.role === 'blurred-background' ? ' blurred' : ''}`).join('; ')}. Licence: ${lic}. Stock models are not students, nurses or externs and are never described as such.`;
+  const licensed = used.filter((a) => a.rights !== 'unlicensed');
+  const unlicensed = used.filter((a) => a.rights === 'unlicensed');
+  const lic = [...new Set(licensed.map((a) => `${a.licence} (${a.licence_url}, checked ${a.checked})`))].join('; ');
+  const one = (a) => a.rights === 'unlicensed'
+    ? `slide ${a.n} ${a.id} from ${a.page_url} (NOT licensed: used on the account owner's decision of 2026-11-20, accepting the copyright risk; reviewed ${a.checked})`
+    : `slide ${a.n} ${a.id} by ${a.photographer} (${a.page_url})${a.role === 'blurred-background' ? ' blurred' : ''}`;
+  // all licensed: the original wording, byte for byte (earlier packages stay reproducible)
+  if (!unlicensed.length) return ` Photos: ${used.map(one).join('; ')}. Licence: ${lic}. Stock models are not students, nurses or externs and are never described as such.`;
+  return ` Photos: ${used.map(one).join('; ')}.${licensed.length ? ` Licence (licensed photos only): ${lic}.` : ''} Unlicensed photos show no identifiable person. People pictured are not students, nurses or externs of this account and are never described as such.`;
 }
 
 function usage(msg) { console.error(`${msg}\n\n${HELP}`); return 2; }

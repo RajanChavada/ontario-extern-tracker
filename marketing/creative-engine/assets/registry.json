@@ -565,6 +565,56 @@
         "legible_logo": false
       },
       "notes": "Candid: young woman in green scrubs on a phone call, smiling and looking to the side, plain white studio background. Tiny unreadable size tag on the trouser pocket; no badge, logo or stethoscope. Stock model, never captioned as a student. Licence page checked 2026-11-20."
+    },
+    {
+      "id": "pinterest-667729082286619854",
+      "source": "Pinterest",
+      "page_url": "https://www.pinterest.com/pin/667729082286619854/",
+      "rights": "unlicensed",
+      "checked": "2026-11-20",
+      "file": "photos/pinterest-667729082286619854.jpg",
+      "sha256": "6093022493341cb8378006b5f9c4cec6f1723efe510526f5dba251b35419d7bb",
+      "width": 736,
+      "height": 1308,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "pinterest-667729082286619854",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "scene",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Brief v2.2 pool p2. People in blue scrubs and white coats walking down a hospital-style corridor, all seen from behind; no faces. Small 'Sortida' exit sign (not a hospital name), no badges, logos or stethoscopes. Low resolution (736 px wide). NOT licensed: owner's decision 2026-11-20."
+    },
+    {
+      "id": "pinterest-807762883210772908-blurred",
+      "source": "Pinterest",
+      "page_url": "https://www.pinterest.com/pin/807762883210772908/",
+      "rights": "unlicensed",
+      "checked": "2026-11-20",
+      "file": "photos/pinterest-807762883210772908-blurred.jpg",
+      "sha256": "068410d10649f3c0f42a8f9f4668f179ba40472aa2c230d6eeb6246be293d317",
+      "width": 1080,
+      "height": 1920,
+      "contains_people": true,
+      "identifiable_faces": false,
+      "shoot_id": "pinterest-807762883210772908-blurred",
+      "quiet_area": "top",
+      "treatment": "none",
+      "composition": "person",
+      "flags": {
+        "clinical_tools": false,
+        "badge_or_id": false,
+        "patient_or_clinical_setting": false,
+        "third_party_screen": false,
+        "legible_logo": false
+      },
+      "notes": "Brief v2.2 pool p4, edited: bottom band blurred by Hermes so a novel's cover (title/author) and a laptop/marker brand aren't legible. Person seen from behind writing anatomy notes on a whiteboard; no face, no school or course named. NOT licensed: owner's decision 2026-11-20."
     }
   ],
   "rejected": [
@@ -619,5 +669,11 @@
     "since": "2026-11-18",
     "approved_by": "account owner",
     "rule": "Licensed Pexels/Unsplash stock photos of people with visible faces may be used (covers and inside slides) only if the asset has stock_person_not_student: true. Stock models are never captioned or described as real students, nurses or externs, never paired with first-person lines, and never implied to run the account. Clinical tools, badges, logos, patients and legible text stay forbidden."
+  },
+  "unlicensed_policy": {
+    "allowed": true,
+    "since": "2026-11-20",
+    "approved_by": "account owner (direct answer to Hermes, 2026-11-20)",
+    "rule": "Unlicensed photos (e.g. Pinterest pins) may be used at the account owner's risk, only if they show no identifiable person (no faces), no badges, logos or legible third-party text, no clinical tools and no paperwork. Record the pin URL as page_url; never record or claim a photographer or licence. Never describe the people pictured as students, nurses or anyone tied to the account."
   }
 }
