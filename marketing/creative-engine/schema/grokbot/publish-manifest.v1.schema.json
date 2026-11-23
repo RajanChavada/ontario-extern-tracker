@@ -5,63 +5,367 @@
   "description": "Contract between a content generator (e.g. Hermes) and a publishing agent (e.g. Grokbot). Written by the generator as publish-manifest.json in <inbox>/<project>/<post_id>/, followed LAST by READY.json. The generator never sets approval; approval lives only in the publisher's approvals ledger.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["manifest_version", "post_id", "project", "created_at", "generator", "destination", "assets", "caption", "hashtags", "source_verification", "approval_state", "content_fingerprint"],
+  "required": [
+    "manifest_version",
+    "post_id",
+    "project",
+    "created_at",
+    "generator",
+    "destination",
+    "assets",
+    "caption",
+    "hashtags",
+    "source_verification",
+    "approval_state",
+    "content_fingerprint"
+  ],
   "properties": {
-    "manifest_version": {"const": "1.0"},
-    "post_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,79}$", "description": "Stable, unique per project, never reused for different content. A content change gets a NEW post_id and sets supersedes."},
-    "project": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "description": "Must equal a projects/<project>.json config id."},
-    "created_at": {"type": "string", "format": "date-time"},
+    "manifest_version": {
+      "const": "1.0"
+    },
+    "post_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,79}$",
+      "description": "Stable, unique per project, never reused for different content. A content change gets a NEW post_id and sets supersedes."
+    },
+    "project": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+      "description": "Must equal a projects/<project>.json config id."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "generator": {
-      "type": "object", "additionalProperties": true, "required": ["name", "version"],
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "version"
+      ],
       "properties": {
-        "name": {"type": "string", "minLength": 1, "description": "e.g. @oet/creative-engine"},
-        "version": {"type": "string", "minLength": 1},
-        "created_by": {"type": "string", "description": "Agent or person that ran the generator, e.g. hermes"},
-        "spec_id": {"type": "string"},
-        "spec_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-      }
-    },
-    "destination": {
-      "type": "object", "additionalProperties": false, "required": ["platform", "account", "format", "visibility_requested"],
-      "properties": {
-        "platform": {"enum": ["tiktok", "instagram"]},
-        "account": {"type": "string", "pattern": "^@[A-Za-z0-9._]{2,30}$"},
-        "format": {"enum": ["photo_carousel"]},
-        "visibility_requested": {"enum": ["only_you", "friends", "followers", "everyone"]}
-      }
-    },
-    "assets": {
-      "type": "array", "minItems": 1,
-      "items": {
-        "type": "object", "additionalProperties": false, "required": ["index", "file", "sha256", "width", "height", "alt"],
-        "properties": {
-          "index": {"type": "integer", "minimum": 1, "description": "1-based display order; index 1 is the cover."},
-          "file": {"type": "string", "pattern": "^assets/[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$", "description": "Path relative to the manifest folder."},
-          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "width": {"type": "integer", "minimum": 1},
-          "height": {"type": "integer", "minimum": 1},
-          "alt": {"type": "string"}
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "e.g. @oet/creative-engine"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_by": {
+          "type": "string",
+          "description": "Agent or person that ran the generator, e.g. hermes"
+        },
+        "spec_id": {
+          "type": "string"
+        },
+        "spec_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       }
     },
-    "caption": {"type": "string", "minLength": 1, "description": "Full post text exactly as it will be pasted, hashtags included. UTF-8, LF line endings, no trailing newline."},
-    "hashtags": {"type": "array", "items": {"type": "string", "pattern": "^#[^\\s#]+$"}, "description": "Every hashtag in caption, in order of appearance, with leading #. Must equal the hashtags parsed from caption."},
-    "source_verification": {
-      "type": "object", "additionalProperties": false, "required": ["state", "checked_at", "reverify_by", "sources", "blockers"],
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "account",
+        "format",
+        "visibility_requested"
+      ],
       "properties": {
-        "state": {"enum": ["verified", "failed", "expired", "missing"]},
-        "checked_at": {"type": "string", "description": "ISO date or date-time of the last check by the generator."},
-        "reverify_by": {"type": ["string", "null"], "description": "ISO date after which content must not be published without re-verification."},
-        "expires_at": {"type": ["string", "null"], "description": "Hard post-by date (e.g. a deadline the post refers to). null = none."},
-        "sources": {"type": "array", "items": {"type": "object", "required": ["url"], "properties": {"url": {"type": "string"}, "publisher": {"type": "string"}, "title": {"type": "string"}, "primary": {"type": "boolean"}, "accessed_at": {"type": "string"}}}},
-        "blockers": {"type": "array", "items": {"type": "string"}},
-        "conflicts": {"type": "array", "items": {"type": "string"}, "description": "Unresolved source conflicts. Must be empty to publish."},
-        "engagement_claims": {"type": "array", "items": {"type": "object", "required": ["kind", "url"], "properties": {"kind": {"type": "string"}, "url": {"type": "string"}}}, "description": "Any quoted comment/reply/testimonial shown in the assets must be listed here with a real link."}
+        "platform": {
+          "enum": [
+            "tiktok",
+            "instagram",
+            "youtube"
+          ]
+        },
+        "account": {
+          "type": "string",
+          "pattern": "^@[A-Za-z0-9._]{2,30}$"
+        },
+        "format": {
+          "enum": [
+            "photo_carousel",
+            "video",
+            "short"
+          ]
+        },
+        "visibility_requested": {
+          "enum": [
+            "only_you",
+            "friends",
+            "followers",
+            "everyone"
+          ]
+        }
       }
     },
-    "approval_state": {"enum": ["not_requested", "requested"], "description": "Generator's view only. 'approved' is intentionally not allowed: approval exists only in the publisher's ledger."},
-    "content_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "See FINGERPRINT in HERMES_HANDOFF.md: fp1 over ordered asset hashes + caption + hashtags."},
-    "supersedes": {"type": ["string", "null"], "description": "post_id this manifest replaces, if any."},
-    "notes": {"type": "string"}
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "index",
+          "file",
+          "sha256",
+          "width",
+          "height",
+          "alt"
+        ],
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1-based display order; index 1 is the cover."
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^assets/[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp|mp4)$",
+            "description": "Path relative to the manifest folder."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "alt": {
+            "type": "string"
+          },
+          "duration_sec": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Video assets only: duration in seconds (must match ffprobe within 0.5s)."
+          },
+          "has_audio": {
+            "type": "boolean",
+            "description": "Video assets only: declared audio stream presence."
+          }
+        }
+      }
+    },
+    "caption": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Full post text exactly as it will be pasted, hashtags included. UTF-8, LF line endings, no trailing newline."
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^#[^\\s#]+$"
+      },
+      "description": "Every hashtag in caption, in order of appearance, with leading #. Must equal the hashtags parsed from caption."
+    },
+    "source_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "checked_at",
+        "reverify_by",
+        "sources",
+        "blockers"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "verified",
+            "failed",
+            "expired",
+            "missing"
+          ]
+        },
+        "checked_at": {
+          "type": "string",
+          "description": "ISO date or date-time of the last check by the generator."
+        },
+        "reverify_by": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ISO date after which content must not be published without re-verification."
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Hard post-by date (e.g. a deadline the post refers to). null = none."
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "publisher": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "primary": {
+                "type": "boolean"
+              },
+              "accessed_at": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Unresolved source conflicts. Must be empty to publish."
+        },
+        "engagement_claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "url"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Any quoted comment/reply/testimonial shown in the assets must be listed here with a real link."
+        }
+      }
+    },
+    "approval_state": {
+      "enum": [
+        "not_requested",
+        "requested"
+      ],
+      "description": "Generator's view only. 'approved' is intentionally not allowed: approval exists only in the publisher's ledger."
+    },
+    "content_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "fp1 over ordered asset hashes + caption + hashtags (carousels, unchanged). fp2 = fp1 plus title, ai disclosure and sidecars, used when the manifest has title, ai_generated_disclosure or sidecars. See VIDEO-CONTRACT.md."
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "post_id this manifest replaces, if any."
+    },
+    "notes": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Video title (required for youtube formats, max 100 chars). Bound into fingerprint fp2."
+    },
+    "ai_generated_disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ai_voice"
+      ],
+      "properties": {
+        "ai_voice": {
+          "type": "boolean"
+        },
+        "ai_visuals": {
+          "type": "boolean"
+        },
+        "platform_label_planned": {
+          "type": "boolean",
+          "description": "Owner/publisher will switch on the platform's AI label."
+        },
+        "disclosure_text": {
+          "type": "string"
+        }
+      },
+      "description": "Required for video formats. Bound into fingerprint fp2."
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uses_pinterest"
+      ],
+      "properties": {
+        "uses_pinterest": {
+          "type": "boolean"
+        },
+        "image_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Required for youtube formats; uses_pinterest must be false."
+    },
+    "sidecars": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "file",
+          "sha256"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "captions",
+              "transcript",
+              "claims",
+              "other"
+            ]
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^sidecars/[A-Za-z0-9._-]+\\.(srt|vtt|txt|json|md)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "description": "Optional non-uploaded files kept beside the video. Hash-checked; bound into fingerprint fp2."
+    }
   }
 }

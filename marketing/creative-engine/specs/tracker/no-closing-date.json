@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/content-spec.schema.json",
+  "id": "no-closing-date",
+  "title": "No closing date on the extern posting? (Nov 24)",
+  "status": "verified",
+  "format": "c",
+  "voice": "brand",
+  "theme": "board",
+  "brand": {
+    "name": "Ontario Extern Tracker",
+    "handle": "@ontarioextern"
+  },
+  "tracker": {
+    "entries": [
+      "thp",
+      "mackenzie",
+      "sunnybrook",
+      "shn"
+    ]
+  },
+  "brief": {
+    "type": "explainer",
+    "problem": "Students read a posting with no closing date as 'no rush'. In Ontario it can mean open until filled, a talent pool, or simply no date shown.",
+    "hooks": [
+      "no closing date on the extern posting?",
+      "the extern postings with no deadline",
+      "no closing date doesn't mean no rush"
+    ],
+    "why": "Hermes brief 2026-11-24 (no closing date), built on the Nov 23 data refresh: four live Ontario postings, three with no closing date shown and one talent pool with a date, all re-read on the hospitals' own pages on Nov 23.",
+    "payoff": "What a missing closing date can mean, with a real Ontario example of each, and to apply the week you find a posting.",
+    "evidence": [
+      "~/AgentHandoff/briefs/ontario-extern-tracker/2026-11-24-brief-no-closing-date.md",
+      "~/AgentHandoff/evidence/ontario-extern-tracker/2026-11-23/ (thp-6976, mackenzie-18701, sunnybrook-14354, shn-JR105532)",
+      "Humber left out: its combined pay line can't be matched to one capture, so the tracker bridge refuses the entry."
+    ]
+  },
+  "slides": [
+    {
+      "layout": "c_photo",
+      "photo": "pinterest-807762883210772908-blurred",
+      "title": "no closing date on the extern posting?",
+      "body": "real ontario examples, incl. a talent pool closing nov 30",
+      "basis": "facts",
+      "facts": [
+        "shn-deadline"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-9996457",
+      "title": "1. open until filled",
+      "body": "trillium's extern posting lists its deadline as “open until filled”.",
+      "basis": "facts",
+      "facts": [
+        "thp-open-until-filled"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5537938",
+      "title": "2. it's a talent pool",
+      "body": "mackenzie's extern posting isn't for an existing vacancy. it's sourcing candidates for future roles.",
+      "basis": "facts",
+      "facts": [
+        "mackenzie-vacancy"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-2440970",
+      "title": "3. no date is shown",
+      "body": "sunnybrook's extern posting went up apr 9, 2026 and shows no closing date.",
+      "basis": "facts",
+      "facts": [
+        "sunnybrook-posted"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-5965524",
+      "title": "4. some do have a date",
+      "body": "shn's extern talent pool closes nov 30 (as posted). it's a candidate pool, not one open job.",
+      "basis": "facts",
+      "facts": [
+        "shn-deadline",
+        "shn-vacancy"
+      ]
+    },
+    {
+      "layout": "c_photo",
+      "photo": "pexels-7439131",
+      "title": "5. don't wait to apply",
+      "body": "if you qualify, don't wait. ontarioexterns.ca lists ontario extern postings + requirements in one place.",
+      "basis": "promo",
+      "asides": [
+        {
+          "text": "save this ↓",
+          "at": {
+            "x": 0.52,
+            "y": 0.8
+          },
+          "size": 66,
+          "rotate": -6
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "thp-open-until-filled",
+      "kind": "other",
+      "claim": "Trillium Health Partners' Clinical Extern - Nursing posting (job 6976) lists its deadline as \"Open until filled\".",
+      "org": "Trillium Health Partners",
+      "role": "Clinical Extern - Nursing (RN, RPN, IEN)",
+      "value": "open until filled",
+      "status": "open",
+      "quote": "Deadline:  Open until filled",
+      "sources": [
+        "thp-posting"
+      ],
+      "verifiedAt": "2026-11-23"
+    },
+    {
+      "id": "sunnybrook-posted",
+      "kind": "other",
+      "claim": "Sunnybrook's Clinical Extern posting (reference 2026-17050) shows Date Posted 4/9/2026 and no closing date.",
+      "org": "Sunnybrook Health Sciences Centre",
+      "role": "Clinical Extern (Nursing students and IENs)",
+      "value": "posted apr 9, 2026; no closing date shown",
+      "status": "open",
+      "quote": "4/9/2026",
+      "sources": [
+        "sunnybrook-posting"
+      ],
+      "verifiedAt": "2026-11-23"
+    }
+  ],
+  "sources": [],
+  "caption": {
+    "text": "no closing date on the extern posting? here's what it can mean 👇\n\ntrillium health partners' clinical extern posting lists its deadline as “open until filled”. mackenzie health's is a talent pool: not for an existing vacancy, sourcing candidates for future roles. sunnybrook's went up apr 9, 2026 and shows no closing date. scarborough health network's talent pool does have a date: it closes nov 30 (as posted). all checked on the hospitals' own pages nov 23.\n\nwould you apply right away or wait?\n\nontario extern postings + requirements: ontarioexterns.ca\n\nontarioexterns.ca is an independent tracker of Ontario extern postings, checked on hospitals’ own career pages. Not affiliated with any hospital or Ontario Health.",
+    "instagram": "no closing date on the extern posting? here's what it can mean 👇\n\ntrillium health partners' clinical extern posting lists its deadline as “open until filled”. mackenzie health's is a talent pool: not for an existing vacancy, sourcing candidates for future roles. sunnybrook's went up apr 9, 2026 and shows no closing date. scarborough health network's talent pool does have a date: it closes nov 30 (as posted). all checked on the hospitals' own pages nov 23.\n\nwould you apply right away or wait?\n\nontario extern postings + requirements: ontarioexterns.ca\n\nIndependent tracker of Ontario extern postings, checked on hospitals’ own career pages: link in bio (ontarioexterns.ca). Not affiliated with any hospital or Ontario Health.",
+    "hashtags": [
+      "#nursingstudent",
+      "#nursingschool",
+      "#clinicalextern",
+      "#nursingextern",
+      "#ontarionursingstudents"
+    ]
+  }
+}
