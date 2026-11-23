@@ -1,5 +1,5 @@
 {
-  "dataset_checked": "2026-11-11",
+  "dataset_checked": "2026-11-23",
   "stale_after_days": 7,
   "note": "Facts in our own words. Every entry links to the employer's own page. Verification captures are kept outside this repository. 'short' fields are display summaries of the facts above, not new facts.",
   "entries": [
@@ -147,7 +147,7 @@
       "source_url": "https://clients.njoyn.com/cl4/xweb/xweb.asp?clid=77108&Page=JobDetails&Jobid=J1026-0161&BRID=461175&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-12",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -168,7 +168,7 @@
         "also_listed": []
       },
       "short": "Posting removed before its Nov 16 closing date",
-      "window_text": "The hospital's posting page says the job is no longer available (checked Nov 12, 2026). It had listed a Nov 16 closing date."
+      "window_text": "The hospital's posting page said the job was no longer available on Nov 12, 2026, before its listed Nov 16 closing date. North York General's job board had no extern posting when checked by hand on Nov 23, 2026 (0 of 67 jobs)."
     },
     {
       "id": "wch",
@@ -205,14 +205,15 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Clinical & Research Extern (Hybrid)",
-      "posting_type": "unconfirmed",
-      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
+      "posting_type": "open_vacancies",
+      "positions_listed": 1,
+      "posted_text": "Req WPT2610; no posted or closing date shown; contract ends Mar 31, 2027",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J0926-0530&BRID=362474&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -237,7 +238,7 @@
           "Hybrid role: clinical and research duties (as posted)"
         ]
       },
-      "short": "Job site blocks our automated checks"
+      "short": "1 position listed (no closing date shown)"
     },
     {
       "hospital": "Michael Garron Hospital",
@@ -245,14 +246,15 @@
       "location": "Toronto",
       "id": "mgh-help",
       "program_name": "HELP Externs (Hospital Elder Life Program)",
-      "posting_type": "unconfirmed",
-      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
+      "posting_type": "open_vacancies",
+      "positions_listed": 4,
+      "posted_text": "Req WPT2611; no posted or closing date shown; contract ends Mar 31, 2027",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1072&BRID=366266&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -272,7 +274,7 @@
           "Basic Life Support (BLS) required"
         ]
       },
-      "short": "Job site blocks our automated checks"
+      "short": "4 positions listed (no closing date shown)"
     },
     {
       "hospital": "Michael Garron Hospital",
@@ -280,14 +282,15 @@
       "location": "Toronto",
       "id": "mgh-hro",
       "program_name": "Student Clinical Extern, HRO Team (no direct patient care)",
-      "posting_type": "unconfirmed",
-      "unconfirmed_reason": "Last seen open on Nov 11. Michael Garron's job site blocks our automated checks and we haven't re-checked this posting by hand since. Check the posting on the hospital's site before applying.",
+      "posting_type": "open_vacancies",
+      "positions_listed": 2,
+      "posted_text": "Req WPT2615; no posted or closing date shown; contract ends Mar 31, 2027",
       "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://tehn.njoyn.com/CL3/xweb/xweb.asp?clid=55587&Page=JobDetails&Jobid=J1026-1085&BRID=366273&lang=1",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-11",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -307,7 +310,7 @@
           "Weekday day shifts, minimum two 8-hour shifts per 2-week pay period (as posted)"
         ]
       },
-      "short": "Job site blocks our automated checks"
+      "short": "2 positions listed (no closing date shown)"
     },
     {
       "id": "humber",
