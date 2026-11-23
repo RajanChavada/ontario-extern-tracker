@@ -110,20 +110,20 @@ test('status: open needs an https posting link that was reachable', () => {
 });
 
 test('sortEntries: open first (positions, then unstated, then talent pools), nearest deadline first; closed last', () => {
-  const ids = sortEntries(data.entries, '2026-11-10').map(e => e.id);
+  const ids = sortEntries(data.entries, '2026-11-23').map(e => e.id);
   // positions listed (dated first), then live postings by nearest deadline then name, then talent pools (shn has a closing date)
   assert.deepEqual(ids.slice(0, 1), ['humber']);                                 // vacancies stated, no date
-  assert.deepEqual(ids.slice(1, 6), ['wch', 'sunnybrook', 'thp', 'shn', 'mackenzie']);
-  for (const id of ['mgh', 'mgh-help', 'mgh-hro']) {                              // Unconfirmed: after every open listing, before closed
+  assert.deepEqual(ids.slice(1, 5), ['sunnybrook', 'thp', 'shn', 'mackenzie']);
+  for (const id of ['mgh', 'mgh-help', 'mgh-hro', 'nygh']) {                      // Unconfirmed: after every open listing, before closed
     assert.ok(ids.indexOf(id) > ids.indexOf('lhsc'), id);
     assert.ok(ids.indexOf(id) < ids.indexOf('southlake'), id);
   }
   assert.ok(ids.indexOf('southlake') > ids.indexOf('hhs'));                       // removed before its end date (Nov 14)
-  assert.ok(ids.indexOf('nygh') > ids.indexOf('hhs'));                            // removed before its closing date (Nov 12)
+  assert.ok(ids.indexOf('nygh') > ids.indexOf('hhs'));                            // removed Nov 12; not re-read since (Njoyn bot wall), so stale
   assert.ok(ids.indexOf('mackenzie') < ids.indexOf('cheo'));
   assert.ok(ids.indexOf('cheo') < ids.indexOf('lhsc'));
   assert.ok(ids.indexOf('hhs') < ids.indexOf('uhn'));
-  assert.deepEqual(ids.slice(-4).sort(), ['nygh', 'osler', 'southlake', 'uhn']);  // closed entries last
+  assert.deepEqual(ids.slice(-4).sort(), ['osler', 'southlake', 'uhn', 'wch']);   // closed entries last (wch closed Nov 20)
 });
 
 // ---------- Eligibility (wording: "Meets listed criteria", never "eligible") ----------
@@ -177,11 +177,11 @@ test('new Nov 10 entries: NYGH, WCH, MGH, Humber criteria', () => {
   assert.equal(eligibility(byId.mgh, P('IEN', null)).verdict, 'check');
   assert.equal(eligibility(byId.humber, P('BSCN', 3)).verdict, 'meets');
   assert.equal(eligibility(byId.humber, P('PN', 2)).verdict, 'check');          // program type not named
-  assert.equal(byId.humber.postings.length, 10);
+  assert.equal(byId.humber.postings.length, 13);                                 // 3 added Nov 23 (Endoscopy, 9 West x2)
   assert.equal(status(byId.humber, '2026-11-12').key, 'open_vacancies');       // each posting: 'existing vacancy'
   assert.equal(byId.humber.positions_listed, undefined);                         // no count is stated, so none is invented
   assert.doesNotMatch(status(byId.humber, '2026-11-12').detail, /vacancy or a pool/);
-  assert.equal(new Set(byId.humber.postings.map(q => q.url)).size, 10);          // ten distinct job ids
+  assert.equal(new Set(byId.humber.postings.map(q => q.url)).size, 13);          // thirteen distinct job ids
   assert.equal(eligibility(byId['mgh-help'], P('BSCN', 2)).verdict, 'check');    // "entering" wording
   assert.equal(eligibility(byId['mgh-hro'], P('BSCN', 1)).verdict, 'not_met');
   assert.equal(status(byId['mgh-help'], '2026-11-11').key, 'unconfirmed');
@@ -359,7 +359,7 @@ test('production build fails on stale data (blocks the deploy)', () => {
 });
 
 test('data: postings removed before their closing date are closed, with no date, countdown or calendar file', () => {
-  for (const [id, checked] of [['nygh', '2026-11-12'], ['southlake', '2026-11-14']]) {
+  for (const [id, checked] of [['nygh', '2026-11-12'], ['southlake', '2026-11-23']]) {
     assert.equal(status(byId[id], '2026-11-14').key, 'closed', id);
     assert.equal(byId[id].deadline, null, id);
     assert.equal(byId[id].last_verified, checked, id);
@@ -452,7 +452,7 @@ test('an Unconfirmed entry must say why', () => {
   assert.match(validateData(d).join(), /blocked: unconfirmed needs an unconfirmed_reason/);
 });
 
-test('data (Nov 14 release): Michael Garron x3 Unconfirmed with links and real check dates; counts exclude them', () => {
+test('data (Nov 23 release): Michael Garron x3 Unconfirmed with links and real check dates; counts exclude them', () => {
   for (const id of ['mgh', 'mgh-help', 'mgh-hro']) {
     const e = byId[id];
     assert.equal(e.posting_type, 'unconfirmed', id);
@@ -465,26 +465,28 @@ test('data (Nov 14 release): Michael Garron x3 Unconfirmed with links and real c
   assert.equal(byId.nygh.last_verified, '2026-11-12');
   assert.equal(byId.southlake.positions_listed, undefined);
   assert.ok(data.dataset_checked <= data.entries.map(e => e.last_verified).sort()[0]);
-  const sum = openSummary(data.entries, '2026-11-14');
-  assert.deepEqual(sum, { hospitals: 6, listings: 6, positions: 1, pools: 2, other: 3, unconfirmed: 3, nextDeadline: '2026-11-20' });
+  const sum = openSummary(data.entries, '2026-11-23');
+  assert.deepEqual(sum, { hospitals: 5, listings: 5, positions: 1, pools: 2, other: 2, unconfirmed: 4, nextDeadline: '2026-11-30' });
+  assert.equal(byId.wch.posting_type, 'closed');                // expired on its Nov 20 closing date
+  assert.equal(byId.wch.deadline, null);                        // no stale date or calendar file left behind
 });
 
-test('data (Nov 14 release): HHS is a verified search that found nothing, not an Unconfirmed (blocked) check', () => {
+test('data (Nov 23 release): HHS is a verified search that found nothing, not an Unconfirmed (blocked) check', () => {
   const e = byId.hhs;
   assert.equal(e.posting_type, 'check_employer');
   assert.equal(e.unconfirmed_reason, undefined);
-  assert.match(e.window_text, /searched HHS's official job board for external applicants \(Taleo\) on Nov 14 and found no clinical extern posting/);
-  assert.equal(e.last_verified, '2026-11-14');
-  assert.equal(status(e, '2026-11-14').label, 'No live posting linked');
-  // Unconfirmed is reserved for postings we could not read: only the CAPTCHA-blocked Michael Garron ones
-  assert.deepEqual(data.entries.filter(x => status(x, '2026-11-14').key === 'unconfirmed').map(x => x.id).sort(), ['mgh', 'mgh-help', 'mgh-hro']);
+  assert.match(e.window_text, /searched HHS's official job board for external applicants \(Taleo\) on Nov 23 and found no clinical extern posting/);
+  assert.equal(e.last_verified, '2026-11-23');
+  assert.equal(status(e, '2026-11-23').label, 'No live posting linked');
+  // Unconfirmed is reserved for postings we could not read: the CAPTCHA-blocked Njoyn ones (Michael Garron x3, NYGH)
+  assert.deepEqual(data.entries.filter(x => status(x, '2026-11-23').key === 'unconfirmed').map(x => x.id).sort(), ['mgh', 'mgh-help', 'mgh-hro', 'nygh']);
 });
 
 test('page units reconcile: sections count listings; 17 listings at 15 hospitals', () => {
-  const t = '2026-11-14';
+  const t = '2026-11-23';
   const g = (n) => data.entries.filter(e => status(e, t).group === n).length;
   const sections = { taking: g(0), notOpenOrNoPosting: g(1) + g(2), unconfirmed: g(3), closed: g(4) };
-  assert.deepEqual(sections, { taking: 6, notOpenOrNoPosting: 4, unconfirmed: 3, closed: 4 });
+  assert.deepEqual(sections, { taking: 5, notOpenOrNoPosting: 4, unconfirmed: 4, closed: 4 });
   assert.equal(Object.values(sections).reduce((a, b) => a + b, 0), data.entries.length);
   assert.equal(data.entries.length, 17);
   assert.equal(countHospitals(data.entries), 15); // Michael Garron has 3 listings; the date line names both units

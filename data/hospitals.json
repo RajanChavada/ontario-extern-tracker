@@ -15,7 +15,7 @@
       "source_url": "https://southlake.wd10.myworkdayjobs.com/en-US/Southlake/job/Clinical-Extern_JR-102401",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -32,7 +32,7 @@
           "Recent acute care experience (preferred)"
         ]
       },
-      "window_text": "Southlake's posting page now says the page doesn't exist, and the posting is no longer on Southlake's job board (checked Nov 14, 2026). It had listed an end date of Nov 30 and 40 positions.",
+      "window_text": "Southlake's posting page says the page doesn't exist, and there's no clinical extern posting on Southlake's job board (checked Nov 23, 2026). It had listed an end date of Nov 30 and 40 positions.",
       "short": "Posting removed before its Nov 30 end date"
     },
     {
@@ -48,7 +48,7 @@
       "source_url": "https://shn.wd10.myworkdayjobs.com/en-US/SHN_External_Career_Site/job/Clinical-Nurse-Extern--Talent-Pool--2026-_JR105532",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -78,7 +78,7 @@
       "source_url": "https://employment-mackenziehealth.icims.com/jobs/18701/2026-18701/job",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -113,7 +113,7 @@
       "source_url": "https://sunnybrook.talcura.com/Candidates/m/ShowJob.aspx?JobId=14354",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -176,14 +176,13 @@
       "region": "gta",
       "location": "Toronto",
       "program_name": "Clinical Extern - Professional Practice",
-      "posting_type": "open_unspecified",
-      "posted_text": "Posted Nov 6, 2026",
-      "deadline": "2026-11-20",
+      "posting_type": "closed",
+      "deadline": null,
       "pay_text": "$20.60/hr",
       "source_url": "https://jobs.dayforcehcm.com/en-US/wch/CANDIDATEPORTAL/jobs/3892",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -197,7 +196,8 @@
           "Up to 7.5 hours per week (as posted)"
         ]
       },
-      "short": "Vacancy count not stated"
+      "short": "Closed Nov 20",
+      "window_text": "The posting closed on its listed date, Nov 20, 2026; the hospital's page now says it is no longer available. No other extern posting was on Women's College's job board when we searched on Nov 23, 2026."
     },
     {
       "id": "mgh",
@@ -316,13 +316,13 @@
       "location": "Toronto",
       "program_name": "Student Nurse Extern (one posting per unit)",
       "posting_type": "open_vacancies",
-      "posted_text": "10 postings live on Nov 14, posted Jun 4 to Oct 22, 2026; no closing dates shown",
+      "posted_text": "13 postings live on Nov 23, posted Jun 4 to Nov 18, 2026; no closing dates shown",
       "deadline": null,
-      "pay_text": "$17.60/hr ($17.95/hr on 10 East & West)",
+      "pay_text": "$17.60/hr ($17.95/hr on 10 East & West and 9 West)",
       "source_url": "https://careersen-hrrh.icims.com/jobs/search?ss=1&searchKeyword=extern",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -340,8 +340,23 @@
           "Current CPR certification required"
         ]
       },
-      "short": "10 postings, each for an existing vacancy (count per posting not stated)",
+      "short": "13 postings, each for an existing vacancy (count per posting not stated)",
       "postings": [
+        {
+          "label": "Endoscopy",
+          "url": "https://careersen-hrrh.icims.com/jobs/26760/job",
+          "note": "job 26760 · posted Nov 18"
+        },
+        {
+          "label": "9 West Medicine",
+          "url": "https://careersen-hrrh.icims.com/jobs/25493/job",
+          "note": "job 25493 · posted Nov 16 · $17.95/hr"
+        },
+        {
+          "label": "9 West Medicine",
+          "url": "https://careersen-hrrh.icims.com/jobs/25593/job",
+          "note": "job 25593 · posted Nov 16 · $17.95/hr"
+        },
         {
           "label": "Critical Care 6 West (ICU)",
           "url": "https://careersen-hrrh.icims.com/jobs/24856/job",
@@ -406,7 +421,7 @@
       "source_url": "https://iadyup.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_4001/job/6976/",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -441,7 +456,7 @@
       "source_url": "https://www.lhsc.on.ca/nursing/recruitment",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -473,7 +488,7 @@
       "source_url": "https://www.cheo.on.ca/en/about-us/careers/nursing-health-human-resources-programs-students-and-clinical-externs/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -506,7 +521,7 @@
       "source_url": "https://www.sickkids.ca/en/learning/student-centre/nursing-learners/nursing-clinical-extern-program/",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -533,7 +548,7 @@
       "source_url": "https://www.uhn.ca/healthcareprofessionals/Meet_Professions/Collaborative_Academic_Practice/ClinicalExterns",
       "source_kind": "program_page",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": true,
         "programs": {
@@ -562,7 +577,7 @@
       "source_url": "https://jobs.smartrecruiters.com/WilliamOslerHealthSystem1/744000151923218-clinical-extern-medicine-and-surgery",
       "source_kind": "posting",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": false,
         "programs": {},
@@ -578,20 +593,20 @@
       "location": "Hamilton",
       "program_name": "Clinical Extern (Nurse)",
       "posting_type": "check_employer",
-      "window_text": "We searched HHS's official job board for external applicants (Taleo) on Nov 14 and found no clinical extern posting. Job aggregators have listed one, but aggregators aren't an official source. Check HHS directly.",
+      "window_text": "We searched HHS's official job board for external applicants (Taleo) on Nov 23 and found no clinical extern posting among its 31 listed jobs. Job aggregators have listed one, but aggregators aren't an official source. Check HHS directly.",
       "deadline": null,
       "pay_text": null,
       "source_url": "https://www.hhscareers.ca/",
       "source_kind": "careers_home",
       "source_ok": true,
-      "last_verified": "2026-11-14",
+      "last_verified": "2026-11-23",
       "eligibility": {
         "listed": false,
         "programs": {},
         "bcls": null,
         "also_listed": []
       },
-      "short": "None on HHS job board (searched Nov 14)"
+      "short": "None on HHS job board (searched Nov 23)"
     }
   ]
 }
