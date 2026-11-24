@@ -210,3 +210,13 @@ button.btn { border: 0; cursor: pointer; font-family: inherit; }
 .article .cta { margin: var(--s4) 0; }
 .article a.btn { color: #fff; }
 .article .src { margin-top: var(--s2); }
+
+/* Guides: hub, posts, breadcrumbs */
+.mast-links { display: inline-flex; gap: var(--s4); }
+.crumbs { font-size: var(--t-small); color: var(--muted); }
+.article .answer { font-size: 17px; line-height: 1.55; margin-top: var(--s3); }
+.article .notice { color: var(--st-caution); font-weight: 600; margin-top: var(--s3); }
+.article .guide-list, .article .sources { padding-left: 0; list-style: none; }
+.article .guide-list li { padding: var(--s3) 0; border-bottom: 1px solid var(--rule); }
+.article .sources li { margin: var(--s2) 0; }
+.article h3 { font: 700 17px/1.3 var(--serif); margin: var(--s4) 0 var(--s2); }
