@@ -45,7 +45,7 @@ test('schema check accepts Grokbot\'s own example and rejects what Grokbot rejec
   assert.match(bad((m) => { m.assets[0].sha256 = 'XYZ'; }).join(), /assets\[0\]\.sha256/);
   assert.match(bad((m) => { m.assets[0].file = '01-hook.jpg'; }).join(), /assets\[0\]\.file/);
   assert.match(bad((m) => { delete m.source_verification.reverify_by; }).join(), /missing reverify_by/);
-  assert.match(bad((m) => { m.destination.format = 'video'; }).join(), /destination\.format/);
+  assert.match(bad((m) => { m.destination.format = 'story'; }).join(), /destination\.format/);   // 'video'/'short' became valid with the kit's VIDEO-CONTRACT (Nov 23)
   assert.match(bad((m) => { m.manifest_version = '2.0'; }).join(), /manifest_version/);
 });
 
